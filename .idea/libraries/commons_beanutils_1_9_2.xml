@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="commons-beanutils-1.9.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/commons-beanutils-1.9.2.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/commons-collections-3.2.1.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/commons-io-2.6.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/commons-logging-1.2.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/fontbox-2.0.12.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/ghost4j-1.0.1.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/itext-2.1.7.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jai-imageio-core-1.4.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jbig2-imageio-3.0.2.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jboss-logging-3.1.4.GA.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jboss-vfs-3.2.14.Final.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jcl-over-slf4j-1.7.25.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jna-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/jul-to-slf4j-1.7.25.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/lept4j-1.10.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/log4j-over-slf4j-1.7.25.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/log4j-1.2.17.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/logback-classic-1.2.3.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/logback-core-1.2.3.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/pdfbox-2.0.12.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/pdfbox-debugger-2.0.12.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/pdfbox-tools-2.0.12.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/tess4j-4.3.1.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files (2)/xmlgraphics-commons-1.4.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>
