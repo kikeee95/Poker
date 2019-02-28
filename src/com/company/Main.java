@@ -38,7 +38,7 @@ public class Main {
         //Saját pénzösszegünk megtalálása
 
         BufferedImage screencapturePlayer2 = new Robot().createScreenCapture(
-                new Rectangle(rect.x + 370, rect.y + 613, 68, 13)); // 385, 610, 40, 18
+                new Rectangle(rect.x + 368, rect.y + 612, 68, 16)); // 385, 610, 40, 18
 
         BufferedImage screencaptureResized = resizeImage(screencapturePlayer2, 2);
 
@@ -94,7 +94,7 @@ public class Main {
 
         Tesseract tesseract = new Tesseract();
         tesseract.setDatapath("D:/Tesseract/");
-        tesseract.setTessVariable("tessedit_char_whitelist", "0123456789,$");
+        tesseract.setTessVariable("tessedit_char_whitelist", "0123456789,$.");
 
 
         try {
