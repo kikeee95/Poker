@@ -22,7 +22,7 @@ public final class Constants {
     public  static  int heartsRGB = -908544;
     public  static  int diamondsRGB = -16776961;
     public  static  int boardCardsY = 325;
-    public static int[] boarCarsX = new int[] {284, 339, 394, 449, 504};
+    public static int[] boardCarsdX = new int[] {284, 339, 394, 449, 504};
     public  static  int CardWidth = 15;
     public static  int CardHeight = 17;
     public static  int buttonRGB = -1184068;
