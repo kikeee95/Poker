@@ -656,7 +656,7 @@ public class Main {
                     }
 
                     tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
-                    
+
                     tesseract.setTessVariable("tessedit_char_whitelist", "Raise Call Bet Blind Check");
 
                     if(hasCards[0]) {

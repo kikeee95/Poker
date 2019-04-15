@@ -1,0 +1,46 @@
+package com.company;
+
+public final class Constants {
+    public static int posXhelper = 3;
+    public static int posYname = -4;
+    public  static  int posYmoney = 12;
+    public static  int posYaction = 25;
+    public static  int boxWidth = 95;
+    public static  int nameHeight = 16;
+    public static  int moneyHeight = 14;
+    public static  int actionHeight = 16;
+    public static int[] playersPosX = new int[] {355, 178, 15, 17, 178, 355, 528, 694, 529};
+    public static int[] playersPosY = new int[] {604, 597, 545, 176, 112, 107, 112, 545, 596};
+    public  static  int holeCard1X = 369;
+    public  static  int holeCard1Y = 486;
+    public  static  int holeCard2X = 385;
+    public  static  int holeCard2Y = 497;
+    public  static  int CardhelperX = 8;
+    public  static  int CardhelperY = 22;
+    public  static  int clubsRGB = -16751867;
+    public  static  int spadesRGB = -16777216;
+    public  static  int heartsRGB = -908544;
+    public  static  int diamondsRGB = -16776961;
+    public  static  int boardCardsY = 325;
+    public static int[] boarCarsX = new int[] {284, 339, 394, 449, 504};
+    public  static  int CardWidth = 15;
+    public static  int CardHeight = 17;
+    public static  int buttonRGB = -1184068;
+    public static  int[] buttonPosX = new int[]{448, 269, 146, 118, 214, 365, 507, 708, 601};
+    public static  int[] buttonPosY = new int[]{531, 532, 495, 267, 202, 196, 196, 445, 526};
+    public static  int buttonPosition = 0;
+    public  static  int potTextX = 120;
+    public  static  int potTextY = 347;
+    public  static  int potHeight = 13;
+    public  static  int potWidth = 50;
+    public  static  int playerButtonsPosY = 681;
+    public  static  int playerButton1PosX = 159;
+    public  static int playerButton2PosX = 343;
+    public  static int playerButton3PosX = 527;
+    public  static int buttonWidth = 100;
+    public  static int buttonHeigth = 20;
+    public  static int cardColor = -16777216;
+    public  static int[] playersCardPosX = new int[]{219, 122, 152, 247, 395, 537, 653, 552};
+    public  static int[] playersCardPosY = new int[]{491, 432, 245, 200, 196, 197, 433, 491};
+    public  static int cardRGB = -1;
+}
