@@ -7,7 +7,7 @@ public class Card {
     private int primeValue;
 
     public Card(String name) {
-        for(int i = 0; i <= Constants.cardPrimes.length; i++){
+        for(int i = 0; i < Constants.cardPrimes.length; i++){
             if(name.equals(Constants.cards[i])){
                 this.name = name;
                 this.value = i;
@@ -50,13 +50,13 @@ public class Card {
     }
 
     private String suitDefine(String name){
-        if("h".equals(name.charAt(1))){
+        if('h' == name.charAt(1)){
             return "Hearts";
-        }else if("s".equals(name.charAt(1))){
+        }else if('s' == name.charAt(1)){
             return "Spades";
-        }else if("d".equals(name.charAt(1))){
-            return "Diamons";
-        }else if("c".equals(name.charAt(1))){
+        }else if('d' == name.charAt(1)){
+            return "Diamonds";
+        }else if('c' == name.charAt(1)){
             return "Spades";
         }else{
             return "Invalid Suit";

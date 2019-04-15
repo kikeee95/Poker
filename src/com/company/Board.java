@@ -6,7 +6,7 @@ public class Board {
     private String gameState;
     private ArrayList<Card> cards = new ArrayList<Card>();
     private ArrayList<Player> players = new ArrayList<Player>();
-    private int pot;
+    private double pot;
     private int buttonPosition;
 
     public Board(Player player1, Player player2, Player player3, Player player4, Player player5, Player player6, Player player7, Player player8, Player player9) {
@@ -36,11 +36,11 @@ public class Board {
         return cards;
     }
 
-    public int getPot() {
+    public double getPot() {
         return pot;
     }
 
-    public void setPot(int pot) {
+    public void setPot(double pot) {
         this.pot = pot;
     }
 
@@ -55,16 +55,11 @@ public class Board {
     public void addCard(Card card){
 
         boolean exists = false;
-
-        if(this.cards.isEmpty()) {
-            cards.add(card);
-        }else{
             for(int i = 0; i < this.cards.size(); i++){
                 if(card.getPrimeValue() == cards.get(i).getPrimeValue()){
                     exists = true;
                 }
             }
-        }
         if(exists == false){
             cards.add(card);
         }
@@ -77,11 +72,11 @@ public class Board {
     @Override
     public String toString() {
         return "Board{" +
-                "gameState='" + gameState + '\'' +
-                ", cards=" + cards +
-                ", players=" + players +
-                ", pot=" + pot +
-                ", buttonPosition=" + buttonPosition +
+                "gameState='" + gameState + '\'' + "\n" +
+                ", cards=" + cards + "\n" +
+                ", players=" + players + "\n" +
+                ", pot=" + pot + "\n" +
+                ", buttonPosition=" + buttonPosition + "\n" +
                 '}';
     }
 }

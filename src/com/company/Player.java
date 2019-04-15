@@ -9,6 +9,8 @@ public class Player {
     private String flopAction;
     private String turnAction;
     private String riverAction;
+    private Hand hand;
+    private boolean hasCards;
 
     public Player(boolean isPlayed) {
         this.isPlayed = isPlayed;
@@ -41,8 +43,11 @@ public class Player {
     }
 
     public void setAction(String action) {
-        if(action.toLowerCase().equals("fold") || action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call")) {
-            this.action = action;
+
+        if(action.toLowerCase().equals("fold") || action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check"))  {
+            this.action = action.toLowerCase();
+        }else{
+            this.action = "No action";
         }
     }
 
@@ -70,6 +75,14 @@ public class Player {
         this.flopAction = flopAction;
     }
 
+    public String getTurnAction() {
+        return turnAction;
+    }
+
+    public void setTurnAction(String turnAction) {
+        this.turnAction = turnAction;
+    }
+
     public String getRiverAction() {
         return riverAction;
     }
@@ -78,17 +91,33 @@ public class Player {
         this.riverAction = riverAction;
     }
 
+    public Hand getHand() {
+        return hand;
+    }
+
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+
+    public boolean isHasCards() {
+        return hasCards;
+    }
+
+    public void setHasCards(boolean hasCards) {
+        this.hasCards = hasCards;
+    }
+
     @Override
     public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                ", money=" + money +
-                ", action='" + action + '\'' +
-                ", isPlayed=" + isPlayed +
-                ", preflopAction='" + preflopAction + '\'' +
-                ", flopAction='" + flopAction + '\'' +
-                ", turnAction='" + turnAction + '\'' +
-                ", riverAction='" + riverAction + '\'' +
-                '}';
+        if (this.hasCards) {
+            return "Player{" +
+                    "name='" + name + '\'' + "\n" +
+                    ", money=" + money + "\n" +
+                    ", action='" + action + '\'' + "\n" +
+                    ", hand=" + hand + "\n" +
+                    '}';
+        }else{
+            return "";
+        }
     }
 }
