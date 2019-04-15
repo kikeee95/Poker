@@ -41,7 +41,9 @@ public class Player {
     }
 
     public void setAction(String action) {
-        this.action = action;
+        if(action.toLowerCase().equals("fold") || action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call")) {
+            this.action = action;
+        }
     }
 
     public boolean isPlayed() {
