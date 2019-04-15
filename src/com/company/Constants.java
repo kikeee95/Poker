@@ -42,5 +42,9 @@ public final class Constants {
     public  static int cardColor = -16777216;
     public  static int[] playersCardPosX = new int[]{219, 122, 152, 247, 395, 537, 653, 552};
     public  static int[] playersCardPosY = new int[]{491, 432, 245, 200, 196, 197, 433, 491};
-    public  static int cardRGB = -1;
+    public  static int cardRGB = -1; //d c h s
+    public static String[] cards = new String[] {"2d", "2c", "2h", "2s", "3d", "3c", "3h", "3s", "4d", "4c", "4h", "4s", "5d", "5c", "5h", "5s", "6d", "6c", "6h", "6s", "7d", "7c", "7h", "7s",
+                                                    "8d", "8c", "8h", "8s", "9d", "9c", "9h", "9s", "10d", "10c", "10h", "10s", "jd", "jc", "jh", "js", "qd", "qc", "qh", "qs", "kd", "kc", "kh", "ks", "ad", "ac", "ah", "as"};
+    public static int[] cardPrimes = new int[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191,
+                                                193, 197, 199, 211, 223, 227, 229, 233, 239};
 }
