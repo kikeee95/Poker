@@ -44,6 +44,8 @@ public class Main {
 
 
 
+        Ranges.rangeHelper();
+
         for (; ; ) {
 
             long startTime = System.nanoTime();
@@ -537,9 +539,9 @@ public class Main {
             long endTime = System.nanoTime();
             long timeElapsed = endTime - startTime;
 
-            System.out.println(board.toString());
 
-            System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
+
+            //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
 
         }
