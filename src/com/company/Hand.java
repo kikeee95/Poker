@@ -39,7 +39,7 @@ public class Hand {
 
     private int calculateHandId(Card card1, Card card2){
         int value;
-        value = card1.getValue()*card2.getValue();
+        value = card1.getPrimeValue()*card2.getPrimeValue();
         return value;
     }
 

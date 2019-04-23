@@ -52,6 +52,14 @@ public class Board {
         this.buttonPosition = buttonPosition;
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
     public void addCard(Card card){
 
         boolean exists = false;

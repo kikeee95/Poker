@@ -8,7 +8,7 @@ public class Card {
 
     public Card(String name) {
         for(int i = 0; i < Constants.cardPrimes.length; i++){
-            if(name.equals(Constants.cards[i])){
+            if(name.toLowerCase().equals(Constants.cards[i])){
                 this.name = name;
                 this.value = i;
                 this.primeValue = Constants.cardPrimes[i];

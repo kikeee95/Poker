@@ -44,7 +44,7 @@ public class Main {
 
 
 
-        Ranges.rangeHelper();
+       Ranges.rangeHelper();
 
         for (; ; ) {
 
@@ -425,12 +425,15 @@ public class Main {
                      }
                     tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
                      String cardContainer1 = tesseract.doOCR(screencapturePlayer1Card1);
-                     cardContainer1 = container.replaceAll("\\s+", "").concat(holeCardColor1name);
+
+                     cardContainer1 = cardContainer1.replaceAll("\\s+", "").concat(holeCardColor1name);
+
 
                     String cardContainer2 = tesseract.doOCR(screencapturePlayer1Card2);
-                    cardContainer2 = container.replaceAll("\\s+", "").concat(holeCardColor2name);
+                    cardContainer2 = cardContainer2.replaceAll("\\s+", "").concat(holeCardColor2name);
 
                     player1.setHand(new Hand(new Card(cardContainer1), new Card(cardContainer2)));
+
 
 
                     if(board.getGameState().toLowerCase().equals("preflop")){
@@ -539,6 +542,10 @@ public class Main {
             long endTime = System.nanoTime();
             long timeElapsed = endTime - startTime;
 
+            System.out.println(inRange(board));
+
+
+
 
 
             //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
@@ -547,6 +554,21 @@ public class Main {
         }
 
 
+    }
+
+
+    public  static  boolean inRange(Board board){
+        Player player = board.getPlayers().get(0);
+        boolean inRange = false;
+        System.out.println(player.getHand());
+        System.out.println(player.getHand().getHandId());
+        for(int i = 0; i < Ranges.tightPos9OR.length; i++){
+            if(player.getHand().getHandId() == Ranges.tightPos9OR[i]){
+                inRange = true;
+
+            }
+        }
+        return inRange;
     }
 
     // Aktív játékosokat kereső fv.
