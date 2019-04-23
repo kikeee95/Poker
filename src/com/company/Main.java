@@ -73,6 +73,16 @@ public class Main {
 
                 board.setGameState(gameState(screencapture));
 
+                //ha preflop van minden akció nullázásra kerül, hogy ne maradjon bent semmi érték az előző leosztásból, a sajátunk nem kerül törlésre
+
+                if(board.getGameState().equalsIgnoreCase("preflop")){
+                    for(int i = 0; i < board.getPlayers().size(); i++){
+                        if(i != 0) {
+                            board.getPlayers().get(i).setAction("No action");
+                        }
+                    }
+                }
+
                 //aktív játékosok keresése
 
                 hasCards = hasCardsFunction(Constants.playersCardPosX, Constants.playersCardPosY, hasCards, screencapture);
@@ -262,7 +272,7 @@ public class Main {
                 for (int i = 0; i < 8; i++) {
 
                     if (Constants.buttonRGB == (screencapture.getRGB(Constants.buttonPosX[i], Constants.buttonPosY[i]))) {
-                        board.setButtonPosition(i+1);
+                        board.setButtonPosition(i);
                     }
 
                 }
@@ -552,7 +562,8 @@ public class Main {
             long endTime = System.nanoTime();
             long timeElapsed = endTime - startTime;
 
-            System.out.println(inRange(board));
+
+
             board.setPlayerPositions();
 
 
@@ -560,9 +571,13 @@ public class Main {
             for(int i = 0; i < board.getPlayers().size(); i++){
                 if(board.getPlayers().get(i).getAction().toLowerCase().equals("raise")){
                     raises ++;
+                    System.out.println("Raise position: " + board.getPlayers().get(i).getPosition());
                 }
             }
-            GameLogic.preflopAction(board);
+           GameLogic.preflopAction(board);
+            System.out.println(board.getPlayers().get(0).getPosition());
+            System.out.println(board.getButtonPosition());
+            System.out.println(raises);
             //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
         }

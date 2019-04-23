@@ -78,17 +78,107 @@ public class Board {
     }
 
     public void setPlayerPositions(){
-
-        int playerPos = 0;
-        for(int i = this.buttonPosition; i < this.players.size(); i++){
-
-            this.players.get(i).setPosition(playerPos);
-            playerPos++;
+        if(buttonPosition == 0){
+            this.players.get(0).setPosition(6);
+            this.players.get(1).setPosition(7);
+            this.players.get(2).setPosition(8);
+            this.players.get(3).setPosition(0);
+            this.players.get(4).setPosition(1);
+            this.players.get(5).setPosition(2);
+            this.players.get(6).setPosition(3);
+            this.players.get(7).setPosition(4);
+            this.players.get(8).setPosition(5);
         }
-        for(int i = 0; i < this.buttonPosition; i++){
-            this.players.get(i).setPosition(playerPos);
-            playerPos++;
+        if(buttonPosition == 1){
+            this.players.get(1).setPosition(6);
+            this.players.get(2).setPosition(7);
+            this.players.get(3).setPosition(8);
+            this.players.get(4).setPosition(0);
+            this.players.get(5).setPosition(1);
+            this.players.get(6).setPosition(2);
+            this.players.get(7).setPosition(3);
+            this.players.get(8).setPosition(4);
+            this.players.get(0).setPosition(5);
         }
+        if(buttonPosition == 2){
+            this.players.get(2).setPosition(6);
+            this.players.get(3).setPosition(7);
+            this.players.get(4).setPosition(8);
+            this.players.get(5).setPosition(0);
+            this.players.get(6).setPosition(1);
+            this.players.get(7).setPosition(2);
+            this.players.get(8).setPosition(3);
+            this.players.get(0).setPosition(4);
+            this.players.get(1).setPosition(5);
+        }
+        if(buttonPosition == 3) {
+            this.players.get(3).setPosition(6);
+            this.players.get(4).setPosition(7);
+            this.players.get(5).setPosition(8);
+            this.players.get(6).setPosition(0);
+            this.players.get(7).setPosition(1);
+            this.players.get(8).setPosition(2);
+            this.players.get(0).setPosition(3);
+            this.players.get(1).setPosition(4);
+            this.players.get(2).setPosition(5);
+        }
+        if(buttonPosition == 4) {
+            this.players.get(4).setPosition(6);
+            this.players.get(5).setPosition(7);
+            this.players.get(6).setPosition(8);
+            this.players.get(7).setPosition(0);
+            this.players.get(8).setPosition(1);
+            this.players.get(0).setPosition(2);
+            this.players.get(1).setPosition(3);
+            this.players.get(2).setPosition(4);
+            this.players.get(3).setPosition(5);
+        }
+        if(buttonPosition == 5) {
+            this.players.get(5).setPosition(6);
+            this.players.get(6).setPosition(7);
+            this.players.get(7).setPosition(8);
+            this.players.get(8).setPosition(0);
+            this.players.get(0).setPosition(1);
+            this.players.get(1).setPosition(2);
+            this.players.get(2).setPosition(3);
+            this.players.get(3).setPosition(4);
+            this.players.get(4).setPosition(5);
+        }
+        if(buttonPosition == 6) {
+            this.players.get(6).setPosition(6);
+            this.players.get(7).setPosition(7);
+            this.players.get(8).setPosition(8);
+            this.players.get(0).setPosition(0);
+            this.players.get(1).setPosition(1);
+            this.players.get(2).setPosition(2);
+            this.players.get(3).setPosition(3);
+            this.players.get(4).setPosition(4);
+            this.players.get(5).setPosition(5);
+        }
+        if(buttonPosition == 7) {
+            this.players.get(7).setPosition(6);
+            this.players.get(8).setPosition(7);
+            this.players.get(0).setPosition(8);
+            this.players.get(1).setPosition(0);
+            this.players.get(2).setPosition(1);
+            this.players.get(3).setPosition(2);
+            this.players.get(4).setPosition(3);
+            this.players.get(5).setPosition(4);
+            this.players.get(6).setPosition(5);
+        }
+        if(buttonPosition == 8) {
+            this.players.get(8).setPosition(6);
+            this.players.get(0).setPosition(7);
+            this.players.get(1).setPosition(8);
+            this.players.get(2).setPosition(0);
+            this.players.get(3).setPosition(1);
+            this.players.get(4).setPosition(2);
+            this.players.get(5).setPosition(3);
+            this.players.get(6).setPosition(4);
+            this.players.get(7).setPosition(5);
+        }
+
+
     }
 
     @Override
