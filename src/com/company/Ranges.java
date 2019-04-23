@@ -287,8 +287,24 @@ public  final class Ranges {
 
 
 
+// összes kézkombináció legenerálása prímes és szöveges változatban, átalakításokhoz tároláshoz
 
-
+    public static void allHandsPrimesAndStrings(){
+        String allHandPrimes = "";
+        String allHandStrings = "";
+        int number = 0;
+        for(int i = 0; i < Constants.cardPrimes.length; i++){
+            for(int j = Constants.cardPrimes.length-1; j > i; j--){
+                allHandPrimes = allHandPrimes.concat((Constants.cardPrimes[i] * Constants.cardPrimes[j]) + " , ");
+                allHandStrings = allHandStrings.concat("\"" + Constants.cards[i] + Constants.cards[j] + "\" , ");
+                number++;
+            }
+        }
+        System.out.println(number);
+        System.out.println(allHandPrimes);
+        System.out.println("\n\n");
+        System.out.println(allHandStrings);
+    }
 
 
 

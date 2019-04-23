@@ -46,6 +46,8 @@ public class Main {
 
        //Ranges.rangeHelper();
 
+        Ranges.allHandsPrimesAndStrings();
+
         for (; ; ) {
 
             long startTime = System.nanoTime();
