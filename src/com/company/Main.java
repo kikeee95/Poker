@@ -378,49 +378,59 @@ public class Main {
 
                      String container = tesseract.doOCR(screenCapturePotResized);
                      container = container.replaceAll("[$]", "");
+                    container = container.replaceAll(",", ".");
                      board.setPot(Double.parseDouble(container));
 
                      container = tesseract.doOCR(playerMoney[0]);
                     container = container.replaceAll("[$]", "");
+                    container = container.replaceAll(",", ".");
                     player1.setMoney(Double.parseDouble(container));
                      if(hasCards[0]) {
                          container = tesseract.doOCR(playerMoney[1]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player2.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[1]) {
                          container = tesseract.doOCR(playerMoney[2]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player3.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[2]) {
                          container = tesseract.doOCR(playerMoney[3]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player4.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[3]) {
                          container = tesseract.doOCR(playerMoney[4]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player5.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[4]) {
                          container = tesseract.doOCR(playerMoney[5]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player6.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[5]) {
                          container = tesseract.doOCR(playerMoney[6]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player7.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[6]) {
                          container = tesseract.doOCR(playerMoney[7]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player8.setMoney(Double.parseDouble(container));
                      }
                      if(hasCards[7]) {
                          container = tesseract.doOCR(playerMoney[8]);
                          container = container.replaceAll("[$]", "");
+                         container = container.replaceAll(",", ".");
                          player9.setMoney(Double.parseDouble(container));
                      }
                     tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
@@ -545,17 +555,15 @@ public class Main {
             System.out.println(inRange(board));
             board.setPlayerPositions();
 
+
+            int raises = 0;
             for(int i = 0; i < board.getPlayers().size(); i++){
-                System.out.println(board.getPlayers().get(i).getName() + "  " + board.getPlayers().get(i).getPosition());
-               
+                if(board.getPlayers().get(i).getAction().toLowerCase().equals("raise")){
+                    raises ++;
+                }
             }
-
-
-
-
-
+            GameLogic.preflopAction(board);
             //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
-
 
         }
 

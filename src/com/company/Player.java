@@ -17,6 +17,7 @@ public class Player {
         this.isPlayed = isPlayed;
         this.name = "Default Name";
         this.money = 200;
+        this.action = "No action";
         this.preflopAction = "No action";
         this.flopAction = "No action";
         this.turnAction = "No action";
