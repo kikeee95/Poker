@@ -44,7 +44,7 @@ public class Main {
 
 
 
-       Ranges.rangeHelper();
+       //Ranges.rangeHelper();
 
         for (; ; ) {
 
@@ -543,6 +543,12 @@ public class Main {
             long timeElapsed = endTime - startTime;
 
             System.out.println(inRange(board));
+            board.setPlayerPositions();
+
+            for(int i = 0; i < board.getPlayers().size(); i++){
+                System.out.println(board.getPlayers().get(i).getName() + "  " + board.getPlayers().get(i).getPosition());
+               
+            }
 
 
 

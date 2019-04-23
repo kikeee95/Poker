@@ -77,6 +77,20 @@ public class Board {
         cards.clear();
     }
 
+    public void setPlayerPositions(){
+
+        int playerPos = 0;
+        for(int i = this.buttonPosition; i < this.players.size(); i++){
+
+            this.players.get(i).setPosition(playerPos);
+            playerPos++;
+        }
+        for(int i = 0; i < this.buttonPosition; i++){
+            this.players.get(i).setPosition(playerPos);
+            playerPos++;
+        }
+    }
+
     @Override
     public String toString() {
         return "Board{" +

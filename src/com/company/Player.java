@@ -11,6 +11,7 @@ public class Player {
     private String riverAction;
     private Hand hand;
     private boolean hasCards;
+    private int position;
 
     public Player(boolean isPlayed) {
         this.isPlayed = isPlayed;
@@ -20,6 +21,7 @@ public class Player {
         this.flopAction = "No action";
         this.turnAction = "No action";
         this.riverAction = "No action";
+        this.position = -1;
     }
 
     public String getName() {
@@ -105,6 +107,14 @@ public class Player {
 
     public void setHasCards(boolean hasCards) {
         this.hasCards = hasCards;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override
