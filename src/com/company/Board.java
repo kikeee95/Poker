@@ -8,6 +8,7 @@ public class Board {
     private ArrayList<Player> players = new ArrayList<Player>();
     private double pot;
     private int buttonPosition;
+    private String potType;
 
     public Board(Player player1, Player player2, Player player3, Player player4, Player player5, Player player6, Player player7, Player player8, Player player9) {
         this.players.add(player1);
@@ -179,6 +180,28 @@ public class Board {
         }
 
 
+    }
+
+    public String getPotType() {
+        return potType;
+    }
+
+    public void setPotType() {
+        int raises = 0;
+        if (this.getGameState().equalsIgnoreCase("preflop")) {
+            for (int i = 0; i < this.getPlayers().size(); i++) {
+                if (this.getPlayers().get(i).getAction().toLowerCase().equals("raise")) {
+                    raises++;
+                }
+            }
+            if(raises <= 1){
+                this.potType = "normal";
+            }else if(raises == 2){
+                this.potType = "3bet";
+            }else if(raises >= 3){
+                this.potType = "4bet";
+            }
+        }
     }
 
     @Override

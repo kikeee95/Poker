@@ -45,10 +45,19 @@ public class Player {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(String action, Board board) {
 
         if(action.toLowerCase().equals("fold") || action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check"))  {
             this.action = action.toLowerCase();
+            if(board.getGameState().equalsIgnoreCase("preflop")){
+                this.preflopAction = action.toLowerCase();
+            }else if(board.getGameState().equalsIgnoreCase("flop")){
+                this.flopAction = action.toLowerCase();
+            }else if(board.getGameState().equalsIgnoreCase("turn")){
+                this.turnAction = action.toLowerCase();
+            }else if(board.getGameState().equalsIgnoreCase("river")){
+                this.riverAction = action.toLowerCase();
+            }
         }else{
             this.action = "No action";
         }

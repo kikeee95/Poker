@@ -48,11 +48,11 @@ public final class GameLogic {
                 if (raise) {
                     System.out.println("Raise");
                     board.getPlayers().get(0).setPreflopAction("raise");
-                    board.getPlayers().get(0).setAction("raise");
+                    board.getPlayers().get(0).setAction("raise", board);
                 } else {
                     System.out.println("Fold");
                     board.getPlayers().get(0).setPreflopAction("fold");
-                    board.getPlayers().get(0).setAction("fold");
+                    board.getPlayers().get(0).setAction("fold", board);
                 }
 
                 // ha volt 1 emelés
@@ -88,7 +88,7 @@ public final class GameLogic {
                 if (do3bet) {
                     System.out.println("3Bet");
                     board.getPlayers().get(0).setPreflopAction("raise");
-                    board.getPlayers().get(0).setAction("raise");
+                    board.getPlayers().get(0).setAction("raise", board);
                 } else {
                     // Megnézzük hogy megadhatunk-e
 
@@ -113,11 +113,11 @@ public final class GameLogic {
                     if (call) {
                         System.out.println("Call");
                         board.getPlayers().get(0).setPreflopAction("call");
-                        board.getPlayers().get(0).setAction("call");
+                        board.getPlayers().get(0).setAction("call", board);
                     } else {
                         System.out.println("Fold");
                         board.getPlayers().get(0).setPreflopAction("fold");
-                        board.getPlayers().get(0).setAction("fold");
+                        board.getPlayers().get(0).setAction("fold", board);
                     }
                 }
 
@@ -163,7 +163,7 @@ public final class GameLogic {
                     if (do4bet) {
                         System.out.println("4Bet");
                         board.getPlayers().get(0).setPreflopAction("raise");
-                        board.getPlayers().get(0).setAction("raise");
+                        board.getPlayers().get(0).setAction("raise", board);
                     } else {
                         boolean call = false;
 
@@ -184,11 +184,11 @@ public final class GameLogic {
                         if (call) {
                             System.out.println("Call");
                             board.getPlayers().get(0).setPreflopAction("call");
-                            board.getPlayers().get(0).setAction("call");
+                            board.getPlayers().get(0).setAction("call", board);
                         } else {
                             System.out.println("Fold");
                             board.getPlayers().get(0).setPreflopAction("fold");
-                            board.getPlayers().get(0).setAction("fold");
+                            board.getPlayers().get(0).setAction("fold", board);
                         }
 
                     }
@@ -234,11 +234,11 @@ public final class GameLogic {
                 if (allIn) {
                     System.out.println("All In");
                     board.getPlayers().get(0).setPreflopAction("raise");
-                    board.getPlayers().get(0).setAction("raise");
+                    board.getPlayers().get(0).setAction("raise", board);
                 } else {
                     System.out.println("Fold");
                     board.getPlayers().get(0).setPreflopAction("fold");
-                    board.getPlayers().get(0).setAction("fold");
+                    board.getPlayers().get(0).setAction("fold", board);
                 }
 
             }
