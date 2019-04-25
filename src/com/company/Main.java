@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.Buffer;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,8 +47,39 @@ public class Main {
 
        //Ranges.rangeHelper();
 
-        Ranges.allHandsPrimesAndStrings();
 
+        ArrayList<Card> cards1 = new ArrayList<Card>();
+        ArrayList<Card> cards2 = new ArrayList<Card>();
+        int card1Wins = 0;
+        int card2Wins = 0;
+
+
+        for(int i = 0; i < 1000000; i++){
+            String cards = "";
+
+            Deck deck1 = new Deck();
+            cards1.add(deck1.dealCard());
+            cards1.add(deck1.dealCard());
+            cards1.add(deck1.dealCard());
+            cards1.add(deck1.dealCard());
+            cards1.add(deck1.dealCard());
+
+
+            HandCombination combi = new HandCombination(cards1);
+            for(int j = 0; j < cards1.size(); j++){
+                cards = cards.concat(cards1.get(j).getName() + " ");
+            }
+            if(!combi.getType().equalsIgnoreCase("High Card") && !combi.getType().equalsIgnoreCase("Pair") && !combi.getType().equalsIgnoreCase("Three of a Kind") && !combi.getType().equalsIgnoreCase("Full house") && !combi.getType().equalsIgnoreCase("Flush") && !combi.getType().equalsIgnoreCase("Straight") && !combi.getType().equalsIgnoreCase("Four of a Kind")) {
+                System.out.println(cards);
+                System.out.println(combi.getType());
+
+            }
+            cards1.clear();
+
+
+
+        }
+/*
         for (; ; ) {
 
             long startTime = System.nanoTime();
@@ -332,8 +364,8 @@ public class Main {
                 File file14 = new File("D:/screencapturePlayer6money.png");
                 ImageIO.write(playerMoney[5], "png", file14);
                 File file15 = new File("D:/screencapturePlayer2action.png");
-               // ImageIO.write(screencaptureResizedAction2, "png", file15);
-               // ImageIO.write(screencapturePlayer6Name, "png", file13);
+               ImageIO.write(screencaptureResizedAction2, "png", file15);
+                ImageIO.write(screencapturePlayer6Name, "png", file13);
                 File file16 = new File("D:/screencapturePlayer7name.png");
                 ImageIO.write(playerNames[6], "png", file16);
                 File file17 = new File("D:/screencapturePlayer7money.png");
@@ -347,7 +379,7 @@ public class Main {
                 File file21 = new File("D:/screencapturePlayer9money.png");
                 ImageIO.write(playerMoney[8], "png", file21);
                 File file22 = new File("D:/screencapturePlayer3action.png");
-               /* ImageIO.write(screencapturePlayer3Action, "png", file22);
+                ImageIO.write(screencapturePlayer3Action, "png", file22);
                 File file23 = new File("D:/screencapturePlayer4action.png");
                 ImageIO.write(screencapturePlayer4Action, "png", file23);
                 File file24 = new File("D:/screencapturePlayer5action.png");
@@ -359,7 +391,7 @@ public class Main {
                 File file27 = new File("D:/screencapturePlayer8action.png");
                 ImageIO.write(screencapturePlayer8Action, "png", file27);
                 File file28 = new File("D:/screencapturePlayer9action.png");
-                ImageIO.write(screencapturePlayer9Action, "png", file28);*/
+                ImageIO.write(screencapturePlayer9Action, "png", file28);
                 File file29 = new File("D:/screencaptureCard1.png");
                 ImageIO.write(screencapturePlayer1Card1, "png", file29);
                 File file30 = new File("D:/screencaptureCard2.png");
@@ -576,15 +608,17 @@ public class Main {
                     System.out.println("Raise position: " + board.getPlayers().get(i).getPosition());
                 }
             }
+
            GameLogic.preflopAction(board);
             System.out.println(board.getPlayers().get(0).getPosition());
             System.out.println(board.getButtonPosition());
             System.out.println(raises);
             //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
+
         }
 
-
+*/
     }
 
 

@@ -7,13 +7,18 @@ public class Card {
     private int primeValue;
 
     public Card(String name) {
+        boolean exists = false;
         for(int i = 0; i < Constants.cardPrimes.length; i++){
             if(name.toLowerCase().equals(Constants.cards[i])){
                 this.name = name;
                 this.value = i;
                 this.primeValue = Constants.cardPrimes[i];
                 this.suit = suitDefine(name);
+                exists = true;
             }
+        }
+        if(!exists){
+            System.out.println("Error");
         }
     }
 

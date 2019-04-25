@@ -1,11 +1,13 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Deck {
-    ArrayList<Card> cards;
+    private ArrayList<Card> cards;
 
     public Deck() {
+        cards = new ArrayList<Card>();
         for(int i = 0; i < Constants.cards.length; i++){
             cards.add(new Card(Constants.cards[i]));
         }
@@ -33,6 +35,14 @@ public class Deck {
                 this.cards.remove(i);
             }
         }
+    }
+
+    public Card dealCard(){
+        Random rand = new Random();
+        int i = rand.nextInt(this.cards.size());
+        Card card = this.cards.get(i);
+        this.cards.remove(i);
+        return card;
     }
 }
 

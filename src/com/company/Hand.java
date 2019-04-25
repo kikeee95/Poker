@@ -13,6 +13,16 @@ public class Hand {
         this.handId = calculateHandId(card1, card2);
     }
 
+    public Hand(int handId){
+        for(int i = 0; i < Constants.allHandsId.length; i++){
+            if(handId == Constants.allHandsId[i]){
+                this.handName = Constants.allHandsName[i];
+                this.cards = new Card[] {new Card(this.handName.substring(0,3)), new Card(this.handName.substring(2, 4))};
+                this.handId = handId;
+            }
+        }
+    }
+
     public String getHandName() {
         return handName;
     }
