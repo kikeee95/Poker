@@ -32,15 +32,15 @@ public class Main {
         BufferedImage[] playerNames = new BufferedImage[9];
         BufferedImage[] playerMoney = new BufferedImage[9];
         BufferedImage[] playerAction = new BufferedImage[8];
-        Player player1 = new Player(true);
-        Player player2 = new Player(false);
-        Player player3 = new Player(false);
-        Player player4 = new Player(false);
-        Player player5 = new Player(false);
-        Player player6 = new Player(false);
-        Player player7 = new Player(false);
-        Player player8 = new Player(false);
-        Player player9 = new Player(false);
+        PlayerPlayed player1 = new PlayerPlayed();
+        PlayerAI player2 = new PlayerAI();
+        PlayerAI player3 = new PlayerAI();
+        PlayerAI player4 = new PlayerAI();
+        PlayerAI player5 = new PlayerAI();
+        PlayerAI player6 = new PlayerAI();
+        PlayerAI player7 = new PlayerAI();
+        PlayerAI player8 = new PlayerAI();
+        PlayerAI player9 = new PlayerAI();
         Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
 
 
@@ -578,10 +578,13 @@ public class Main {
 
 
     public static boolean inRange(Board board) {
-        Player player = board.getPlayers().get(0);
+        PlayerPlayed player = new PlayerPlayed();
+        for(int i = 0; i < board.getPlayers().size(); i++){
+            if(board.getPlayers().get(i).getClass() == PlayerPlayed.class){
+                player = (PlayerPlayed)board.getPlayers().get(i);
+            }
+        }
         boolean inRange = false;
-        System.out.println(player.getHand());
-        System.out.println(player.getHand().getHandId());
         for (int i = 0; i < Ranges.tightPos9OR.length; i++) {
             if (player.getHand().getHandId() == Ranges.tightPos9OR[i]) {
                 inRange = true;
