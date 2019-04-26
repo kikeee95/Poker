@@ -9,6 +9,8 @@ public  class HandCombination {
     private int combinationStrength;
     private String type;
 
+
+
     public HandCombination(ArrayList<Card> cards) {
         if (cards.size() == 5) {
             this.Cards = cards;
@@ -100,11 +102,6 @@ public  class HandCombination {
 
         }
 
-
-
-
-
-
         boolean royalFlush = false;
         boolean straightFlush = false;
         boolean fourOfAKind = false;
@@ -131,7 +128,7 @@ public  class HandCombination {
         if (royalflushFlushHelper && royalstraightHelper) {
             royalFlush = true;
             this.type = "Royal Flush";
-            this.combinationStrength = 1000000;
+            this.combinationStrength = 10000000;
         }
 
         //straightflush
@@ -168,7 +165,7 @@ public  class HandCombination {
             if (flushHelper && straightHelper) {
                 straightFlush = true;
                 this.type = "Straight Flush";
-                this.combinationStrength = (950000 + straigthend);
+                this.combinationStrength = (9500000 + straigthend);
             }
 
 
@@ -184,7 +181,7 @@ public  class HandCombination {
                 }
             }
             if (fourOfAKind) {
-                this.combinationStrength = 900000 + fourOfAKindStrength;
+                this.combinationStrength = 9000000 + fourOfAKindStrength;
             }
             // full house
         }
@@ -208,7 +205,7 @@ public  class HandCombination {
             if (cards2 && cards3) {
                 fullHouse = true;
                 this.type = "Full House";
-                this.combinationStrength = 800000 + (drillStrength * 100) + (pairStrength * 1);
+                this.combinationStrength = 8000000 + (drillStrength * 100) + (pairStrength * 1);
             }
             //flush
         }
@@ -227,7 +224,7 @@ public  class HandCombination {
                 }
             }
             if (flush) {
-                flushStrength = 700000 + flushStrength;
+                flushStrength = 7000000 + flushStrength;
             }
             //Straight
         }
@@ -245,7 +242,7 @@ public  class HandCombination {
                     straight = true;
                     this.type = "Straight";
                     straightStrength = i;
-                    this.combinationStrength = 600000 + straightStrength;
+                    this.combinationStrength = 6000000 + straightStrength;
                 }
             }
 
@@ -253,7 +250,7 @@ public  class HandCombination {
             if (ranks[12] == 1 && ranks[0] == 1 && ranks[1] == 1 && ranks[2] == 1 && ranks[3] == 1) {
                 straight = true;
                 this.type = "Straight";
-                this.combinationStrength = 600000 + 3;
+                this.combinationStrength = 6000000 + 3;
             }
             //Three of a Kind
         }
@@ -278,7 +275,7 @@ public  class HandCombination {
                         }
                     }
                 }
-                this.combinationStrength = 500000 + (kicker2 * 100) + (kicker1);
+                this.combinationStrength = 5000000 + (kicker2 * 100) + (kicker1);
             }
 
             //Two pair && pair
@@ -319,18 +316,68 @@ public  class HandCombination {
             if (pairs == 2) {
                 twoPair = true;
                 this.type = "Two Pair";
-                this.combinationStrength = 400000 + (higherPair * 500) + (smallerPair * 50 ) + kicker1;
+                this.combinationStrength = 4000000 + (higherPair * 5000) + (smallerPair * 500 ) + kicker1;
 
             }
             if (pairs == 1) {
                 pair = true;
                 this.type = "Pair";
-                this.combinationStrength = 300000 + (smallerPair * 500) + (kicker3 * 100) + (kicker2 * 15) + kicker1;
+                this.combinationStrength = 3000000 + (smallerPair * 5000) + (kicker3 * 100) + (kicker2 * 15) + kicker1;
             } else {
                 highcard = true;
                 this.type = "High Card";
                 this.combinationStrength = 10 + (kicker5 * 24000) + (kicker4 * 2000) + (kicker3 * 166) + (kicker2*13) + kicker1;
             }
         }
+    }
+
+    public static int sevenCardEvaluator(Hand hand, ArrayList<Card> boardCards){
+
+        int cardCount = 5;
+        int combinationStrenght = 0;
+        int temp;
+
+        //Brute force megközelítés, végignézzük az összes lehetséges 7 lapos kombinációt és visszaadjuk a legerősebbet
+
+        ArrayList<Card> combinations = new ArrayList<>();
+        ArrayList<Card> combination = new ArrayList<>();
+        ArrayList<Card> excluded = new ArrayList<>();
+
+        for(int i = 0; i < hand.getCards().length; i++){
+            combinations.add(hand.getCards()[i]);
+        }
+
+        for(int i = 0; i < boardCards.size(); i++){
+            combinations.add(boardCards.get(i));
+        }
+
+        //7ből úgy tudunk 5 lapot kiválasztani, hogy kettőt mindig kihagyunk, 21 féle képpen választhatunk ki 2 lapot amit kihagyunk, ezt 2 ciklussal lehet kiválogatni
+
+        for(int i = 0; i < combinations.size() - 1; i++){
+            for(int j = i + 1; j < combinations.size(); j++){
+                excluded.add(combinations.get(i));
+                excluded.add(combinations.get(j));
+
+                //kombináció létrehozása és kiértékelése a két kimaradó  lap nélkül
+                if(excluded.size() == 2){
+                   combination.addAll(combinations);
+
+                   for(int k = 0; k < excluded.size(); k++){
+                       combination.remove(excluded.get(k));
+                   }
+                   excluded.clear();
+                }
+                temp = new HandCombination(combination).getCombinationStrength();
+                
+                if(temp >= combinationStrenght){
+                    combinationStrenght = temp;
+                }
+
+
+                combination.clear();
+
+            }
+        }
+        return combinationStrenght;
     }
 }

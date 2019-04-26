@@ -44,7 +44,17 @@ public class Main {
         Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
 
 
-        Ranges.rangeHelper();
+        Hand hand = new Hand(new Card("kh"), new Card("jh"));
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card("ac"));
+        cards.add(new Card("2d"));
+        cards.add(new Card("8c"));
+        cards.add(new Card("7h"));
+        cards.add(new Card("kd"));
+
+        HandCombination combi = new HandCombination(cards);
+
+        combi.sevenCardEvaluator(hand, cards);
 
 
         for (; ; ) {
