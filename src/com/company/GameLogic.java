@@ -6,11 +6,12 @@ public final class GameLogic {
 
 
     public static void preflopAction(Board board) {
+        PlayerPlayed player = (PlayerPlayed)board.getPlayers().get(0);
 
         // saját kártyáink értéke
         int holeCardValue = -1;
-        if (board.getPlayers().get(0).getHand() != null) {
-            holeCardValue = board.getPlayers().get(0).getHand().getHandId();
+        if (player.getHand() != null) {
+            holeCardValue = player.getHand().getHandId();
         }
         int raises = 0;
 

@@ -1,29 +1,16 @@
 package com.company;
 
-public class Player {
-    private String name;
-    private double money;
-    private String action;
-    private boolean isPlayed;
-    private String preflopAction;
-    private String flopAction;
-    private String turnAction;
-    private String riverAction;
-    private Hand hand;
-    private boolean hasCards;
-    private int position;
+public abstract class Player {
+    protected String name;
+    protected double money;
+    protected String action;
+    protected String preflopAction;
+    protected String flopAction;
+    protected String turnAction;
+    protected String riverAction;
+    protected int position;
+    protected boolean hasCards;
 
-    public Player(boolean isPlayed) {
-        this.isPlayed = isPlayed;
-        this.name = "Default Name";
-        this.money = 200;
-        this.action = "No action";
-        this.preflopAction = "No action";
-        this.flopAction = "No action";
-        this.turnAction = "No action";
-        this.riverAction = "No action";
-        this.position = -1;
-    }
 
     public String getName() {
         return name;
@@ -63,52 +50,39 @@ public class Player {
         }
     }
 
-    public boolean isPlayed() {
-        return isPlayed;
-    }
-
-    public void setPlayed(boolean played) {
-        isPlayed = played;
-    }
-
     public String getPreflopAction() {
         return preflopAction;
+    }
+
+
+    public String getFlopAction() {
+        return flopAction;
+    }
+
+
+    public String getTurnAction() {
+        return turnAction;
+    }
+
+
+    public String getRiverAction() {
+        return riverAction;
     }
 
     public void setPreflopAction(String preflopAction) {
         this.preflopAction = preflopAction;
     }
 
-    public String getFlopAction() {
-        return flopAction;
-    }
-
     public void setFlopAction(String flopAction) {
         this.flopAction = flopAction;
-    }
-
-    public String getTurnAction() {
-        return turnAction;
     }
 
     public void setTurnAction(String turnAction) {
         this.turnAction = turnAction;
     }
 
-    public String getRiverAction() {
-        return riverAction;
-    }
-
     public void setRiverAction(String riverAction) {
         this.riverAction = riverAction;
-    }
-
-    public Hand getHand() {
-        return hand;
-    }
-
-    public void setHand(Hand hand) {
-        this.hand = hand;
     }
 
     public boolean isHasCards() {
@@ -127,17 +101,5 @@ public class Player {
         this.position = position;
     }
 
-    @Override
-    public String toString() {
-        if (this.hasCards) {
-            return "Player{" +
-                    "name='" + name + '\'' + "\n" +
-                    ", money=" + money + "\n" +
-                    ", action='" + action + '\'' + "\n" +
-                    ", hand=" + hand + "\n" +
-                    '}';
-        }else{
-            return "";
-        }
-    }
+
 }

@@ -44,7 +44,7 @@ public class Main {
         Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
 
 
-        //Ranges.rangeHelper();
+        Ranges.rangeHelper();
 
 
         for (; ; ) {
@@ -562,12 +562,18 @@ public class Main {
 
 
             board.setPlayerPositions();
+            board.setPotType();
 
 
 
             GameLogic.preflopAction(board);
             System.out.println(board.getPlayers().get(0).getPosition());
             System.out.println(board.getButtonPosition());
+            System.out.println(board.getPotType());
+            for(int i = 0; i < board.getPlayers().size(); i++){
+                System.out.println(board.getPlayers().get(i).name);
+                System.out.println(board.getPlayers().get(i).money);
+            }
             //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
 
