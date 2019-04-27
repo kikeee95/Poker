@@ -53,6 +53,7 @@ public class Main {
         cards.add(new Card("kd"));
 
         HandCombination combi = new HandCombination(cards);
+        Ranges.rangeHelper();
 
         combi.sevenCardEvaluator(hand, cards);
 

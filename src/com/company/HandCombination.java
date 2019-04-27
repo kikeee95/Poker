@@ -368,7 +368,7 @@ public  class HandCombination {
                    excluded.clear();
                 }
                 temp = new HandCombination(combination).getCombinationStrength();
-                
+
                 if(temp >= combinationStrenght){
                     combinationStrenght = temp;
                 }
