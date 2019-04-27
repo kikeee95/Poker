@@ -52,10 +52,13 @@ public class Main {
         cards.add(new Card("7h"));
         cards.add(new Card("kd"));
 
-        HandCombination combi = new HandCombination(cards);
-        Ranges.rangeHelper();
+        HandCombination combi = new HandCombination(hand, cards);
 
-        combi.sevenCardEvaluator(hand, cards);
+        for(int i = 0; i < combi.getCards().size(); i++){
+            System.out.println(combi.getCards().get(i).getName() + "  ");
+        }
+
+
 
 
         for (; ; ) {

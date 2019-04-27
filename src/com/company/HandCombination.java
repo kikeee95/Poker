@@ -24,6 +24,10 @@ public  class HandCombination {
 
     }
 
+    public HandCombination(Hand hand, ArrayList<Card> cards) {
+       this(sevenCardEvaluator(hand, cards));
+    }
+
     public String getName() {
         return name;
     }
@@ -331,7 +335,7 @@ public  class HandCombination {
         }
     }
 
-    public static int sevenCardEvaluator(Hand hand, ArrayList<Card> boardCards){
+    private static ArrayList<Card> sevenCardEvaluator(Hand hand, ArrayList<Card> boardCards){
 
         int cardCount = 5;
         int combinationStrenght = 0;
@@ -353,6 +357,8 @@ public  class HandCombination {
 
         //7ből úgy tudunk 5 lapot kiválasztani, hogy kettőt mindig kihagyunk, 21 féle képpen választhatunk ki 2 lapot amit kihagyunk, ezt 2 ciklussal lehet kiválogatni
 
+        ArrayList<Card> container = new ArrayList<Card>();
+
         for(int i = 0; i < combinations.size() - 1; i++){
             for(int j = i + 1; j < combinations.size(); j++){
                 excluded.add(combinations.get(i));
@@ -371,6 +377,8 @@ public  class HandCombination {
 
                 if(temp >= combinationStrenght){
                     combinationStrenght = temp;
+                    container.clear();
+                    container.addAll(combination);
                 }
 
 
@@ -378,6 +386,6 @@ public  class HandCombination {
 
             }
         }
-        return combinationStrenght;
+        return container;
     }
 }
