@@ -54,8 +54,10 @@ public class Main {
 
         HandCombination combi = new HandCombination(hand, cards);
 
-        for(int i = 0; i < combi.getCards().size(); i++){
-            System.out.println(combi.getCards().get(i).getName() + "  ");
+        player4.setRange(Ranges.standard4Bet);
+
+        for(int i = 0; i < player4.getRange().size(); i++){
+            System.out.println(player4.getRange().get(i).getHandName());
         }
 
 

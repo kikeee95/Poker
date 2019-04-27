@@ -37,7 +37,7 @@ public class PlayerAI extends  Player {
 
     public void setRange(int[] range) {
         for(int i = 0; i < range.length; i++){
-            this.range.add(new Hand(i));
+            this.range.add(new Hand(range[i]));
         }
     }
 

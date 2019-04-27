@@ -7,6 +7,7 @@ public class Card {
     private int primeValue;
 
     public Card(String name) {
+        name = name.replace("10","t");
         boolean exists = false;
         for(int i = 0; i < Constants.cardPrimes.length; i++){
             if(name.toLowerCase().equals(Constants.cards[i])){
@@ -19,6 +20,7 @@ public class Card {
         }
         if(!exists){
             System.out.println("Error");
+            System.out.println(name);
         }
     }
 

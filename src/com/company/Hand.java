@@ -17,7 +17,8 @@ public class Hand {
         for(int i = 0; i < Constants.allHandsId.length; i++){
             if(handId == Constants.allHandsId[i]){
                 this.handName = Constants.allHandsName[i];
-                this.cards = new Card[] {new Card(this.handName.substring(0,3)), new Card(this.handName.substring(2, 4))};
+                this.cards = new Card[] {new Card(this.handName.substring(0,2)), new Card(this.handName.substring(2, 4))};
+                System.out.println("Első fele: " + this.handName.substring(0,2) + "Második fele: " + this.handName.substring(2,4));
                 this.handId = handId;
             }
         }
