@@ -74,9 +74,6 @@ public class Main {
             board.setPotType();
             board.setPlayerActions();
             board.setBoardType();
-            GameLogic.start(board);
-
-
             // GameLogic.flopAction(board);
 
         }

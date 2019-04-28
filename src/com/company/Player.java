@@ -34,7 +34,8 @@ public abstract class Player {
 
     public void setAction(String action, Board board) {
 
-        if (action.toLowerCase().equals("fold") || action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check")) {
+            //Ha fold azzal nem foglalkozunk, onnantól a játékosnak nincs már szerepe
+        if (action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check")) {
             this.action = action.toLowerCase();
             if (board.getGameState().equalsIgnoreCase("preflop")) {
                 this.preflopAction = action.toLowerCase();
@@ -45,8 +46,6 @@ public abstract class Player {
             } else if (board.getGameState().equalsIgnoreCase("river")) {
                 this.riverAction = action.toLowerCase();
             }
-        } else {
-            this.action = "No action";
         }
     }
 

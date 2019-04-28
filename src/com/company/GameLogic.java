@@ -27,6 +27,15 @@ public final class GameLogic {
 
         if (holeCardValue > 0) {
 
+            if(!player.isCanRaise()){
+                for(int i = 0; i < Ranges.Vs4BetEarlyAllIn.length; i++) {
+                    if(holeCardValue == Ranges.Vs4BetEarlyAllIn[i]){
+                        System.out.println("Call all in");
+                        board.getPlayers().get(0).setPreflopAction("call");
+                    }
+                }
+            }
+
 
             //emelések száma előttünk
             for (int i = 0; i < board.getPlayers().size(); i++) {
@@ -271,7 +280,6 @@ public final class GameLogic {
         }
 
         for (int i = 0; i < opponents.size(); i++) {
-
             if (opponents.get(i).getPlayerType().equalsIgnoreCase("fish")) {
                 opponents.get(i).setRange(Ranges.fish);
             } else if (board.getPotType().equalsIgnoreCase("normal")) {

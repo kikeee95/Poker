@@ -21,13 +21,13 @@ public final class ScreenReader {
         BufferedImage[] playerMoney = new BufferedImage[9];
         BufferedImage[] playerAction = new BufferedImage[8];
 
-        Rectangle rect = findWindow();
 
 
         long startTime = System.nanoTime();
 
 
         //Poker Genius ablakának megtalálása
+        Rectangle rect = findWindow();
 
 
         // screenshot az egész asztalról
@@ -35,7 +35,7 @@ public final class ScreenReader {
                 new Rectangle(rect));
 
         if (isActive(screencapture)) {
-
+            canRaise(screencapture, board);
 
             boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
             //játék állapotának lekérdezése
@@ -371,6 +371,7 @@ public final class ScreenReader {
             container = tesseract.doOCR(playerMoney[0]);
             container = container.replaceAll("[$]", "");
             container = container.replaceAll(",", ".");
+           /*
             board.getPlayers().get(0).setMoney(Double.parseDouble(container));
             if (hasCards[0]) {
                 container = tesseract.doOCR(playerMoney[1]);
@@ -420,6 +421,7 @@ public final class ScreenReader {
                 container = container.replaceAll(",", ".");
                 board.getPlayers().get(8).setMoney(Double.parseDouble(container));
             }
+            */
             tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
             String cardContainer1 = tesseract.doOCR(screencapturePlayer1Card1);
 
@@ -530,6 +532,7 @@ public final class ScreenReader {
                 containerArray = container.split(" ");
                 board.getPlayers().get(8).setAction(containerArray[0].replaceAll("\\s+", ""), board);
             }
+            GameLogic.start(board);
         }
         long endTime = System.nanoTime();
         long timeElapsed = endTime - startTime;
@@ -546,6 +549,15 @@ public final class ScreenReader {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private static void canRaise(BufferedImage screenCapture, Board board) {
+        PlayerPlayed player = (PlayerPlayed)board.getPlayers().get(0);
+        if (screenCapture.getRGB(Constants.playerButton3PosX, Constants.playerButtonsPosY + 13) == -29152) {
+            player.setCanRaise(true);
+        } else {
+            player.setCanRaise(false);
         }
     }
 

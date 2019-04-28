@@ -10,6 +10,7 @@ public class PlayerPlayed extends Player {
     private String availableAction;
     private double amountToCall;
     private double potOdds;
+    private boolean canRaise;
 
 
     public PlayerPlayed() {
@@ -26,10 +27,18 @@ public class PlayerPlayed extends Player {
         this.availableAction = "check";
         this.amountToCall = 0;
         this.potOdds = 0;
+        this.canRaise = true;
 
 
     }
 
+    public boolean isCanRaise() {
+        return canRaise;
+    }
+
+    public void setCanRaise(boolean canRaise) {
+        this.canRaise = canRaise;
+    }
 
     public double getPotOdds() {
         return potOdds;
