@@ -2,13 +2,12 @@ package com.company;
 
 import java.util.ArrayList;
 
-public  class HandCombination {
+public class HandCombination {
     private String name;
     private ArrayList<Card> Cards;
     private int combinationId;
     private int combinationStrength;
     private String type;
-
 
 
     public HandCombination(ArrayList<Card> cards) {
@@ -26,7 +25,7 @@ public  class HandCombination {
     }
 
     public HandCombination(Hand hand, ArrayList<Card> cards) {
-       this(sevenCardEvaluator(hand, cards));
+        this(sevenCardEvaluator(hand, cards));
     }
 
     public String getName() {
@@ -303,16 +302,16 @@ public  class HandCombination {
                         higherPair = i;
                     }
                 }
-                if(ranks[i] == 1){
-                    if(kicker1 == 0){
+                if (ranks[i] == 1) {
+                    if (kicker1 == 0) {
                         kicker1 = i;
-                    }else if(kicker2 == 0){
+                    } else if (kicker2 == 0) {
                         kicker2 = i;
-                    }else if(kicker3 == 0){
+                    } else if (kicker3 == 0) {
                         kicker3 = i;
-                    }else if(kicker4 == 0){
+                    } else if (kicker4 == 0) {
                         kicker4 = i;
-                    }else if(kicker5 == 0){
+                    } else if (kicker5 == 0) {
                         kicker5 = i;
                     }
                 }
@@ -321,7 +320,7 @@ public  class HandCombination {
             if (pairs == 2) {
                 twoPair = true;
                 this.type = "Two Pair";
-                this.combinationStrength = 4000000 + (higherPair * 5000) + (smallerPair * 500 ) + kicker1;
+                this.combinationStrength = 4000000 + (higherPair * 5000) + (smallerPair * 500) + kicker1;
 
             }
             if (pairs == 1) {
@@ -331,12 +330,12 @@ public  class HandCombination {
             } else {
                 highcard = true;
                 this.type = "High Card";
-                this.combinationStrength = 10 + (kicker5 * 24000) + (kicker4 * 2000) + (kicker3 * 166) + (kicker2*13) + kicker1;
+                this.combinationStrength = 10 + (kicker5 * 24000) + (kicker4 * 2000) + (kicker3 * 166) + (kicker2 * 13) + kicker1;
             }
         }
     }
 
-    private static ArrayList<Card> sevenCardEvaluator(Hand hand, ArrayList<Card> boardCards){
+    private static ArrayList<Card> sevenCardEvaluator(Hand hand, ArrayList<Card> boardCards) {
 
         int cardCount = 5;
         int combinationStrenght = 0;
@@ -348,11 +347,11 @@ public  class HandCombination {
         ArrayList<Card> combination = new ArrayList<>();
         ArrayList<Card> excluded = new ArrayList<>();
 
-        for(int i = 0; i < hand.getCards().length; i++){
+        for (int i = 0; i < hand.getCards().length; i++) {
             combinations.add(hand.getCards()[i]);
         }
 
-        for(int i = 0; i < boardCards.size(); i++){
+        for (int i = 0; i < boardCards.size(); i++) {
             combinations.add(boardCards.get(i));
         }
 
@@ -360,23 +359,23 @@ public  class HandCombination {
 
         ArrayList<Card> container = new ArrayList<Card>();
 
-        for(int i = 0; i < combinations.size() - 1; i++){
-            for(int j = i + 1; j < combinations.size(); j++){
+        for (int i = 0; i < combinations.size() - 1; i++) {
+            for (int j = i + 1; j < combinations.size(); j++) {
                 excluded.add(combinations.get(i));
                 excluded.add(combinations.get(j));
 
                 //kombináció létrehozása és kiértékelése a két kimaradó  lap nélkül
-                if(excluded.size() == 2){
-                   combination.addAll(combinations);
+                if (excluded.size() == 2) {
+                    combination.addAll(combinations);
 
-                   for(int k = 0; k < excluded.size(); k++){
-                       combination.remove(excluded.get(k));
-                   }
-                   excluded.clear();
+                    for (int k = 0; k < excluded.size(); k++) {
+                        combination.remove(excluded.get(k));
+                    }
+                    excluded.clear();
                 }
                 temp = new HandCombination(combination).getCombinationStrength();
 
-                if(temp >= combinationStrenght){
+                if (temp >= combinationStrenght) {
                     combinationStrenght = temp;
                     container.clear();
                     container.addAll(combination);

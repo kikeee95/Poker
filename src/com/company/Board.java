@@ -62,25 +62,25 @@ public class Board {
         this.players = players;
     }
 
-    public void addCard(Card card){
+    public void addCard(Card card) {
 
         boolean exists = false;
-            for(int i = 0; i < this.cards.size(); i++){
-                if(card.getPrimeValue() == cards.get(i).getPrimeValue()){
-                    exists = true;
-                }
+        for (int i = 0; i < this.cards.size(); i++) {
+            if (card.getPrimeValue() == cards.get(i).getPrimeValue()) {
+                exists = true;
             }
-        if(exists == false){
+        }
+        if (exists == false) {
             cards.add(card);
         }
     }
 
-    public void removeCards(){
+    public void removeCards() {
         cards.clear();
     }
 
-    public void setPlayerPositions(){
-        if(buttonPosition == 0){
+    public void setPlayerPositions() {
+        if (buttonPosition == 0) {
             this.players.get(0).setPosition(6);
             this.players.get(1).setPosition(7);
             this.players.get(2).setPosition(8);
@@ -91,7 +91,7 @@ public class Board {
             this.players.get(7).setPosition(4);
             this.players.get(8).setPosition(5);
         }
-        if(buttonPosition == 1){
+        if (buttonPosition == 1) {
             this.players.get(1).setPosition(6);
             this.players.get(2).setPosition(7);
             this.players.get(3).setPosition(8);
@@ -102,7 +102,7 @@ public class Board {
             this.players.get(8).setPosition(4);
             this.players.get(0).setPosition(5);
         }
-        if(buttonPosition == 2){
+        if (buttonPosition == 2) {
             this.players.get(2).setPosition(6);
             this.players.get(3).setPosition(7);
             this.players.get(4).setPosition(8);
@@ -113,7 +113,7 @@ public class Board {
             this.players.get(0).setPosition(4);
             this.players.get(1).setPosition(5);
         }
-        if(buttonPosition == 3) {
+        if (buttonPosition == 3) {
             this.players.get(3).setPosition(6);
             this.players.get(4).setPosition(7);
             this.players.get(5).setPosition(8);
@@ -124,7 +124,7 @@ public class Board {
             this.players.get(1).setPosition(4);
             this.players.get(2).setPosition(5);
         }
-        if(buttonPosition == 4) {
+        if (buttonPosition == 4) {
             this.players.get(4).setPosition(6);
             this.players.get(5).setPosition(7);
             this.players.get(6).setPosition(8);
@@ -135,7 +135,7 @@ public class Board {
             this.players.get(2).setPosition(4);
             this.players.get(3).setPosition(5);
         }
-        if(buttonPosition == 5) {
+        if (buttonPosition == 5) {
             this.players.get(5).setPosition(6);
             this.players.get(6).setPosition(7);
             this.players.get(7).setPosition(8);
@@ -146,7 +146,7 @@ public class Board {
             this.players.get(3).setPosition(4);
             this.players.get(4).setPosition(5);
         }
-        if(buttonPosition == 6) {
+        if (buttonPosition == 6) {
             this.players.get(6).setPosition(6);
             this.players.get(7).setPosition(7);
             this.players.get(8).setPosition(8);
@@ -157,7 +157,7 @@ public class Board {
             this.players.get(4).setPosition(4);
             this.players.get(5).setPosition(5);
         }
-        if(buttonPosition == 7) {
+        if (buttonPosition == 7) {
             this.players.get(7).setPosition(6);
             this.players.get(8).setPosition(7);
             this.players.get(0).setPosition(8);
@@ -168,7 +168,7 @@ public class Board {
             this.players.get(5).setPosition(4);
             this.players.get(6).setPosition(5);
         }
-        if(buttonPosition == 8) {
+        if (buttonPosition == 8) {
             this.players.get(8).setPosition(6);
             this.players.get(0).setPosition(7);
             this.players.get(1).setPosition(8);
@@ -187,10 +187,10 @@ public class Board {
         return potType;
     }
 
-    public void setPlayerActions(){
-        if(this.getGameState().equalsIgnoreCase("flop")){
-            for(int i = 0; i < this.getPlayers().size(); i++){
-                if(players.get(i).getPreflopAction().equalsIgnoreCase("No action")) {
+    public void setPlayerActions() {
+        if (this.getGameState().equalsIgnoreCase("flop")) {
+            for (int i = 0; i < this.getPlayers().size(); i++) {
+                if (players.get(i).getPreflopAction().equalsIgnoreCase("No action")) {
                     this.getPlayers().get(i).setPreflopAction("call");
                 }
             }
@@ -205,11 +205,11 @@ public class Board {
                     raises++;
                 }
             }
-            if(raises <= 1){
+            if (raises <= 1) {
                 this.potType = "normal";
-            }else if(raises == 2){
+            } else if (raises == 2) {
                 this.potType = "3bet";
-            }else if(raises >= 3){
+            } else if (raises >= 3) {
                 this.potType = "4bet";
             }
         }

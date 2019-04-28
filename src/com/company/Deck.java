@@ -8,7 +8,7 @@ public class Deck {
 
     public Deck() {
         cards = new ArrayList<Card>();
-        for(int i = 0; i < Constants.cards.length; i++){
+        for (int i = 0; i < Constants.cards.length; i++) {
             cards.add(new Card(Constants.cards[i]));
         }
     }
@@ -21,23 +21,23 @@ public class Deck {
         this.cards = cards;
     }
 
-    public void removeCardByname(String name){
-        for(int i = this.cards.size()-1; i >= 0; i--){
-            if(this.cards.get(i).getName() == name){
+    public void removeCardByname(String name) {
+        for (int i = this.cards.size() - 1; i >= 0; i--) {
+            if (this.cards.get(i).getName() == name) {
                 this.cards.remove(i);
             }
         }
     }
 
-    public void removeCardById(int id){
-        for(int i = this.cards.size()-1; i >= 0; i--){
-            if(this.cards.get(i).getPrimeValue() == id){
+    public void removeCardById(int id) {
+        for (int i = this.cards.size() - 1; i >= 0; i--) {
+            if (this.cards.get(i).getPrimeValue() == id) {
                 this.cards.remove(i);
             }
         }
     }
 
-    public Card dealCard(){
+    public Card dealCard() {
         Random rand = new Random();
         int i = rand.nextInt(this.cards.size());
         Card card = this.cards.get(i);

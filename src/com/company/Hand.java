@@ -8,16 +8,16 @@ public class Hand {
     private int handId;
 
     public Hand(Card card1, Card card2) {
-        this.handName = card1.getName()+card2.getName();
-        this.cards = new Card[] {card1, card2};
+        this.handName = card1.getName() + card2.getName();
+        this.cards = new Card[]{card1, card2};
         this.handId = calculateHandId(card1, card2);
     }
 
-    public Hand(int handId){
-        for(int i = 0; i < Constants.allHandsId.length; i++){
-            if(handId == Constants.allHandsId[i]){
+    public Hand(int handId) {
+        for (int i = 0; i < Constants.allHandsId.length; i++) {
+            if (handId == Constants.allHandsId[i]) {
                 this.handName = Constants.allHandsName[i];
-                this.cards = new Card[] {new Card(this.handName.substring(0,2)), new Card(this.handName.substring(2, 4))};
+                this.cards = new Card[]{new Card(this.handName.substring(0, 2)), new Card(this.handName.substring(2, 4))};
                 this.handId = handId;
             }
         }
@@ -47,9 +47,9 @@ public class Hand {
         this.handId = handId;
     }
 
-    private int calculateHandId(Card card1, Card card2){
+    private int calculateHandId(Card card1, Card card2) {
         int value;
-        value = card1.getPrimeValue()*card2.getPrimeValue();
+        value = card1.getPrimeValue() * card2.getPrimeValue();
         return value;
     }
 

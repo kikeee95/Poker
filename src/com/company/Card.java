@@ -7,10 +7,10 @@ public class Card {
     private int primeValue;
 
     public Card(String name) {
-        name = name.replace("10","t");
+        name = name.replace("10", "t");
         boolean exists = false;
-        for(int i = 0; i < Constants.cardPrimes.length; i++){
-            if(name.toLowerCase().equals(Constants.cards[i])){
+        for (int i = 0; i < Constants.cardPrimes.length; i++) {
+            if (name.toLowerCase().equals(Constants.cards[i])) {
                 this.name = name;
                 this.value = i;
                 this.primeValue = Constants.cardPrimes[i];
@@ -18,7 +18,7 @@ public class Card {
                 exists = true;
             }
         }
-        if(!exists){
+        if (!exists) {
             System.out.println("Error");
             System.out.println(name);
         }
@@ -56,16 +56,16 @@ public class Card {
         this.primeValue = primeValue;
     }
 
-    private String suitDefine(String name){
-        if('h' == name.charAt(1)){
+    private String suitDefine(String name) {
+        if ('h' == name.charAt(1)) {
             return "Hearts";
-        }else if('s' == name.charAt(1)){
+        } else if ('s' == name.charAt(1)) {
             return "Spades";
-        }else if('d' == name.charAt(1)){
+        } else if ('d' == name.charAt(1)) {
             return "Diamonds";
-        }else if('c' == name.charAt(1)){
+        } else if ('c' == name.charAt(1)) {
             return "Spades";
-        }else{
+        } else {
             return "Invalid Suit";
         }
     }

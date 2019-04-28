@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class PlayerAI extends  Player {
+public class PlayerAI extends Player {
 
     private ArrayList<Hand> range;
     private int vpip;
@@ -29,15 +29,13 @@ public class PlayerAI extends  Player {
     }
 
 
-
-
     public ArrayList<Hand> getRange() {
         return range;
     }
 
     public void setRange(int[] range) {
         this.range.clear();
-        for(int i = 0; i < range.length; i++){
+        for (int i = 0; i < range.length; i++) {
             this.range.add(new Hand(range[i]));
         }
     }

@@ -75,12 +75,16 @@ public class PlayerPlayed extends Player {
             int wins = 0;
             int hands = 0;
 
+            long timerStart = System.nanoTime();
             for(int i = 0; i < 25000; i++){
                 if(equityInnerCalculation(opponent, cards)){
                     wins++;
                 }
                 hands++;
             }
+            long timerEnd = System.nanoTime();
+        System.out.println((timerEnd-timerStart)/1000000);
+
 
             double equity = (double) wins / hands;
             this.equity = equity;
