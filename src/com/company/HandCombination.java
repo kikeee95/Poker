@@ -20,6 +20,7 @@ public  class HandCombination {
 
         } else {
             System.out.println("Invalid hand combination");
+            System.out.println(cards.size());
         }
 
     }
