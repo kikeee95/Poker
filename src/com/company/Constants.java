@@ -37,7 +37,7 @@ public final class Constants {
     public  static  int playerButton1PosX = 159;
     public  static int playerButton2PosX = 343;
     public  static int playerButton3PosX = 527;
-    public  static int buttonWidth = 100;
+    public  static int buttonWidth = 130;
     public  static int buttonHeigth = 20;
     public  static int cardColor = -16777216;
     public  static int[] playersCardPosX = new int[]{219, 122, 152, 247, 395, 537, 653, 552};

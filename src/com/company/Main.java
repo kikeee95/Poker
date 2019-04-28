@@ -60,11 +60,11 @@ public class Main {
         opponents.add(player2);
         opponents.add(player3);
 
-        System.out.println(player1.equity(opponents, cards));
 
 
 
-        /*for (; ; ) {
+
+        for (; ; ) {
             try {
                 ScreenReader.readScreen(board);
             } catch (Exception e) {
@@ -75,9 +75,10 @@ public class Main {
             board.setPotType();
             board.setPlayerActions();
             GameLogic.preflopAction(board);
-            GameLogic.flopAction(board);
 
-        }*/
+           // GameLogic.flopAction(board);
+
+        }
     }
 
 

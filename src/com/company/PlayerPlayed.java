@@ -7,6 +7,9 @@ import java.util.stream.IntStream;
 public class PlayerPlayed extends Player {
     Hand hand;
     double equity;
+    String availableAction;
+    double amountToCall;
+    double potOdds;
 
 
     public PlayerPlayed() {
@@ -20,6 +23,20 @@ public class PlayerPlayed extends Player {
         this.position = -1;
         this.setHand(null);
         this.equity = 0;
+        this.availableAction = "check";
+        this.amountToCall = 0;
+        this.potOdds = 0;
+
+
+    }
+
+
+    public double getPotOdds() {
+        return potOdds;
+    }
+
+    public void calculatePotOdds(Board board){
+        this.potOdds = this.amountToCall / board.getPot();
     }
 
     public Hand getHand() {
@@ -30,7 +47,31 @@ public class PlayerPlayed extends Player {
         this.hand = hand;
     }
 
-    public double equity(ArrayList<PlayerAI> opponent, ArrayList<Card> cards){
+    public double getEquity() {
+        return equity;
+    }
+
+    public void setEquity(double equity) {
+        this.equity = equity;
+    }
+
+    public String getAvailableAction() {
+        return availableAction;
+    }
+
+    public void setAvailableAction(String availableAction) {
+        this.availableAction = availableAction;
+    }
+
+    public double getAmountToCall() {
+        return amountToCall;
+    }
+
+    public void setAmountToCall(double amountToCall) {
+        this.amountToCall = amountToCall;
+    }
+
+    public void equity(ArrayList<PlayerAI> opponent, ArrayList<Card> cards){
             int wins = 0;
             int hands = 0;
 
@@ -43,11 +84,6 @@ public class PlayerPlayed extends Player {
 
             double equity = (double) wins / hands;
             this.equity = equity;
-            return equity;
-
-
-
-
     }
 
 
@@ -68,7 +104,9 @@ public class PlayerPlayed extends Player {
         //ellenfél kezek
         for(int i = 0; i < opponents.size(); i++) {
             Random random = new Random();
+            System.out.println(opponents.get(i).getRange().size());
             Hand hand = opponents.get(i).getRange().get(random.nextInt(opponents.get(i).getRange().size()));
+
             opponentHands.add(hand);
             deck.removeCardByname(hand.getCards()[0].getName());
             deck.removeCardByname(hand.getCards()[1].getName());

@@ -556,5 +556,12 @@ public final class GameLogic {
                 }
             }
         }
+        PlayerPlayed player = (PlayerPlayed)board.getPlayers().get(0);
+
+        player.equity(opponents, board.getCards());
+
+
+        // megnézzük hogy volt-e már raise
+
     }
 }

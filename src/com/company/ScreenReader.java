@@ -346,9 +346,23 @@ public final class ScreenReader {
 
 
                     board.getPlayers().get(0).setName(tesseract.doOCR(playerNames[0]));
-                    PlayerButton1 = tesseract.doOCR(screenCapturePlayerButton1);
                     PlayerButton2 = tesseract.doOCR(screenCapturePlayerButton2);
-                    PlayerButton3 = tesseract.doOCR(screenCapturePlayerButton3);
+                    String[] button = PlayerButton2.split(" ");
+                    String buttonContainer;
+                    buttonContainer = button[0];
+                    buttonContainer = buttonContainer.replaceAll("\\s+", "");
+                    PlayerPlayed player = (PlayerPlayed)board.getPlayers().get(0);
+                    player.setAvailableAction(buttonContainer);
+
+                    if(button.length == 2){
+                        buttonContainer = button[1];
+                        buttonContainer = buttonContainer.replaceAll("[$]", "");
+                        buttonContainer = buttonContainer.replaceAll("\\s+", "");
+                        player.setAmountToCall(Double.parseDouble(buttonContainer));
+                    }else{
+                        player.setAmountToCall(0);
+                    }
+
                     tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
 
                     String container = tesseract.doOCR(screenCapturePotResized);
@@ -417,7 +431,7 @@ public final class ScreenReader {
                     String cardContainer2 = tesseract.doOCR(screencapturePlayer1Card2);
                     cardContainer2 = cardContainer2.replaceAll("\\s+", "").concat(holeCardColor2name);
 
-                    PlayerPlayed player = (PlayerPlayed)board.getPlayers().get(0);
+
 
                     player.setHand(new Hand(new Card(cardContainer1), new Card(cardContainer2)));
 
