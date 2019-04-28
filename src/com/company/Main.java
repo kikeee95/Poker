@@ -52,13 +52,7 @@ public class Main {
         cards.add(new Card("7h"));
         cards.add(new Card("kd"));
 
-        HandCombination combi = new HandCombination(hand, cards);
 
-        player4.setRange(Ranges.standard4Bet);
-
-        for(int i = 0; i < player4.getRange().size(); i++){
-            System.out.println(player4.getRange().get(i).getHandName());
-        }
 
 
 
@@ -284,13 +278,11 @@ public class Main {
 
 
                             for (int j = 0; j < board.getPlayers().size(); j++) {
-                                if (j != 0) {
-                                    board.getPlayers().get(i).setAction("No action", board);
-                                    board.getPlayers().get(i).setPreflopAction("No action");
-                                    board.getPlayers().get(i).setFlopAction("No action");
-                                    board.getPlayers().get(i).setTurnAction("No action");
-                                    board.getPlayers().get(i).setRiverAction("No action");
-                                }
+                                    board.getPlayers().get(j).setAction("No action", board);
+                                    board.getPlayers().get(j).setPreflopAction("No action");
+                                    board.getPlayers().get(j).setFlopAction("No action");
+                                    board.getPlayers().get(j).setTurnAction("No action");
+                                    board.getPlayers().get(j).setRiverAction("No action");
                             }
                         }
                     }
@@ -579,17 +571,32 @@ public class Main {
 
             board.setPlayerPositions();
             board.setPotType();
+            board.setPlayerActions();
+            System.out.println(board.getPotType());
+
 
 
 
             GameLogic.preflopAction(board);
+            GameLogic.flopAction(board);
+
+            if(board.getGameState().equalsIgnoreCase("flop")) {
+                for (int i = 0; i < board.getPlayers().size(); i++) {
+                    System.out.println("-------------------------------------------");
+                    if (i != 0 && board.getPlayers().get(i).hasCards) {
+                        System.out.println("KUTYAAAAAAAAAAAAA");
+                        PlayerAI playerasd = (PlayerAI) board.getPlayers().get(i);
+                        for (int j = 0; j < playerasd.getRange().size(); j++) {
+
+                            System.out.println(playerasd.getRange().get(j));
+                        }
+                    }
+                }
+            }
             System.out.println(board.getPlayers().get(0).getPosition());
             System.out.println(board.getButtonPosition());
             System.out.println(board.getPotType());
-            for(int i = 0; i < board.getPlayers().size(); i++){
-                System.out.println(board.getPlayers().get(i).name);
-                System.out.println(board.getPlayers().get(i).money);
-            }
+
             //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
 

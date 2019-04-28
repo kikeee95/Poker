@@ -36,6 +36,7 @@ public class PlayerAI extends  Player {
     }
 
     public void setRange(int[] range) {
+        this.range.clear();
         for(int i = 0; i < range.length; i++){
             this.range.add(new Hand(range[i]));
         }

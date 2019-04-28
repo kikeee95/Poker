@@ -23,6 +23,7 @@ public class Board {
         this.gameState = "Unknown";
         this.pot = 0;
         this.buttonPosition = 0;
+        this.potType = "normal";
     }
 
     public String getGameState() {
@@ -184,6 +185,14 @@ public class Board {
 
     public String getPotType() {
         return potType;
+    }
+
+    public void setPlayerActions(){
+        if(this.getGameState().equalsIgnoreCase("flop")){
+            for(int i = 0; i < this.getPlayers().size(); i++){
+                this.getPlayers().get(i).setPreflopAction("call");
+            }
+        }
     }
 
     public void setPotType() {

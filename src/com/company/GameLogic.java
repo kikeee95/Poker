@@ -246,4 +246,315 @@ public final class GameLogic {
 
         }
     }
+
+    public static void flopAction(Board board){
+        // rangek kiosztása
+
+        ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
+
+        for(int i = 0; i < board.getPlayers().size(); i++){
+            if(i != 0){
+                if(board.getPlayers().get(i).hasCards){
+                    opponents.add((PlayerAI)board.getPlayers().get(i));
+                }
+            }
+        }
+
+        for(int i = 0; i < opponents.size(); i++) {
+
+            if (opponents.get(i).getPlayerType().equalsIgnoreCase("fish")) {
+                opponents.get(i).setRange(Ranges.fish);
+            } else if (board.getPotType().equalsIgnoreCase("normal")) {
+                if (opponents.get(i).getPreflopAction().equalsIgnoreCase("raise")) {
+                    if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
+                        if (opponents.get(i).getPosition() == 0) {
+                            opponents.get(i).setRange(Ranges.standardPos1OR);
+                        }
+                        if (opponents.get(i).getPosition() == 1) {
+                            opponents.get(i).setRange(Ranges.standardPos2OR);
+                        }
+                        if (opponents.get(i).getPosition() == 2) {
+                            opponents.get(i).setRange(Ranges.standardPos3OR);
+                        }
+                        if (opponents.get(i).getPosition() == 3) {
+                            opponents.get(i).setRange(Ranges.standardPos4OR);
+                        }
+                        if (opponents.get(i).getPosition() == 4) {
+                            opponents.get(i).setRange(Ranges.standardPos5OR);
+                        }
+                        if (opponents.get(i).getPosition() == 5) {
+                            opponents.get(i).setRange(Ranges.standardPos6OR);
+                        }
+                        if (opponents.get(i).getPosition() == 6) {
+                            opponents.get(i).setRange(Ranges.standardPos7OR);
+                        }
+                        if (opponents.get(i).getPosition() == 7) {
+                            opponents.get(i).setRange(Ranges.standardPos8OR);
+                        }
+                        if (opponents.get(i).getPosition() == 8) {
+                            opponents.get(i).setRange(Ranges.standardPos9OR);
+                        }
+
+                    }
+                    if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
+                        if (opponents.get(i).getPosition() == 0) {
+                            opponents.get(i).setRange(Ranges.tightPos1OR);
+                        }
+                        if (opponents.get(i).getPosition() == 1) {
+                            opponents.get(i).setRange(Ranges.tightPos2OR);
+                        }
+                        if (opponents.get(i).getPosition() == 2) {
+                            opponents.get(i).setRange(Ranges.tightPos3OR);
+                        }
+                        if (opponents.get(i).getPosition() == 3) {
+                            opponents.get(i).setRange(Ranges.tightPos4OR);
+                        }
+                        if (opponents.get(i).getPosition() == 4) {
+                            opponents.get(i).setRange(Ranges.tightPos5OR);
+                        }
+                        if (opponents.get(i).getPosition() == 5) {
+                            opponents.get(i).setRange(Ranges.tightPos6OR);
+                        }
+                        if (opponents.get(i).getPosition() == 6) {
+                            opponents.get(i).setRange(Ranges.tightPos7OR);
+                        }
+                        if (opponents.get(i).getPosition() == 7) {
+                            opponents.get(i).setRange(Ranges.tightPos8OR);
+                        }
+                        if (opponents.get(i).getPosition() == 8) {
+                            opponents.get(i).setRange(Ranges.tightPos9OR);
+                        }
+                    }
+
+                    if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
+                        if (opponents.get(i).getPosition() == 0) {
+                            opponents.get(i).setRange(Ranges.loosePos1OR);
+                        }
+                        if (opponents.get(i).getPosition() == 1) {
+                            opponents.get(i).setRange(Ranges.loosePos2OR);
+                        }
+                        if (opponents.get(i).getPosition() == 2) {
+                            opponents.get(i).setRange(Ranges.loosePos3OR);
+                        }
+                        if (opponents.get(i).getPosition() == 3) {
+                            opponents.get(i).setRange(Ranges.loosePos4OR);
+                        }
+                        if (opponents.get(i).getPosition() == 4) {
+                            opponents.get(i).setRange(Ranges.loosePos5OR);
+                        }
+                        if (opponents.get(i).getPosition() == 5) {
+                            opponents.get(i).setRange(Ranges.loosePos6OR);
+                        }
+                        if (opponents.get(i).getPosition() == 6) {
+                            opponents.get(i).setRange(Ranges.loosePos7OR);
+                        }
+                        if (opponents.get(i).getPosition() == 7) {
+                            opponents.get(i).setRange(Ranges.loosePos8OR);
+                        }
+                        if (opponents.get(i).getPosition() == 8) {
+                            opponents.get(i).setRange(Ranges.loosePos9OR);
+                        }
+                    }
+                }
+                if(opponents.get(i).getPreflopAction().equalsIgnoreCase("call")){
+                    // eredeti emelő megtalálása:
+
+                    int preflopRaiserPos = -1;
+
+                    for(int j = 0; j < board.getPlayers().size(); j++){
+                        if(board.getPlayers().get(j).getPreflopAction().equalsIgnoreCase("raise")){
+                            preflopRaiserPos = board.getPlayers().get(j).getPosition();
+                        }
+                    }
+
+                    if(opponents.get(i).getPlayerType().equalsIgnoreCase("tight")){
+                        if(preflopRaiserPos == 0){
+                            opponents.get(i).setRange(Ranges.VsStandardPos1ORCall);
+                        }if(preflopRaiserPos == 1){
+                            opponents.get(i).setRange(Ranges.VsStandardPos2ORCall);
+                        }if(preflopRaiserPos == 2){
+                            opponents.get(i).setRange(Ranges.VsStandardPos3ORCall);
+                        }if(preflopRaiserPos == 3){
+                            opponents.get(i).setRange(Ranges.VsStandardPos4ORCall);
+                        }if(preflopRaiserPos == 4){
+                            opponents.get(i).setRange(Ranges.VsStandardPos5ORCall);
+                        }if(preflopRaiserPos == 5){
+                            opponents.get(i).setRange(Ranges.VsStandardPos6ORCall);
+                        }if(preflopRaiserPos == 6){
+                            opponents.get(i).setRange(Ranges.VsStandardPos7ORCall);
+                        }if(preflopRaiserPos == 7){
+                            opponents.get(i).setRange(Ranges.VsStandardPos8ORCall);
+                        }if(preflopRaiserPos == 8){
+                            opponents.get(i).setRange(Ranges.VsStandardPos8ORCall);
+                        }
+                    }
+                    if(opponents.get(i).getPlayerType().equalsIgnoreCase("standard")){
+                        if(preflopRaiserPos <= 3){
+                           opponents.get(i).setRange(Ranges.standardCallEarly);
+                        }if(preflopRaiserPos > 3){
+                            opponents.get(i).setRange(Ranges.standardCallLate);
+                        }
+                    }
+                    if(opponents.get(i).getPlayerType().equalsIgnoreCase("loose")){
+                        if(preflopRaiserPos <= 3){
+                            opponents.get(i).setRange(Ranges.looseCallEarly);
+                        }if(preflopRaiserPos > 3){
+                            opponents.get(i).setRange(Ranges.looseCallLate);
+                        }
+                    }
+                }
+            }else if(board.getPotType().equalsIgnoreCase("3bet")){
+                int preflopRaiserPos = -1;
+
+                for(int j = 0; j < board.getPlayers().size(); j++){
+                    if(board.getPlayers().get(j).getPreflopAction().equalsIgnoreCase("raise")){
+                        preflopRaiserPos = board.getPlayers().get(j).getPosition();
+                    }
+                }
+
+                if(opponents.get(i).getPreflopAction().equalsIgnoreCase("raise")){
+                    if(opponents.get(i).getPlayerType().equalsIgnoreCase("tight")){
+                        if(preflopRaiserPos == 0){
+                            opponents.get(i).setRange(Ranges.VsStandardPos1OR3B);
+                        }
+                        if(preflopRaiserPos == 1){
+                            opponents.get(i).setRange(Ranges.VsStandardPos2OR3B);
+                        }
+                        if(preflopRaiserPos == 2){
+                            opponents.get(i).setRange(Ranges.VsStandardPos3OR3B);
+                        }
+                        if(preflopRaiserPos == 3){
+                            opponents.get(i).setRange(Ranges.VsStandardPos4OR3B);
+                        }
+                        if(preflopRaiserPos == 4){
+                            opponents.get(i).setRange(Ranges.VsStandardPos5OR3B);
+                        }
+                        if(preflopRaiserPos == 5){
+                            opponents.get(i).setRange(Ranges.VsStandardPos6OR3B);
+                        }
+                        if(preflopRaiserPos == 6){
+                            opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                        }
+                        if(preflopRaiserPos == 7){
+                            opponents.get(i).setRange(Ranges.VsStandardPos8OR3B);
+                        }
+                        if(preflopRaiserPos == 8){
+                            opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                        }
+                    }
+                    else if(opponents.get(i).getPlayerType().equalsIgnoreCase("standard")){
+                        if(preflopRaiserPos <= 3){
+                            opponents.get(i).setRange(Ranges.standard3BetEarly);
+                        }if(preflopRaiserPos > 3){
+                            opponents.get(i).setRange(Ranges.standard3BetCallLate);
+                        }
+                    }
+                    else if(opponents.get(i).getPlayerType().equalsIgnoreCase("loose")){
+                        if(preflopRaiserPos <= 3){
+                            opponents.get(i).setRange(Ranges.loose3BetEarly);
+                        }else if(preflopRaiserPos > 3){
+                            opponents.get(i).setRange(Ranges.loose3BetLate);
+                        }
+                    }
+                }
+            }
+            else if(board.getPotType().equalsIgnoreCase("3bet")) {
+                int preflopRaiserPos = -1;
+
+                for (int j = 0; j < board.getPlayers().size(); j++) {
+                    if (board.getPlayers().get(j).getPreflopAction().equalsIgnoreCase("raise")) {
+                        preflopRaiserPos = board.getPlayers().get(j).getPosition();
+                    }
+                }
+
+                if (opponents.get(i).getPreflopAction().equalsIgnoreCase("raise")) {
+                    if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
+                        if (preflopRaiserPos == 0) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos1OR3B);
+                        }
+                        if (preflopRaiserPos == 1) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos2OR3B);
+                        }
+                        if (preflopRaiserPos == 2) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos3OR3B);
+                        }
+                        if (preflopRaiserPos == 3) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos4OR3B);
+                        }
+                        if (preflopRaiserPos == 4) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos5OR3B);
+                        }
+                        if (preflopRaiserPos == 5) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos6OR3B);
+                        }
+                        if (preflopRaiserPos == 6) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                        }
+                        if (preflopRaiserPos == 7) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos8OR3B);
+                        }
+                        if (preflopRaiserPos == 8) {
+                            opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                        }
+                    } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
+                        if (preflopRaiserPos <= 3) {
+                            opponents.get(i).setRange(Ranges.standard3BetEarly);
+                        }
+                        if (preflopRaiserPos > 3) {
+                            opponents.get(i).setRange(Ranges.standard3BetCallLate);
+                        }
+                    } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
+                        if (preflopRaiserPos <= 3) {
+                            opponents.get(i).setRange(Ranges.loose3BetEarly);
+                        } else if (preflopRaiserPos > 3) {
+                            opponents.get(i).setRange(Ranges.loose3BetLate);
+                        }
+                    }
+                }if(opponents.get(i).getPreflopAction().equalsIgnoreCase("call")){
+                    if(opponents.get(i).getPlayerType().equalsIgnoreCase("tight") || opponents.get(i).getPlayerType().equalsIgnoreCase("standard")){
+                        if(preflopRaiserPos <= 3){
+                            opponents.get(i).setRange(Ranges.standard3BetCallEarly);
+                        }if(preflopRaiserPos > 3){
+                            opponents.get(i).setRange(Ranges.standard3BetCallLate);
+                        }
+                    }else if(opponents.get(i).getPlayerType().equalsIgnoreCase("loose")){
+                        if(preflopRaiserPos <= 3){
+                            opponents.get(i).setRange(Ranges.loose3BetCallEarly);
+                        }else if(preflopRaiserPos > 3){
+                            opponents.get(i).setRange(Ranges.loose3BetCallLate);
+                        }
+                    }
+                }
+            }
+            else if(board.getPotType().equalsIgnoreCase("4bet")) {
+                int preflopRaiserPos = -1;
+
+                for (int j = 0; j < board.getPlayers().size(); j++) {
+                    if (board.getPlayers().get(j).getPreflopAction().equalsIgnoreCase("raise")) {
+                        preflopRaiserPos = board.getPlayers().get(j).getPosition();
+                    }
+                }
+
+                if (opponents.get(i).getPreflopAction().equalsIgnoreCase("raise")) {
+                    if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
+                      if(opponents.get(i).getPosition() <= 3){
+                          opponents.get(i).setRange(Ranges.Vs3BetEarly4Bet);
+                      }else if(opponents.get(i).getPosition() > 3){
+                          opponents.get(i).setRange(Ranges.Vs3BetLate4Bet);
+                      }
+                    } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
+                        opponents.get(i).setRange(Ranges.standard4Bet);
+                    } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
+                        opponents.get(i).setRange(Ranges.loose4Bet);
+                    }
+                }if(opponents.get(i).getPreflopAction().equalsIgnoreCase("call")){
+                    if(opponents.get(i).getPlayerType().equalsIgnoreCase("tight") || opponents.get(i).getPlayerType().equalsIgnoreCase("standard")){
+                            opponents.get(i).setRange(Ranges.standard3BetEarly);
+                    }else if(opponents.get(i).getPlayerType().equalsIgnoreCase("loose")){
+                            opponents.get(i).setRange(Ranges.standard3BetLate);
+                    }
+                }
+            }
+        }
+    }
 }
