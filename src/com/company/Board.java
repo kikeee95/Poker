@@ -9,6 +9,7 @@ public class Board {
     private double pot;
     private int buttonPosition;
     private String potType;
+    private boolean isWetBoard;
 
     public Board(Player player1, Player player2, Player player3, Player player4, Player player5, Player player6, Player player7, Player player8, Player player9) {
         this.players.add(player1);
@@ -24,6 +25,7 @@ public class Board {
         this.pot = 0;
         this.buttonPosition = 0;
         this.potType = "normal";
+        this.isWetBoard = false;
     }
 
     public String getGameState() {
@@ -180,6 +182,47 @@ public class Board {
             this.players.get(7).setPosition(5);
         }
 
+
+    }
+
+
+    public boolean isWetBoard() {
+        return isWetBoard;
+    }
+
+    public void setBoardType() {
+        int[] ranks = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        // s  h  d  c
+        int[] suits = new int[]{0, 0, 0, 0};
+
+        boolean wet = false;
+
+        for (int i = 0; i < this.cards.size(); i++) {
+            int rankhelper = -1;
+            int suithelper = -1;
+            for (int j = 0; j < Constants.cards.length; j++) {
+                if (this.cards.get(i).getName().equalsIgnoreCase(Constants.cards[j])) {
+                    rankhelper = j / 4;
+                    suithelper = j % 4;
+                    ranks[rankhelper]++;
+                    suits[suithelper]++;
+                }
+            }
+
+        }
+        for(int i = 0; i < ranks.length; i++ ){
+            if(i != 0){
+                if(ranks[i] >= 1 && ranks[i-1] >= 1){
+                    wet = true;
+                }
+            }
+        }
+        for(int i = 0; i < suits.length; i++){
+            if(suits[i] >= 2){
+                wet = true;
+            }
+        }
+        this.isWetBoard = wet;
 
     }
 

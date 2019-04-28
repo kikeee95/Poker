@@ -43,7 +43,7 @@ public class Main {
         PlayerAI player9 = new PlayerAI();
         Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
 
-
+/*
         player1.setHand(new Hand(new Card("jd"), new Card("jh")));
         Card card1 = new Card("7d");
         Card card2 = new Card("7h");
@@ -60,7 +60,7 @@ public class Main {
         opponents.add(player2);
         opponents.add(player3);
         player1.equity(opponents, cards);
-        System.out.println(player1.getEquity());
+       System.out.println(player1.getEquity());*/
 
 
         for (; ; ) {
@@ -73,7 +73,9 @@ public class Main {
             board.setPlayerPositions();
             board.setPotType();
             board.setPlayerActions();
-            GameLogic.preflopAction(board);
+            board.setBoardType();
+            GameLogic.start(board);
+
 
             // GameLogic.flopAction(board);
 

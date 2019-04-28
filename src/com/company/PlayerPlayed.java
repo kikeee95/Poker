@@ -5,11 +5,11 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class PlayerPlayed extends Player {
-    Hand hand;
-    double equity;
-    String availableAction;
-    double amountToCall;
-    double potOdds;
+    private Hand hand;
+    private double equity;
+    private String availableAction;
+    private double amountToCall;
+    private double potOdds;
 
 
     public PlayerPlayed() {
@@ -108,7 +108,6 @@ public class PlayerPlayed extends Player {
         //ellenfél kezek
         for(int i = 0; i < opponents.size(); i++) {
             Random random = new Random();
-            System.out.println(opponents.get(i).getRange().size());
             Hand hand = opponents.get(i).getRange().get(random.nextInt(opponents.get(i).getRange().size()));
 
             opponentHands.add(hand);

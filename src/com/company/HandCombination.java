@@ -25,7 +25,7 @@ public class HandCombination {
     }
 
     public HandCombination(Hand hand, ArrayList<Card> cards) {
-        this(sevenCardEvaluator(hand, cards));
+            this(sevenCardEvaluator(hand, cards));
     }
 
     public String getName() {

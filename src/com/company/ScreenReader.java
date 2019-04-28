@@ -435,44 +435,45 @@ public final class ScreenReader {
             board.getPlayers().set(0, player);
 
 
-            if (board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
+            if (board.getGameState().equalsIgnoreCase("flop") && board.getCards().size() < 3) {
                 container = tesseract.doOCR(screencaptureBoardCard1);
                 board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor1name)));
                 container = tesseract.doOCR(screencaptureBoardCard2);
                 board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor2name)));
                 container = tesseract.doOCR(screencaptureBoardCard3);
                 board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor3name)));
-                if (board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
-                    container = tesseract.doOCR(screencaptureBoardCard4);
-                    board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor4name)));
-                    if (board.getGameState().equalsIgnoreCase("river")) {
-                        container = tesseract.doOCR(screencaptureBoardCard5);
-                        board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor5name)));
-                    }
-                }
             }
-            if (hasCards[0]) {
+            if (board.getGameState().equalsIgnoreCase("turn") && board.getCards().size() < 4) {
+                container = tesseract.doOCR(screencaptureBoardCard4);
+                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor4name)));
+            }
+            if (board.getGameState().equalsIgnoreCase("river") && board.getCards().size() < 5) {
+                container = tesseract.doOCR(screencaptureBoardCard5);
+                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor5name)));
+            }
+
+            if (hasCards[0] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(1).setName(tesseract.doOCR(playerNames[1]));
             }
-            if (hasCards[1]) {
+            if (hasCards[1] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(2).setName(tesseract.doOCR(playerNames[2]));
             }
-            if (hasCards[2]) {
+            if (hasCards[2] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(3).setName(tesseract.doOCR(playerNames[3]));
             }
-            if (hasCards[3]) {
+            if (hasCards[3] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(4).setName(tesseract.doOCR(playerNames[4]));
             }
-            if (hasCards[4]) {
+            if (hasCards[4] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(5).setName(tesseract.doOCR(playerNames[5]));
             }
-            if (hasCards[5]) {
+            if (hasCards[5] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(6).setName(tesseract.doOCR(playerNames[6]));
             }
-            if (hasCards[6]) {
+            if (hasCards[6] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(7).setName(tesseract.doOCR(playerNames[7]));
             }
-            if (hasCards[7]) {
+            if (hasCards[7] && board.getGameState().equalsIgnoreCase("preflop")) {
                 board.getPlayers().get(8).setName(tesseract.doOCR(playerNames[8]));
             }
 
