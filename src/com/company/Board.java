@@ -190,7 +190,9 @@ public class Board {
     public void setPlayerActions(){
         if(this.getGameState().equalsIgnoreCase("flop")){
             for(int i = 0; i < this.getPlayers().size(); i++){
-                this.getPlayers().get(i).setPreflopAction("call");
+                if(players.get(i).getPreflopAction().equalsIgnoreCase("No action")) {
+                    this.getPlayers().get(i).setPreflopAction("call");
+                }
             }
         }
     }
