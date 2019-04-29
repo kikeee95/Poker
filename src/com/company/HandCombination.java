@@ -25,7 +25,7 @@ public class HandCombination {
     }
 
     public HandCombination(Hand hand, ArrayList<Card> cards) {
-            this(sevenCardEvaluator(hand, cards));
+        this(sevenCardEvaluator(hand, cards));
     }
 
     public String getName() {
@@ -387,5 +387,83 @@ public class HandCombination {
             }
         }
         return container;
+    }
+
+    public static ArrayList<Hand> rangeTrimForTurn(ArrayList<Hand> range, Board board) {
+        ArrayList<Hand> newRange = new ArrayList<Hand>();
+
+        for(int i = 0; i < range.size(); i++){
+            if(hasDraws(range.get(i), board) || (new HandCombination(range.get(i), board.getCards()).getCombinationStrength()) > 3000000){
+                newRange.add(range.get(i));
+            }
+        }
+        return newRange;
+    }
+
+    private static boolean hasDraws(Hand hand, Board board) {
+        boolean draw = false;
+        ArrayList<Card> cardContainer = new ArrayList<Card>();
+        cardContainer.add(hand.getCards()[0]);
+        cardContainer.add(hand.getCards()[1]);
+        cardContainer.addAll(board.getCards());
+
+        //2  3  4  5  6  7  8  9  T  J  Q  K  A
+        int[] ranks = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        // s  h  d  c
+        int[] suits = new int[]{0, 0, 0, 0};
+
+        for (int i = 0; i < cardContainer.size(); i++) {
+            int rankhelper = -1;
+            int suithelper = -1;
+            for (int j = 0; j < Constants.cards.length; j++) {
+                if (cardContainer.get(i).getName().equalsIgnoreCase(Constants.cards[j])) {
+                    rankhelper = j / 4;
+                    suithelper = j % 4;
+                    ranks[rankhelper]++;
+                    suits[suithelper]++;
+                }
+            }
+        }
+        for (int i = 0; i < suits.length; i++) {
+            if (suits[i] == 4) {
+                draw = true;
+            }
+        }
+        int[] zeros = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
+        for (int i = 0; i < ranks.length; i++) {
+
+            if (ranks[i] == 0) {
+                if (i < 6) {
+                    zeros[0]++;
+                }
+                if (i >= 1 && i < 7) {
+                    zeros[1]++;
+                }
+                if (i >= 2 && i < 8) {
+                    zeros[2]++;
+                }
+                if (i >= 3 && i < 9) {
+                    zeros[3]++;
+                }
+                if (i >= 4 && i < 10) {
+                    zeros[4]++;
+                }
+                if (i >= 5 && i < 11) {
+                    zeros[5]++;
+                }
+                if (i >= 6 && i < 12) {
+                    zeros[6]++;
+                }
+                if (i >= 7) {
+                    zeros[7]++;
+                }
+            }
+        }
+        for (int i = 0; i < zeros.length; i++) {
+            if (zeros[i] <= 1){
+                draw = true;
+            }
+        }
+        return draw;
     }
 }
