@@ -40,6 +40,11 @@ public class PlayerAI extends Player {
         }
     }
 
+    public void setRange(ArrayList<Hand> range) {
+        this.range.clear();
+        this.range.addAll(range);
+    }
+
     public int getVpip() {
         return vpip;
     }

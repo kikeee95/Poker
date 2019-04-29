@@ -6,11 +6,13 @@ import java.util.Random;
 public final class GameLogic {
 
 
-    public static void start(Board board){
-        if(board.getGameState().equalsIgnoreCase("preflop")){
+    public static void start(Board board) {
+        if (board.getGameState().equalsIgnoreCase("preflop")) {
             preflopAction(board);
-        }else if(board.getGameState().equalsIgnoreCase("flop")){
+        } else if (board.getGameState().equalsIgnoreCase("flop")) {
             flopAction(board);
+        }else if(board.getGameState().equalsIgnoreCase("turn")){
+            turnAction(board);
         }
     }
 
@@ -27,9 +29,9 @@ public final class GameLogic {
 
         if (holeCardValue > 0) {
 
-            if(!player.isCanRaise()){
-                for(int i = 0; i < Ranges.Vs4BetEarlyAllIn.length; i++) {
-                    if(holeCardValue == Ranges.Vs4BetEarlyAllIn[i]){
+            if (!player.isCanRaise()) {
+                for (int i = 0; i < Ranges.Vs4BetEarlyAllIn.length; i++) {
+                    if (holeCardValue == Ranges.Vs4BetEarlyAllIn[i]) {
                         System.out.println("Call all in");
                         board.getPlayers().get(0).setPreflopAction("call");
                     }
@@ -644,6 +646,7 @@ public final class GameLogic {
             if (betterAgression < 2.0) {
                 if (player.getEquity() > (player.getPotOdds() + 0.25)) {
                     board.getPlayers().get(0).setFlopAction("call");
+                    System.out.println("Flop: Call");
                 } else {
                     board.getPlayers().get(0).setFlopAction("fold");
                     System.out.println("Flop: fold");
@@ -663,61 +666,228 @@ public final class GameLogic {
                     board.getPlayers().get(0).setFlopAction("fold");
                     System.out.println("Flop: Fold to raise");
                 }
-            }else if(betterAgression < 2.0){
-                if(player.getEquity() > 0.9){
+            } else if (betterAgression < 2.0) {
+                if (player.getEquity() > 0.9) {
                     board.getPlayers().get(0).setFlopAction("raise");
                     System.out.println("Flop: ReRaise");
-                }else if(player.getEquity() > (player.getPotOdds() + 0.3)){
+                } else if (player.getEquity() > (player.getPotOdds() + 0.3)) {
                     board.getPlayers().get(0).setFlopAction("call");
                     System.out.println("Flop: Call raise");
-                }else{
+                } else {
                     board.getPlayers().get(0).setFlopAction("fold");
                     System.out.println("Flop: Fold to raise");
                 }
             }
         }
         // ha nem mi vagyunk a preflop agressor
-        if (player.getPreflopAction().equalsIgnoreCase("call") && player.getFlopAction().equalsIgnoreCase("No action")){
-            if(!betAction){
+        if (player.getPreflopAction().equalsIgnoreCase("call") && player.getFlopAction().equalsIgnoreCase("No action")) {
+            if (!betAction) {
                 // donk bet
-                if(player.getEquity() > 0.35){
+                if (player.getEquity() > 0.35) {
                     Random rand = new Random();
-                    if(rand.nextInt(100) < 20){
-                        if(board.isWetBoard()){
+                    if (rand.nextInt(100) < 20) {
+                        if (board.isWetBoard()) {
                             board.getPlayers().get(0).setFlopAction("bet");
                             System.out.println("Flop: Bet Pot");
-                        }else{
+                        } else {
                             board.getPlayers().get(0).setFlopAction("bet");
                             System.out.println("Flop: Bet 1/2 Pot");
                         }
-                    }else{
+                    } else {
                         board.getPlayers().get(0).setFlopAction("check");
                         System.out.println("Flop: Check");
                     }
                 }
-            }else{
-                if(betterAgression >= 2){
-                    if(player.getEquity() > 0.8){
+            } else {
+                if (betterAgression >= 2) {
+                    if (player.getEquity() > 0.8) {
                         board.getPlayers().get(0).setFlopAction("raise");
                         System.out.println("Flop: Reraise");
-                    }else if(player.getEquity() > (player.getPotOdds() + 0.10)){
+                    } else if (player.getEquity() > (player.getPotOdds() + 0.10)) {
                         board.getPlayers().get(0).setFlopAction("call");
                         System.out.println("Flop: Call");
-                    }else{
+                    } else {
                         board.getPlayers().get(0).setFlopAction("fold");
                         System.out.println("Flop: Fold");
                     }
-                }else if(betterAgression < 2){
-                    if(player.getEquity() > 0.85){
+                } else if (betterAgression < 2) {
+                    if (player.getEquity() > 0.85) {
                         board.getPlayers().get(0).setFlopAction("raise");
                         System.out.println("Flop: Reraise");
-                    }else if(player.getEquity() > (player.getPotOdds() + 0.2)){
+                    } else if (player.getEquity() > (player.getPotOdds() + 0.2)) {
                         board.getPlayers().get(0).setFlopAction("call");
                         System.out.println("Flop: Call");
-                    }else{
+                    } else {
                         board.getPlayers().get(0).setFlopAction("fold");
                         System.out.println("Flop fold");
                     }
+                }
+            }
+        }
+    }
+
+    private static void turnAction(Board board) {
+        ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
+
+        for (int i = 0; i < board.getPlayers().size(); i++) {
+            if (i != 0) {
+                if (board.getPlayers().get(i).hasCards) {
+                    opponents.add((PlayerAI) board.getPlayers().get(i));
+                }
+            }
+        }
+
+        boolean flopBetHappened = false;
+
+        PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
+        boolean betAction = false;
+        double betterAgression = 2;
+        player.equity(opponents, board.getCards());
+
+        if (player.getFlopAction().equalsIgnoreCase("bet") || player.getFlopAction().equalsIgnoreCase("raise")) {
+            flopBetHappened = true;
+        }
+
+        for (int i = 0; i < opponents.size(); i++) {
+            if (opponents.get(i).getFlopAction().equalsIgnoreCase("bet") || opponents.get(i).getFlopAction().equalsIgnoreCase("raise")) {
+                flopBetHappened = true;
+            }
+        }
+
+        //rangetrim
+        if (flopBetHappened) {
+            for (int i = 0; i < opponents.size(); i++) {
+                opponents.get(i).setRange(HandCombination.rangeTrimForTurn(opponents.get(i).getRange(), board));
+            }
+        }
+
+        for (int i = 0; i < opponents.size(); i++) {
+            if (opponents.get(i).getFlopAction().equalsIgnoreCase("bet") || opponents.get(i).getFlopAction().equalsIgnoreCase("raise")) {
+                betAction = true;
+                betterAgression = opponents.get(i).getAggression();
+            }
+        }
+        // ha mi vagyunk a flop agressor és még nem cselekedtünk a körben
+        if ((player.getFlopAction().equalsIgnoreCase("raise") || player.getFlopAction().equalsIgnoreCase("bet")) && player.getFlopAction().equalsIgnoreCase("No action")) {
+            // ha nem volt még bet
+            if (!betAction) {
+            }
+            if (player.getEquity() > 0.55) {
+                if (board.isWetBoard()) {
+                    board.getPlayers().get(0).setTurnAction("bet");
+                    System.out.println("Turn: bet Pot");
+                } else {
+                    board.getPlayers().get(0).setTurnAction("bet");
+                    System.out.println("Turn: bet 1/2 Pot");
+                }
+            }
+        }
+        if (betAction) {
+            player.calculatePotOdds(board);
+            if (player.getEquity() > 0.80) {
+                board.getPlayers().get(0).setTurnAction("raise");
+                System.out.println("Turn: Raise");
+            }
+        }
+        if (betterAgression >= 2.0) {
+            if (player.getEquity() > (player.getPotOdds() + 0.15)) {
+                board.getPlayers().get(0).setTurnAction("call");
+                System.out.println("Turn: Call");
+            } else {
+                board.getPlayers().get(0).setTurnAction("fold");
+                System.out.println("Turn: Fold");
+            }
+        }
+        if (betterAgression < 2.0) {
+            if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                board.getPlayers().get(0).setTurnAction("call");
+                System.out.println("Turn: Call");
+            } else {
+                board.getPlayers().get(0).setTurnAction("fold");
+                System.out.println("Turn: fold");
+            }
+        }
+        // ha emeltek ránk
+        if (player.getTurnAction().equalsIgnoreCase("bet") || player.getTurnAction().equalsIgnoreCase("raise")) {
+            if (betterAgression >= 2.0) {
+                if (player.getEquity() > 0.85) {
+                    board.getPlayers().get(0).setTurnAction("raise");
+                    System.out.println("Turn: ReRaise");
+                } else if (player.getEquity() > (player.getPotOdds() + 0.25)) {
+                    board.getPlayers().get(0).setTurnAction("call");
+                    System.out.println("Turn: Call Raise");
+                } else {
+                    board.getPlayers().get(0).setTurnAction("fold");
+                    System.out.println("Turn: Fold to raise");
+                }
+            } else if (betterAgression < 2.0) {
+                if (player.getEquity() > 0.9) {
+                    board.getPlayers().get(0).setTurnAction("raise");
+                    System.out.println("Turn: ReRaise");
+                } else if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                    board.getPlayers().get(0).setTurnAction("call");
+                    System.out.println("Turn: Call raise");
+                } else {
+                    board.getPlayers().get(0).setTurnAction("fold");
+                    System.out.println("Turn: Fold to raise");
+                }
+            }
+        }
+        // ha nem mi vagyunk a preflop agressor
+        if (player.getFlopAction().equalsIgnoreCase("call") && player.getTurnAction().equalsIgnoreCase("No action")) {
+            if (!betAction || flopBetHappened) {
+                // donk bet
+                if (player.getEquity() > 0.45) {
+                    Random rand = new Random();
+                    if (rand.nextInt(100) < 20) {
+                        if (board.isWetBoard()) {
+                            board.getPlayers().get(0).setTurnAction("bet");
+                            System.out.println("Turn: Bet Pot");
+                        } else {
+                            board.getPlayers().get(0).setTurnAction("bet");
+                            System.out.println("Turn: Bet 1/2 Pot");
+                        }
+                    } else {
+                        board.getPlayers().get(0).setTurnAction("check");
+                        System.out.println("Turn: Check");
+                    }
+                }
+            } else if (!betAction && !flopBetHappened) {
+                if (player.getEquity() < 0.4) {
+                    if (board.isWetBoard()) {
+                        board.getPlayers().get(0).setTurnAction("bet");
+                        System.out.println("Turn: Bet Pot");
+                    } else {
+                        board.getPlayers().get(0).setTurnAction("bet");
+                        System.out.println("Turn: Bet 1/2 Pot");
+                    }
+                } else {
+                    board.getPlayers().get(0).setTurnAction("check");
+                    System.out.println("Turn: Check");
+                }
+            }
+        } else if (betAction) {
+            if (betterAgression >= 2) {
+                if (player.getEquity() > 0.8) {
+                    board.getPlayers().get(0).setTurnAction("raise");
+                    System.out.println("Turn: Reraise");
+                } else if (player.getEquity() > (player.getPotOdds() + 0.15)) {
+                    board.getPlayers().get(0).setTurnAction("call");
+                    System.out.println("Turn: Call");
+                } else {
+                    board.getPlayers().get(0).setTurnAction("fold");
+                    System.out.println("Turn: Fold");
+                }
+            } else if (betterAgression < 2) {
+                if (player.getEquity() > 0.85) {
+                    board.getPlayers().get(0).setTurnAction("raise");
+                    System.out.println("Turn: Reraise");
+                } else if (player.getEquity() > (player.getPotOdds() + 0.25)) {
+                    board.getPlayers().get(0).setTurnAction("call");
+                    System.out.println("Turn: Call");
+                } else {
+                    board.getPlayers().get(0).setTurnAction("fold");
+                    System.out.println("Turn: Fold");
                 }
             }
         }
