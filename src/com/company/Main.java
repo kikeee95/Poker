@@ -43,24 +43,27 @@ public class Main {
         PlayerAI player9 = new PlayerAI();
         Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
 
-/*
-        player1.setHand(new Hand(new Card("Ah"), new Card("Kh")));
-        Card card1 = new Card("4h");
-        Card card2 = new Card("5c");
-        Card card3 = new Card("4d");
+
+        player1.setHand(new Hand(new Card("ah"), new Card("Kc")));
+        Card card1 = new Card("ad");
+        Card card2 = new Card("3d");
+        Card card3 = new Card("kd");
         ArrayList<Card> cards = new ArrayList<Card>();
         cards.add(card1);
         cards.add(card2);
         cards.add(card3);
 
-        player2.setRange(Ranges.standardCallLate);
+        player2.setRange(Ranges.standard3BetEarly);
+        player3.setRange(Ranges.standard3BetEarly);
 
 
         ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
+        opponents.add(player3);
         opponents.add(player2);
-        player1.equity(opponents, cards);
-       System.out.println(player1.getEquity());
-*/
+      // player1.equity(opponents, cards);
+     //  System.out.println(player1.getEquity());
+
+
 
         for (; ; ) {
             try {
@@ -69,6 +72,7 @@ public class Main {
                 e.printStackTrace();
             }
         }
+
     }
 
 

@@ -132,7 +132,7 @@ public class HandCombination {
         if (royalflushFlushHelper && royalstraightHelper) {
             royalFlush = true;
             this.type = "Royal Flush";
-            this.combinationStrength = 10000000;
+            this.combinationStrength = 100000000;
         }
 
         //straightflush
@@ -169,7 +169,7 @@ public class HandCombination {
             if (flushHelper && straightHelper) {
                 straightFlush = true;
                 this.type = "Straight Flush";
-                this.combinationStrength = (9500000 + straigthend);
+                this.combinationStrength = (95000000 + straigthend);
             }
 
 
@@ -185,7 +185,7 @@ public class HandCombination {
                 }
             }
             if (fourOfAKind) {
-                this.combinationStrength = 9000000 + fourOfAKindStrength;
+                this.combinationStrength = 90000000 + fourOfAKindStrength;
             }
             // full house
         }
@@ -209,7 +209,7 @@ public class HandCombination {
             if (cards2 && cards3) {
                 fullHouse = true;
                 this.type = "Full House";
-                this.combinationStrength = 8000000 + (drillStrength * 100) + (pairStrength * 1);
+                this.combinationStrength = 80000000 + (drillStrength * 100) + (pairStrength * 1);
             }
             //flush
         }
@@ -228,7 +228,7 @@ public class HandCombination {
                 }
             }
             if (flush) {
-                flushStrength = 7000000 + flushStrength;
+                flushStrength = 70000000 + flushStrength;
             }
             //Straight
         }
@@ -246,7 +246,7 @@ public class HandCombination {
                     straight = true;
                     this.type = "Straight";
                     straightStrength = i;
-                    this.combinationStrength = 6000000 + straightStrength;
+                    this.combinationStrength = 60000000 + straightStrength;
                 }
             }
 
@@ -254,7 +254,7 @@ public class HandCombination {
             if (ranks[12] == 1 && ranks[0] == 1 && ranks[1] == 1 && ranks[2] == 1 && ranks[3] == 1) {
                 straight = true;
                 this.type = "Straight";
-                this.combinationStrength = 6000000 + 3;
+                this.combinationStrength = 60000000 + 3;
             }
             //Three of a Kind
         }
@@ -272,46 +272,46 @@ public class HandCombination {
             if (threeOfAKind) {
                 for (int i = 0; i < ranks.length; i++) {
                     if (ranks[i] == 1) {
-                        if (kicker1 == 0) {
+                        if (kicker1 < 0) {
                             kicker1 = i;
                         } else {
                             kicker2 = i;
                         }
                     }
                 }
-                this.combinationStrength = 5000000 + (kicker2 * 100) + (kicker1);
+                this.combinationStrength = 50000000 + (kicker2 * 100) + (kicker1);
             }
 
             //Two pair && pair
         }
         if (!straightFlush && !royalFlush && !fourOfAKind && !fullHouse && !flush && !straight && !threeOfAKind) {
             int pairs = 0;
-            int smallerPair = 0;
-            int higherPair = 0;
-            int kicker1 = 0;
-            int kicker2 = 0;
-            int kicker3 = 0;
-            int kicker4 = 0;
-            int kicker5 = 0;
+            int smallerPair = -1;
+            int higherPair = -1;
+            int kicker1 = -1;
+            int kicker2 = -1;
+            int kicker3 = -1;
+            int kicker4 = -1;
+            int kicker5 = -1;
             for (int i = 0; i < ranks.length; i++) {
                 if (ranks[i] == 2) {
                     pairs++;
-                    if (smallerPair == 0) {
+                    if (smallerPair < 0) {
                         smallerPair = i;
                     } else {
                         higherPair = i;
                     }
                 }
                 if (ranks[i] == 1) {
-                    if (kicker1 == 0) {
+                    if (kicker1 < 0) {
                         kicker1 = i;
-                    } else if (kicker2 == 0) {
+                    } else if (kicker2 < 0) {
                         kicker2 = i;
-                    } else if (kicker3 == 0) {
+                    } else if (kicker3 < 0) {
                         kicker3 = i;
-                    } else if (kicker4 == 0) {
+                    } else if (kicker4 < 0) {
                         kicker4 = i;
-                    } else if (kicker5 == 0) {
+                    } else if (kicker5 < 0) {
                         kicker5 = i;
                     }
                 }
@@ -320,17 +320,17 @@ public class HandCombination {
             if (pairs == 2) {
                 twoPair = true;
                 this.type = "Two Pair";
-                this.combinationStrength = 4000000 + (higherPair * 5000) + (smallerPair * 500) + kicker1;
+                this.combinationStrength = 40000000 + (higherPair * 10000) + (smallerPair * 500) + kicker1;
 
             }
             if (pairs == 1) {
                 pair = true;
                 this.type = "Pair";
-                this.combinationStrength = 3000000 + (smallerPair * 5000) + (kicker3 * 100) + (kicker2 * 15) + kicker1;
+                this.combinationStrength = 30000000 + ((smallerPair+1) * 50000) + ((kicker3+1) * 1500) + ((kicker2+1) * 15) + kicker1;
             } else {
                 highcard = true;
                 this.type = "High Card";
-                this.combinationStrength = 10 + (kicker5 * 24000) + (kicker4 * 2000) + (kicker3 * 166) + (kicker2 * 13) + kicker1;
+                this.combinationStrength = 10 + ((kicker5+1) * 40000) + ((kicker4+1) * 2) + ((kicker3+1) * 190) + ((kicker2+1) * 13) + kicker1;
             }
         }
     }
@@ -391,9 +391,14 @@ public class HandCombination {
 
     public static ArrayList<Hand> rangeTrimForTurn(ArrayList<Hand> range, Board board) {
         ArrayList<Hand> newRange = new ArrayList<Hand>();
+        ArrayList<Card> cardContainer = new ArrayList<Card>();
+        cardContainer.add(board.getCards().get(0));
+        cardContainer.add(board.getCards().get(1));
+        cardContainer.add(board.getCards().get(2));
+        cardContainer.add(board.getCards().get(3));
 
         for(int i = 0; i < range.size(); i++){
-            if(hasDraws(range.get(i), board) || (new HandCombination(range.get(i), board.getCards()).getCombinationStrength()) > 3000000){
+            if(hasDraws(range.get(i), board) || (new HandCombination(range.get(i), cardContainer).getCombinationStrength()) > 3000000){
                 newRange.add(range.get(i));
             }
         }
@@ -405,7 +410,11 @@ public class HandCombination {
         ArrayList<Card> cardContainer = new ArrayList<Card>();
         cardContainer.add(hand.getCards()[0]);
         cardContainer.add(hand.getCards()[1]);
-        cardContainer.addAll(board.getCards());
+        cardContainer.add(board.getCards().get(0));
+        cardContainer.add(board.getCards().get(1));
+        cardContainer.add(board.getCards().get(2));
+        cardContainer.add(board.getCards().get(3));
+
 
         //2  3  4  5  6  7  8  9  T  J  Q  K  A
         int[] ranks = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

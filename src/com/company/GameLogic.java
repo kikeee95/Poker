@@ -19,7 +19,7 @@ public final class GameLogic {
     }
 
 
-    private static void preflopAction(Board board) {
+    public static void preflopAction(Board board) {
         PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
 
         // saját kártyáink értéke
@@ -87,7 +87,7 @@ public final class GameLogic {
                 }
 
                 // ha volt 1 emelés
-            } else if (raises == 1) {
+            } else if (raises == 1 && !board.getPlayers().get(0).getPreflopAction().equalsIgnoreCase("raise")) {
                 int raisePosition = -1;
 
                 for (int i = 0; i < board.getPlayers().size(); i++) {
@@ -291,8 +291,9 @@ public final class GameLogic {
         }
     }
 
-    private static void flopAction(Board board) {
+    public static void flopAction(Board board) {
         // rangek kiosztása
+        int opponentsNumb = 0;
 
         ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
 
@@ -300,9 +301,11 @@ public final class GameLogic {
             if (i != 0) {
                 if (board.getPlayers().get(i).hasCards) {
                     opponents.add((PlayerAI) board.getPlayers().get(i));
+                    opponentsNumb++;
                 }
             }
         }
+        System.out.println("Ellenfelek száma" + opponentsNumb);
 
         for (int i = 0; i < opponents.size(); i++) {
             if (opponents.get(i).getPlayerType().equalsIgnoreCase("fish")) {
@@ -312,90 +315,117 @@ public final class GameLogic {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         if (opponents.get(i).getPosition() == 0) {
                             opponents.get(i).setRange(Ranges.standardPos1OR);
+                            System.out.println("Range set to: StandardPos1OR");
                         }
                         if (opponents.get(i).getPosition() == 1) {
                             opponents.get(i).setRange(Ranges.standardPos2OR);
+                            System.out.println("Range set to: StandardPos2OR");
                         }
                         if (opponents.get(i).getPosition() == 2) {
                             opponents.get(i).setRange(Ranges.standardPos3OR);
+                            System.out.println("Range set to: StandardPos3OR");
                         }
                         if (opponents.get(i).getPosition() == 3) {
                             opponents.get(i).setRange(Ranges.standardPos4OR);
+                            System.out.println("Range set to: StandardPos4OR");
                         }
                         if (opponents.get(i).getPosition() == 4) {
                             opponents.get(i).setRange(Ranges.standardPos5OR);
+                            System.out.println("Range set to: StandardPos5OR");
                         }
                         if (opponents.get(i).getPosition() == 5) {
                             opponents.get(i).setRange(Ranges.standardPos6OR);
+                            System.out.println("Range set to: StandardPos6OR");
                         }
                         if (opponents.get(i).getPosition() == 6) {
                             opponents.get(i).setRange(Ranges.standardPos7OR);
+                            System.out.println("Range set to: StandardPos7OR");
                         }
                         if (opponents.get(i).getPosition() == 7) {
                             opponents.get(i).setRange(Ranges.standardPos8OR);
+                            System.out.println("Range set to: StandardPos8OR");
                         }
                         if (opponents.get(i).getPosition() == 8) {
                             opponents.get(i).setRange(Ranges.standardPos9OR);
+                            System.out.println("Range set to: StandardPos9OR");
                         }
 
                     }
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
                         if (opponents.get(i).getPosition() == 0) {
                             opponents.get(i).setRange(Ranges.tightPos1OR);
+                            System.out.println("Range set to: tightPos1OR");
                         }
                         if (opponents.get(i).getPosition() == 1) {
                             opponents.get(i).setRange(Ranges.tightPos2OR);
+                            System.out.println("Range set to: tightPos2OR");
                         }
                         if (opponents.get(i).getPosition() == 2) {
                             opponents.get(i).setRange(Ranges.tightPos3OR);
+                            System.out.println("Range set to: tightPos3OR");
                         }
                         if (opponents.get(i).getPosition() == 3) {
                             opponents.get(i).setRange(Ranges.tightPos4OR);
+                            System.out.println("Range set to: tightPos4OR");
                         }
                         if (opponents.get(i).getPosition() == 4) {
                             opponents.get(i).setRange(Ranges.tightPos5OR);
+                            System.out.println("Range set to: tightPos5OR");
                         }
                         if (opponents.get(i).getPosition() == 5) {
                             opponents.get(i).setRange(Ranges.tightPos6OR);
+                            System.out.println("Range set to: tightPos6OR");
                         }
                         if (opponents.get(i).getPosition() == 6) {
                             opponents.get(i).setRange(Ranges.tightPos7OR);
+                            System.out.println("Range set to: tightPos7OR");
                         }
                         if (opponents.get(i).getPosition() == 7) {
                             opponents.get(i).setRange(Ranges.tightPos8OR);
+                            System.out.println("Range set to: tightPos8OR");
                         }
                         if (opponents.get(i).getPosition() == 8) {
                             opponents.get(i).setRange(Ranges.tightPos9OR);
+                            System.out.println("Range set to: tightPos9OR");
                         }
                     }
 
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         if (opponents.get(i).getPosition() == 0) {
                             opponents.get(i).setRange(Ranges.loosePos1OR);
+                            System.out.println("Range set to: loosePos1OR");
                         }
                         if (opponents.get(i).getPosition() == 1) {
                             opponents.get(i).setRange(Ranges.loosePos2OR);
+                            System.out.println("Range set to: loosePos2OR");
                         }
                         if (opponents.get(i).getPosition() == 2) {
                             opponents.get(i).setRange(Ranges.loosePos3OR);
+                            System.out.println("Range set to: loosePos3OR");
                         }
                         if (opponents.get(i).getPosition() == 3) {
                             opponents.get(i).setRange(Ranges.loosePos4OR);
+                            System.out.println("Range set to: loosePos4OR");
                         }
                         if (opponents.get(i).getPosition() == 4) {
                             opponents.get(i).setRange(Ranges.loosePos5OR);
+                            System.out.println("Range set to: loosePos5OR");
                         }
                         if (opponents.get(i).getPosition() == 5) {
                             opponents.get(i).setRange(Ranges.loosePos6OR);
+                            System.out.println("Range set to: loosePos6OR");
                         }
                         if (opponents.get(i).getPosition() == 6) {
                             opponents.get(i).setRange(Ranges.loosePos7OR);
+                            System.out.println("Range set to: loosePos7OR");
                         }
                         if (opponents.get(i).getPosition() == 7) {
                             opponents.get(i).setRange(Ranges.loosePos8OR);
+                            System.out.println("Range set to: loosePos8OR");
                         }
                         if (opponents.get(i).getPosition() == 8) {
                             opponents.get(i).setRange(Ranges.loosePos9OR);
+                            System.out.println("Range set to: loosePos9OR");
                         }
                     }
                 }
@@ -413,46 +443,59 @@ public final class GameLogic {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
                         if (preflopRaiserPos == 0) {
                             opponents.get(i).setRange(Ranges.VsStandardPos1ORCall);
+                            System.out.println("Range set to: VsStandardPos1ORCall");
                         }
                         if (preflopRaiserPos == 1) {
                             opponents.get(i).setRange(Ranges.VsStandardPos2ORCall);
+                            System.out.println("Range set to: VsStandardPos2ORCall");
                         }
                         if (preflopRaiserPos == 2) {
                             opponents.get(i).setRange(Ranges.VsStandardPos3ORCall);
+                            System.out.println("Range set to: VsStandardPos3ORCall");
                         }
                         if (preflopRaiserPos == 3) {
                             opponents.get(i).setRange(Ranges.VsStandardPos4ORCall);
+                            System.out.println("Range set to: VsStandardPos4ORCall");
                         }
                         if (preflopRaiserPos == 4) {
                             opponents.get(i).setRange(Ranges.VsStandardPos5ORCall);
+                            System.out.println("Range set to: VsStandardPos5ORCall");
                         }
                         if (preflopRaiserPos == 5) {
                             opponents.get(i).setRange(Ranges.VsStandardPos6ORCall);
+                            System.out.println("Range set to: VsStandardPos6ORCall");
                         }
                         if (preflopRaiserPos == 6) {
                             opponents.get(i).setRange(Ranges.VsStandardPos7ORCall);
+                            System.out.println("Range set to: VsStandardPos7ORCall");
                         }
                         if (preflopRaiserPos == 7) {
                             opponents.get(i).setRange(Ranges.VsStandardPos8ORCall);
+                            System.out.println("Range set to: VsStandardPos8ORCall");
                         }
                         if (preflopRaiserPos == 8) {
                             opponents.get(i).setRange(Ranges.VsStandardPos8ORCall);
+                            System.out.println("Range set to: VsStandardPos8ORCall");
                         }
                     }
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.standardCallEarly);
+                            System.out.println("Range set to: standardCallEarly");
                         }
                         if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.standardCallLate);
+                            System.out.println("Range set to: standardCallLate");
                         }
                     }
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.looseCallEarly);
+                            System.out.println("Range set to: looseCallEarly");
                         }
                         if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.looseCallLate);
+                            System.out.println("Range set to: looseCallLate");
                         }
                     }
                 }
@@ -469,43 +512,56 @@ public final class GameLogic {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
                         if (preflopRaiserPos == 0) {
                             opponents.get(i).setRange(Ranges.VsStandardPos1OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 1) {
                             opponents.get(i).setRange(Ranges.VsStandardPos2OR3B);
+                            System.out.println("Range set to: VsStandardPos2OR3B");
                         }
                         if (preflopRaiserPos == 2) {
                             opponents.get(i).setRange(Ranges.VsStandardPos3OR3B);
+                            System.out.println("Range set to: VsStandardPos3OR3B");
                         }
                         if (preflopRaiserPos == 3) {
                             opponents.get(i).setRange(Ranges.VsStandardPos4OR3B);
+                            System.out.println("Range set to: VsStandardPos4OR3B");
                         }
                         if (preflopRaiserPos == 4) {
                             opponents.get(i).setRange(Ranges.VsStandardPos5OR3B);
+                            System.out.println("Range set to: VsStandardPos5OR3B");
                         }
                         if (preflopRaiserPos == 5) {
                             opponents.get(i).setRange(Ranges.VsStandardPos6OR3B);
+                            System.out.println("Range set to: VsStandardPos6OR3B");
                         }
                         if (preflopRaiserPos == 6) {
                             opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                            System.out.println("Range set to: VsStandardPos7OR3B");
                         }
                         if (preflopRaiserPos == 7) {
                             opponents.get(i).setRange(Ranges.VsStandardPos8OR3B);
+                            System.out.println("Range set to: VsStandardPos8OR3B");
                         }
                         if (preflopRaiserPos == 8) {
                             opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                            System.out.println("Range set to: VsStandardPos7OR3B");
                         }
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.standard3BetEarly);
+                            System.out.println("Range set to: standard3BetEarly");
                         }
                         if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.standard3BetCallLate);
+                            System.out.println("Range set to: standard3BetCallLate");
                         }
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.loose3BetEarly);
+                            System.out.println("Range set to: loose3BetEarly");
                         } else if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.loose3BetLate);
+                            System.out.println("Range set to: loose3BetLate");
                         }
                     }
                 }
@@ -522,43 +578,56 @@ public final class GameLogic {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
                         if (preflopRaiserPos == 0) {
                             opponents.get(i).setRange(Ranges.VsStandardPos1OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 1) {
                             opponents.get(i).setRange(Ranges.VsStandardPos2OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 2) {
                             opponents.get(i).setRange(Ranges.VsStandardPos3OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 3) {
                             opponents.get(i).setRange(Ranges.VsStandardPos4OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 4) {
                             opponents.get(i).setRange(Ranges.VsStandardPos5OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 5) {
                             opponents.get(i).setRange(Ranges.VsStandardPos6OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 6) {
                             opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 7) {
                             opponents.get(i).setRange(Ranges.VsStandardPos8OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                         if (preflopRaiserPos == 8) {
                             opponents.get(i).setRange(Ranges.VsStandardPos7OR3B);
+                            System.out.println("Range set to: VsStandardPos1OR3B");
                         }
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.standard3BetEarly);
+                            System.out.println("Range set to: standard3BetEarly");
                         }
                         if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.standard3BetCallLate);
+                            System.out.println("Range set to: standard3BetCallLate");
                         }
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.loose3BetEarly);
+                            System.out.println("Range set to: loose3BetEarly");
                         } else if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.loose3BetLate);
+                            System.out.println("Range set to: loose3BetLate");
                         }
                     }
                 }
@@ -566,15 +635,19 @@ public final class GameLogic {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight") || opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.standard3BetCallEarly);
+                            System.out.println("Range set to: standard3BetCallEarly");
                         }
                         if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.standard3BetCallLate);
+                            System.out.println("Range set to: standard3BetCallLate");
                         }
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         if (preflopRaiserPos <= 3) {
                             opponents.get(i).setRange(Ranges.loose3BetCallEarly);
+                            System.out.println("Range set to: loose3BetCallEarly");
                         } else if (preflopRaiserPos > 3) {
                             opponents.get(i).setRange(Ranges.loose3BetCallLate);
+                            System.out.println("Range set to: loose3BetCallLate");
                         }
                     }
                 }
@@ -591,26 +664,33 @@ public final class GameLogic {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight")) {
                         if (opponents.get(i).getPosition() <= 3) {
                             opponents.get(i).setRange(Ranges.Vs3BetEarly4Bet);
+                            System.out.println("Range set to: Vs3BetEarly4Bet");
                         } else if (opponents.get(i).getPosition() > 3) {
                             opponents.get(i).setRange(Ranges.Vs3BetLate4Bet);
+                            System.out.println("Range set to: Vs3BetLate4bet");
                         }
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         opponents.get(i).setRange(Ranges.standard4Bet);
+                        System.out.println("Range set to: standard4Bet");
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         opponents.get(i).setRange(Ranges.loose4Bet);
+                        System.out.println("Range set to: loose4Bet");
                     }
                 }
                 if (opponents.get(i).getPreflopAction().equalsIgnoreCase("call")) {
                     if (opponents.get(i).getPlayerType().equalsIgnoreCase("tight") || opponents.get(i).getPlayerType().equalsIgnoreCase("standard")) {
                         opponents.get(i).setRange(Ranges.standard3BetEarly);
+                        System.out.println("Range set to: standard3BetEarly");
                     } else if (opponents.get(i).getPlayerType().equalsIgnoreCase("loose")) {
                         opponents.get(i).setRange(Ranges.standard3BetLate);
+                        System.out.println("Range set to: standard3BetLate");
                     }
                 }
             }
         }
         PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
 
+        System.out.println("Ellenfelek száma: " + opponents.size());
         player.equity(opponents, board.getCards());
 
         // Jelenlegi showdown value
@@ -674,8 +754,10 @@ public final class GameLogic {
                         System.out.println("Flop: fold");
                     }
                 }
+            }
+        }
                 // ha emeltek ránk
-                if (player.getFlopAction().equalsIgnoreCase("bet") || player.getFlopAction().equalsIgnoreCase("raise")) {
+                if ((player.getFlopAction().equalsIgnoreCase("bet") || player.getFlopAction().equalsIgnoreCase("raise")) && betAction ) {
                     if (betterAgression >= 2.0) {
                         if (player.getEquity() > 0.8) {
                             board.getPlayers().get(0).setFlopAction("raise");
@@ -700,7 +782,6 @@ public final class GameLogic {
                         }
                     }
                 }
-            }
             // ha nem mi vagyunk a preflop agressor
             if (player.getPreflopAction().equalsIgnoreCase("call") && player.getFlopAction().equalsIgnoreCase("No action")) {
                 if (!betAction) {
@@ -747,9 +828,8 @@ public final class GameLogic {
                 }
             }
         }
-    }
 
-    private static void turnAction(Board board) {
+    public static void turnAction(Board board) {
         ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
 
         for (int i = 0; i < board.getPlayers().size(); i++) {
@@ -916,7 +996,7 @@ public final class GameLogic {
         }
     }
 
-    private static void riverAction(Board board) {
+    public static void riverAction(Board board) {
         ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
 
         for (int i = 0; i < board.getPlayers().size(); i++) {

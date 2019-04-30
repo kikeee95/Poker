@@ -23,6 +23,7 @@ public final class ScreenReader{
         BufferedImage[] playerNames = new BufferedImage[9];
         BufferedImage[] playerMoney = new BufferedImage[9];
         BufferedImage[] playerAction = new BufferedImage[8];
+        boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
 
 
 
@@ -37,19 +38,17 @@ public final class ScreenReader{
         BufferedImage screencapture = new Robot().createScreenCapture(
                 new Rectangle(rect));
 
+        //aktív játékosok keresése
+
+        hasCards = hasCardsFunction(Constants.playersCardPosX, Constants.playersCardPosY, hasCards, screencapture);
+        assignCard(board, hasCards);
+
         if (isActive(screencapture)) {
             canRaise(screencapture, board);
 
-            boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
             //játék állapotának lekérdezése
 
             board.setGameState(gameState(screencapture));
-
-
-            //aktív játékosok keresése
-
-            hasCards = hasCardsFunction(Constants.playersCardPosX, Constants.playersCardPosY, hasCards, screencapture);
-            assignCard(board, hasCards);
 
 
             //játékosok adatainak begyűjtése
@@ -539,37 +538,65 @@ public final class ScreenReader{
             board.setPotType();
             board.setPlayerActions();
             board.setBoardType();
-            GameLogic.start(board);
+            assignCard(board, hasCards);
+
+/*
             int raises = 0;
-            for(int i = 0; i < board.getPlayers().size(); i++){
-                if(board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("raise")){
-                    raises++;
+
+           // System.out.println("Hand: " + player.getHand().getCards()[0].getName() + "  " + player.getHand().getCards()[1].getName());
+          //  System.out.println("Preflop Action: " +player.getPreflopAction());
+            System.out.println("Preflop raises: " + raises);
+          //  System.out.println("Flop Action: " + player.getFlopAction());
+           // System.out.println("Turn Action: " + player.getTurnAction());
+           // System.out.println("River Action: "+ player.getRiverAction());
+           // System.out.println(board.getGameState());
+            if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("preflop")) {
+                System.out.println("PreflopActionok: ");
+                for (int i = 0; i < board.getPlayers().size(); i++) {
+                    if (board.getPlayers().get(i).hasCards) {
+                        System.out.println(board.getPlayers().get(i).getName() + "   " + board.getPlayers().get(i).getPreflopAction());
+                    }
                 }
             }
-            System.out.println("Hand: " + player.getHand().getCards()[0].getName() + "  " + player.getHand().getCards()[1].getName());
-            System.out.println("Preflop Action: " +player.getPreflopAction());
-            System.out.println("Preflop raises: " + raises);
-            System.out.println("Flop Action: " + player.getFlopAction());
-            System.out.println("Turn Action: " + player.getTurnAction());
-            System.out.println("River Action: "+ player.getRiverAction());
-            System.out.println(board.getGameState());
-            System.out.println("Preflop actionok: ");
-            for(int i = 0; i < board.getPlayers().size(); i++){
-                if(board.getPlayers().get(i).hasCards){
-                    System.out.println(board.getPlayers().get(i).getName() + "   "  + board.getPlayers().get(i).getPreflopAction());
+            if(board.getGameState().equalsIgnoreCase("flop")) {
+                System.out.println("FlopActionok: ");
+                for (int i = 0; i < board.getPlayers().size(); i++) {
+                    if (board.getPlayers().get(i).hasCards) {
+                        System.out.println(board.getPlayers().get(i).getName() + "   " + board.getPlayers().get(i).getFlopAction());
+                    }
+                }
+            }
+            if(board.getGameState().equalsIgnoreCase("turn")) {
+                System.out.println("TurnActionok: ");
+                for (int i = 0; i < board.getPlayers().size(); i++) {
+                    if (board.getPlayers().get(i).hasCards) {
+                        System.out.println(board.getPlayers().get(i).getName() + "   " + board.getPlayers().get(i).getTurnAction());
+                    }
                 }
             }
             if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
                 System.out.println("Equity: " + player.getEquity());
+                System.out.println("Pot odds: " + player.getPotOdds());
 
                 for (int i = 0; i < board.getPlayers().size(); i++) {
                     if (board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("raise") || board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("bet")) {
                         raises++;
                     }
                 }
-                System.out.println("Flop raises: " + raises );
-            }
+                System.out.println("Preflop raises: " + raises );
+            }*/
+            System.out.println("Flop action: " + player.getFlopAction());
             System.out.println("");
+            if(board.getGameState().equalsIgnoreCase("preflop")){
+                GameLogic.preflopAction(board);
+            }else if(board.getGameState().equalsIgnoreCase("flop")){
+                GameLogic.flopAction(board);
+            }else if(board.getGameState().equalsIgnoreCase("turn")){
+                GameLogic.turnAction(board);
+            }else{
+                GameLogic.riverAction(board);
+            }
+
             Thread.sleep(5000);
         }
         long endTime = System.nanoTime();
@@ -669,6 +696,8 @@ public final class ScreenReader{
         for (int i = 0; i < hasCards.length; i++) {
             if (hasCards[i]) {
                 board.getPlayers().get(i + 1).setHasCards(true);
+            }else{
+                board.getPlayers().get(i+1).setHasCards(false);
             }
         }
     }
