@@ -1,17 +1,20 @@
 package com.company;
 
 import com.sun.jna.platform.WindowUtils;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
-public final class ScreenReader {
+public final class ScreenReader{
 
 
-    public static void readScreen(Board board) throws Exception {
+    public static void readScreen(Board board)  throws Exception {
 
 
         String PlayerButton1 = "";
@@ -532,19 +535,42 @@ public final class ScreenReader {
                 containerArray = container.split(" ");
                 board.getPlayers().get(8).setAction(containerArray[0].replaceAll("\\s+", ""), board);
             }
-            System.out.println();
-            System.out.println(player.getHand().getCards()[0].getName() + "  " + player.getHand().getCards()[1].getName());
-            System.out.println(player.getPreflopAction());
-            System.out.println(player.getTurnAction());
-            System.out.println(player.getRiverAction());
-            System.out.println(board.getGameState());
-            System.out.println("");
             board.setPlayerPositions();
             board.setPotType();
             board.setPlayerActions();
             board.setBoardType();
             GameLogic.start(board);
-            Thread.sleep(2000);
+            int raises = 0;
+            for(int i = 0; i < board.getPlayers().size(); i++){
+                if(board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("raise")){
+                    raises++;
+                }
+            }
+            System.out.println("Hand: " + player.getHand().getCards()[0].getName() + "  " + player.getHand().getCards()[1].getName());
+            System.out.println("Preflop Action: " +player.getPreflopAction());
+            System.out.println("Preflop raises: " + raises);
+            System.out.println("Flop Action: " + player.getFlopAction());
+            System.out.println("Turn Action: " + player.getTurnAction());
+            System.out.println("River Action: "+ player.getRiverAction());
+            System.out.println(board.getGameState());
+            System.out.println("Preflop actionok: ");
+            for(int i = 0; i < board.getPlayers().size(); i++){
+                if(board.getPlayers().get(i).hasCards){
+                    System.out.println(board.getPlayers().get(i).getName() + "   "  + board.getPlayers().get(i).getPreflopAction());
+                }
+            }
+            if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
+                System.out.println("Equity: " + player.getEquity());
+
+                for (int i = 0; i < board.getPlayers().size(); i++) {
+                    if (board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("raise") || board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("bet")) {
+                        raises++;
+                    }
+                }
+                System.out.println("Flop raises: " + raises );
+            }
+            System.out.println("");
+            Thread.sleep(5000);
         }
         long endTime = System.nanoTime();
         long timeElapsed = endTime - startTime;
@@ -646,4 +672,5 @@ public final class ScreenReader {
             }
         }
     }
+
 }

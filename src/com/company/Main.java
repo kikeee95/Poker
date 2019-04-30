@@ -44,24 +44,23 @@ public class Main {
         Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
 
 /*
-        player1.setHand(new Hand(new Card("jd"), new Card("jh")));
-        Card card1 = new Card("7d");
-        Card card2 = new Card("7h");
-        Card card3 = new Card("tc");
+        player1.setHand(new Hand(new Card("Ah"), new Card("Kh")));
+        Card card1 = new Card("4h");
+        Card card2 = new Card("5c");
+        Card card3 = new Card("4d");
         ArrayList<Card> cards = new ArrayList<Card>();
         cards.add(card1);
         cards.add(card2);
         cards.add(card3);
 
-        player2.setRange(Ranges.tightPos1OR);
-        player3.setRange(Ranges.loosePos7OR);
+        player2.setRange(Ranges.standardCallLate);
+
 
         ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
         opponents.add(player2);
-        opponents.add(player3);
         player1.equity(opponents, cards);
-       System.out.println(player1.getEquity());*/
-
+       System.out.println(player1.getEquity());
+*/
 
         for (; ; ) {
             try {
@@ -69,14 +68,6 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-/*
-            board.setPlayerPositions();
-            board.setPotType();
-            board.setPlayerActions();
-            board.setBoardType();
-            GameLogic.flopAction(board);
-            */
-
         }
     }
 

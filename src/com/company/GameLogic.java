@@ -43,8 +43,10 @@ public final class GameLogic {
 
             //emelések száma előttünk
             for (int i = 0; i < board.getPlayers().size(); i++) {
-                if (board.getPlayers().get(i).getAction().equalsIgnoreCase("raise")) {
-                    raises++;
+                if(i != 0) {
+                    if (board.getPlayers().get(i).getAction().equalsIgnoreCase("raise")) {
+                        raises++;
+                    }
                 }
             }
             // ha nem volt emelés
@@ -105,14 +107,13 @@ public final class GameLogic {
                 vsRaise3Bet.add(Ranges.VsStandardPos6OR3B);
                 vsRaise3Bet.add(Ranges.VsStandardPos7OR3B);
                 vsRaise3Bet.add(Ranges.VsStandardPos8OR3B);
+                vsRaise3Bet.add(Ranges.VsStandardPos8OR3B);
 
                 boolean do3bet = false;
 
                 for (int i = 0; i < vsRaise3Bet.get(raisePosition).length; i++) {
-                    if(i != 8) {
                         if (holeCardValue == vsRaise3Bet.get(raisePosition)[i]) {
                             do3bet = true;
-                        }
                     }
                 }
 
@@ -157,7 +158,7 @@ public final class GameLogic {
                 }
 
                 //ha 2 emelés volt
-            } else if (raises == 2) {
+            } else if (raises == 2 || (raises == 1 && board.getPlayers().get(0).getPreflopAction().equalsIgnoreCase("raise"))) {
 
                 // megnézzük hogy ránk emeltek-e
 
@@ -631,8 +632,8 @@ public final class GameLogic {
                 betterAgression = opponents.get(i).getAggression();
             }
         }
-        // ha mi vagyunk a preflop agressor és még nem cselekedtünk a körben
-        if (player.getPreflopAction().equalsIgnoreCase("raise") && player.getFlopAction().equalsIgnoreCase("No action")) {
+        // ha mi vagyunk a preflop agressor és még nem cselekedtünk a körben vagy checkeltünk
+        if (player.getPreflopAction().equalsIgnoreCase("raise") && (player.getFlopAction().equalsIgnoreCase("No action")) || player.getFlopAction().equalsIgnoreCase("check")) {
             // ha nem volt még bet
             if (!betAction) {
                 // ha gyenge párunk van
@@ -790,7 +791,7 @@ public final class GameLogic {
             }
         }
         // ha mi vagyunk a flop agressor és még nem cselekedtünk a körben
-        if ((player.getFlopAction().equalsIgnoreCase("raise") || player.getFlopAction().equalsIgnoreCase("bet")) && player.getTurnAction().equalsIgnoreCase("No action")) {
+        if ((player.getFlopAction().equalsIgnoreCase("raise") || player.getFlopAction().equalsIgnoreCase("bet")) && (player.getTurnAction().equalsIgnoreCase("No action")) || player.getTurnAction().equalsIgnoreCase("check")) {
             // ha nem volt még bet
             if (!betAction) {
             }
@@ -951,7 +952,7 @@ public final class GameLogic {
         }
 
         // ha mi vagyunk a turn agresszor és nem cselekedtünk
-        if ((player.getTurnAction().equalsIgnoreCase("raise") || player.getTurnAction().equalsIgnoreCase("bet")) && player.getRiverAction().equalsIgnoreCase("No action")) {
+        if ((player.getTurnAction().equalsIgnoreCase("raise") || player.getTurnAction().equalsIgnoreCase("bet")) && (player.getRiverAction().equalsIgnoreCase("No action")) || player.getRiverAction().equalsIgnoreCase("check")) {
             // ha nem volt még bet
             if (!betAction) {
                 if (player.getEquity() > 0.65) {
