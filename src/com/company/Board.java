@@ -231,10 +231,22 @@ public class Board {
     }
 
     public void setPlayerActions() {
-        if (this.getGameState().equalsIgnoreCase("flop")) {
-            for (int i = 0; i < this.getPlayers().size(); i++) {
-                if (players.get(i).getPreflopAction().equalsIgnoreCase("No action")) {
-                    this.getPlayers().get(i).setPreflopAction("call");
+        for (int i = 0; i < this.players.size(); i++) {
+            if (this.players.get(i).hasCards) {
+                if (this.getGameState().equalsIgnoreCase("flop")) {
+                    if (this.players.get(i).getPreflopAction().equalsIgnoreCase("No action")) {
+                        this.getPlayers().get(i).setPreflopAction("call");
+                    }
+                }
+                if (this.getGameState().equalsIgnoreCase("turn")) {
+                    if (this.players.get(i).getFlopAction().equalsIgnoreCase("No action")) {
+                        this.getPlayers().get(i).setFlopAction("call");
+                    }
+                }
+                if (this.getGameState().equalsIgnoreCase("river")) {
+                    if (this.players.get(i).getTurnAction().equalsIgnoreCase("No action")) {
+                        this.getPlayers().get(i).setTurnAction("call");
+                    }
                 }
             }
         }

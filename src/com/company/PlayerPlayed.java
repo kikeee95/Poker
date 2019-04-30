@@ -85,7 +85,7 @@ public class PlayerPlayed extends Player {
             int hands = 0;
 
             long timerStart = System.nanoTime();
-            for(int i = 0; i < 25000; i++){
+            for(int i = 0; i < 10000; i++){
                 if(equityInnerCalculation(opponent, cards)){
                     wins++;
                 }

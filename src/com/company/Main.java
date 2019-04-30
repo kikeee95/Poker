@@ -69,12 +69,13 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+/*
             board.setPlayerPositions();
             board.setPotType();
             board.setPlayerActions();
             board.setBoardType();
-            // GameLogic.flopAction(board);
+            GameLogic.flopAction(board);
+            */
 
         }
     }

@@ -532,7 +532,19 @@ public final class ScreenReader {
                 containerArray = container.split(" ");
                 board.getPlayers().get(8).setAction(containerArray[0].replaceAll("\\s+", ""), board);
             }
+            System.out.println();
+            System.out.println(player.getHand().getCards()[0].getName() + "  " + player.getHand().getCards()[1].getName());
+            System.out.println(player.getPreflopAction());
+            System.out.println(player.getTurnAction());
+            System.out.println(player.getRiverAction());
+            System.out.println(board.getGameState());
+            System.out.println("");
+            board.setPlayerPositions();
+            board.setPotType();
+            board.setPlayerActions();
+            board.setBoardType();
             GameLogic.start(board);
+            Thread.sleep(2000);
         }
         long endTime = System.nanoTime();
         long timeElapsed = endTime - startTime;
