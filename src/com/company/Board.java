@@ -23,10 +23,12 @@ public class Board {
         this.players.add(player9);
         this.gameState = "Unknown";
         this.pot = 0;
-        this.buttonPosition = 0;
+        this.buttonPosition = -1;
         this.potType = "normal";
         this.isWetBoard = false;
+
     }
+
 
     public String getGameState() {
         return gameState;
@@ -256,7 +258,7 @@ public class Board {
         int raises = 0;
         if (this.getGameState().equalsIgnoreCase("preflop")) {
             for (int i = 0; i < this.getPlayers().size(); i++) {
-                if (this.getPlayers().get(i).getAction().toLowerCase().equals("raise")) {
+                if (this.getPlayers().get(i).getPreflopAction().toLowerCase().equals("raise")) {
                     raises++;
                 }
             }

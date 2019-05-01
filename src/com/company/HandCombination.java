@@ -392,28 +392,28 @@ public class HandCombination {
     public static ArrayList<Hand> rangeTrimForTurn(ArrayList<Hand> range, Board board) {
         ArrayList<Hand> newRange = new ArrayList<Hand>();
         ArrayList<Card> cardContainer = new ArrayList<Card>();
-        cardContainer.add(board.getCards().get(0));
-        cardContainer.add(board.getCards().get(1));
-        cardContainer.add(board.getCards().get(2));
-        cardContainer.add(board.getCards().get(3));
+
 
         for(int i = 0; i < range.size(); i++){
-            if(hasDraws(range.get(i), board) || (new HandCombination(range.get(i), cardContainer).getCombinationStrength()) > 3000000){
+            cardContainer.clear();
+            cardContainer.add(board.getCards().get(0));
+            cardContainer.add(board.getCards().get(1));
+            cardContainer.add(board.getCards().get(2));
+            cardContainer.add(range.get(i).getCards()[0]);
+            cardContainer.add(range.get(i).getCards()[1]);
+            if(hasDraws(range.get(i), cardContainer) || (new HandCombination(cardContainer).getCombinationStrength()) > 3000000){
                 newRange.add(range.get(i));
             }
         }
         return newRange;
     }
 
-    private static boolean hasDraws(Hand hand, Board board) {
-        boolean draw = false;
+    private static boolean hasDraws(Hand hand, ArrayList<Card> cards) {
         ArrayList<Card> cardContainer = new ArrayList<Card>();
         cardContainer.add(hand.getCards()[0]);
         cardContainer.add(hand.getCards()[1]);
-        cardContainer.add(board.getCards().get(0));
-        cardContainer.add(board.getCards().get(1));
-        cardContainer.add(board.getCards().get(2));
-        cardContainer.add(board.getCards().get(3));
+        cardContainer.addAll(cards);
+        boolean draw = false;
 
 
         //2  3  4  5  6  7  8  9  T  J  Q  K  A

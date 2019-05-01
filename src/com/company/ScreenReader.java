@@ -219,13 +219,14 @@ public final class ScreenReader{
 
             }
 
-            //button keresése
 
-            for (int i = 0; i < 8; i++) {
+
+            for (int i = 0; i < 9; i++) {
 
                 if (Constants.buttonRGB == (screencapture.getRGB(Constants.buttonPosX[i], Constants.buttonPosY[i]))) {
                     if (i != board.getButtonPosition()) {
                         board.setButtonPosition(i);
+                        System.out.println("New Hand");
 
                         //új leosztás ha a btn helyzete megváltozott
                         board.removeCards();
@@ -238,6 +239,7 @@ public final class ScreenReader{
                             board.getPlayers().get(j).setTurnAction("No action");
                             board.getPlayers().get(j).setRiverAction("No action");
                         }
+                        board.setPotType();
                     }
                 }
             }
@@ -359,6 +361,7 @@ public final class ScreenReader{
                 buttonContainer = buttonContainer.replaceAll("[$]", "");
                 buttonContainer = buttonContainer.replaceAll("\\s+", "");
                 player.setAmountToCall(Double.parseDouble(buttonContainer));
+
             } else {
                 player.setAmountToCall(0);
             }
@@ -577,36 +580,39 @@ public final class ScreenReader{
             if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
                 System.out.println("Equity: " + player.getEquity());
                 System.out.println("Pot odds: " + player.getPotOdds());
-
-                for (int i = 0; i < board.getPlayers().size(); i++) {
-                    if (board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("raise") || board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("bet")) {
-                        raises++;
-                    }
+*/
+            int raises = 0;
+            for (int i = 0; i < board.getPlayers().size(); i++) {
+                if (board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("raise") || board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("bet")) {
+                    raises++;
                 }
-                System.out.println("Preflop raises: " + raises );
-            }*/
-            System.out.println("Flop action: " + player.getFlopAction());
+            }
+            System.out.println(raises);
+
             System.out.println("");
-            if(board.getGameState().equalsIgnoreCase("preflop")){
+
+            if (board.getGameState().equalsIgnoreCase("preflop")) {
                 GameLogic.preflopAction(board);
-            }else if(board.getGameState().equalsIgnoreCase("flop")){
+            } else if (board.getGameState().equalsIgnoreCase("flop")) {
                 GameLogic.flopAction(board);
-            }else if(board.getGameState().equalsIgnoreCase("turn")){
+            } else if (board.getGameState().equalsIgnoreCase("turn")) {
                 GameLogic.turnAction(board);
-            }else{
+            } else if(board.getGameState().equalsIgnoreCase("river")) {
                 GameLogic.riverAction(board);
             }
+            player.calculatePotOdds(board);
+            System.out.println();
+            System.out.println("Equity: "+ player.getEquity() + "  Pot odds: " + player.getPotOdds());
+        }
 
             Thread.sleep(5000);
         }
-        long endTime = System.nanoTime();
-        long timeElapsed = endTime - startTime;
+
 
 
         //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
 
-    }
 
 
     private static boolean isActive(BufferedImage screenCapture) {
