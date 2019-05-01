@@ -25,57 +25,36 @@ public class Main {
     public static void main(String args[]) throws
             AWTException, IOException, InterruptedException {
 
-        String PlayerButton1 = "";
-        String PlayerButton2 = "";
-        String PlayerButton3 = "";
-        boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
-        BufferedImage[] playerNames = new BufferedImage[9];
-        BufferedImage[] playerMoney = new BufferedImage[9];
-        BufferedImage[] playerAction = new BufferedImage[8];
-        PlayerPlayed player1 = new PlayerPlayed();
-        PlayerAI player2 = new PlayerAI();
-        PlayerAI player3 = new PlayerAI();
-        PlayerAI player4 = new PlayerAI();
-        PlayerAI player5 = new PlayerAI();
-        PlayerAI player6 = new PlayerAI();
-        PlayerAI player7 = new PlayerAI();
-        PlayerAI player8 = new PlayerAI();
-        PlayerAI player9 = new PlayerAI();
-        Board board = new Board(player1, player2, player3, player4, player5, player6, player7, player8, player9);
+
+        Gui gui = new Gui();
+        int timerSec = 1;
+        TimerTask timerObj = new TimerObj();
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(timerObj, 0, timerSec * 1000);
 
 
-        player1.setHand(new Hand(new Card("ah"), new Card("Kc")));
-        Card card1 = new Card("ad");
-        Card card2 = new Card("3d");
-        Card card3 = new Card("kd");
-        ArrayList<Card> cards = new ArrayList<Card>();
-        cards.add(card1);
-        cards.add(card2);
-        cards.add(card3);
-
-        player2.setRange(Ranges.standard3BetEarly);
-        player3.setRange(Ranges.standard3BetEarly);
+    }
+}
 
 
-        ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
-        opponents.add(player3);
-        opponents.add(player2);
-      // player1.equity(opponents, cards);
-     //  System.out.println(player1.getEquity());
+class TimerObj extends TimerTask {
+    Gui gui = new Gui();
+    Board board = new Board();
 
+    @Override
+    public void run() {
 
-
-        for (; ; ) {
+        while (gui.isRunIt()) {
             try {
                 ScreenReader.readScreen(board);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Thread.sleep(1000);
         }
-
     }
-
-
 }
+
+
+
 

@@ -11,16 +11,16 @@ public class Board {
     private String potType;
     private boolean isWetBoard;
 
-    public Board(Player player1, Player player2, Player player3, Player player4, Player player5, Player player6, Player player7, Player player8, Player player9) {
-        this.players.add(player1);
-        this.players.add(player2);
-        this.players.add(player3);
-        this.players.add(player4);
-        this.players.add(player5);
-        this.players.add(player6);
-        this.players.add(player7);
-        this.players.add(player8);
-        this.players.add(player9);
+    public Board() {
+        this.players.add(new PlayerPlayed());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
+        this.players.add(new PlayerAI());
         this.gameState = "Unknown";
         this.pot = 0;
         this.buttonPosition = -1;
