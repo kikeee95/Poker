@@ -6,10 +6,12 @@ import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public final class ScreenReader{
 
@@ -265,6 +267,9 @@ public final class ScreenReader{
             BufferedImage screenCapturePlayerButton3 = new Robot().createScreenCapture(
                     new Rectangle(rect.x + Constants.playerButton3PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
 
+
+            File file = new File("D:/screencapture.jpg");
+            ImageIO.write(screencapture, "jpg", file);
 /*
               //Save as PNG
                 File file = new File("D:/screencapture.jpg");
@@ -344,7 +349,7 @@ public final class ScreenReader{
 */
             Tesseract tesseract = new Tesseract();
             tesseract.setDatapath("D:/Tesseract/");
-            tesseract.setTessVariable("tessedit_char_whitelist", "0123456789,$.");
+            tesseract.setTessVariable("tessedit_char_whitelist", "0123456789$.,");
 
 
             board.getPlayers().get(0).setName(tesseract.doOCR(playerNames[0]));
@@ -371,6 +376,7 @@ public final class ScreenReader{
             String container = tesseract.doOCR(screenCapturePotResized);
             container = container.replaceAll("[$]", "");
             container = container.replaceAll(",", ".");
+            container = container.replaceAll("\\s+", "");
             board.setPot(Double.parseDouble(container));
 
             container = tesseract.doOCR(playerMoney[0]);
@@ -591,21 +597,24 @@ public final class ScreenReader{
 
             System.out.println("");
 
-            if (board.getGameState().equalsIgnoreCase("preflop")) {
-                GameLogic.preflopAction(board);
-            } else if (board.getGameState().equalsIgnoreCase("flop")) {
-                GameLogic.flopAction(board);
-            } else if (board.getGameState().equalsIgnoreCase("turn")) {
-                GameLogic.turnAction(board);
-            } else if(board.getGameState().equalsIgnoreCase("river")) {
-                GameLogic.riverAction(board);
+            try {
+                if (board.getGameState().equalsIgnoreCase("preflop")) {
+                    GameLogic.preflopAction(board, rect);
+                } else if (board.getGameState().equalsIgnoreCase("flop")) {
+                    GameLogic.flopAction(board, rect);
+                } else if (board.getGameState().equalsIgnoreCase("turn")) {
+                    GameLogic.turnAction(board, rect);
+                } else if (board.getGameState().equalsIgnoreCase("river")) {
+                    GameLogic.riverAction(board, rect);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
             player.calculatePotOdds(board);
             System.out.println();
             System.out.println("Equity: "+ player.getEquity() + "  Pot odds: " + player.getPotOdds());
         }
 
-            Thread.sleep(5000);
         }
 
 

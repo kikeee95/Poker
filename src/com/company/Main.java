@@ -71,6 +71,7 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Thread.sleep(1000);
         }
 
     }
