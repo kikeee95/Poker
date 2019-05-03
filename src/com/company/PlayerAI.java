@@ -26,6 +26,11 @@ public class PlayerAI extends Player {
         this.riverAction = "No action";
         this.position = -1;
         this.playerType = "standard";
+        this.call = 1;
+        this.raise = 1;
+        this.check = 1;
+        this.bet = 1;
+        this.handsPlayed = 0;
     }
 
 
@@ -43,6 +48,59 @@ public class PlayerAI extends Player {
     public void setRange(ArrayList<Hand> range) {
         this.range.clear();
         this.range.addAll(range);
+    }
+
+    public void setAction(String action, Board board) {
+        if (action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check")) {
+            this.action = action.toLowerCase();
+            if (board.getGameState().equalsIgnoreCase("preflop")) {
+                this.preflopAction = action.toLowerCase();
+            } else if (board.getGameState().equalsIgnoreCase("flop")) {
+                this.flopAction = action.toLowerCase();
+            } else if (board.getGameState().equalsIgnoreCase("turn")) {
+                this.turnAction = action.toLowerCase();
+            } else if (board.getGameState().equalsIgnoreCase("river")) {
+                this.riverAction = action.toLowerCase();
+            }
+        }
+        if(board.getGameState().equalsIgnoreCase("preflop")){
+            if(action.equalsIgnoreCase("call") || action.equalsIgnoreCase("raise")){
+                this.vpip++;
+            }
+        }
+
+        if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")){
+            if(action.equalsIgnoreCase("call")){
+                this.call++;
+            }else if(action.equalsIgnoreCase("raise")){
+                this.raise++;
+            }else if(action.equalsIgnoreCase("bet")){
+                this.bet++;
+            }else if(action.equalsIgnoreCase("check")){
+                this.check++;
+            }
+
+        }
+        calcPlayerType();
+    }
+
+    private void calcPlayerType(){
+        this.vpipPercent = this.vpip / (double) this.handsPlayed;
+        this.aggression = (this.raise + this.bet) / (double) this.call;
+
+        if(this.handsPlayed > 50) {
+
+            if (this.vpipPercent < 0.12) {
+                this.playerType = "tight";
+            } else if (this.vpipPercent >= 0.12 && this.vpipPercent < 0.22) {
+                this.playerType = "standard";
+            }else if(this.vpipPercent >= 0.22 && this.vpipPercent < 0.35 ){
+                this.playerType = "loose";
+            }else{
+                this.playerType = "fish";
+            }
+        }
+
     }
 
     public int getVpip() {

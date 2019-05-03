@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
 
 public final class ScreenReader{
 
@@ -26,6 +28,7 @@ public final class ScreenReader{
         BufferedImage[] playerMoney = new BufferedImage[9];
         BufferedImage[] playerAction = new BufferedImage[8];
         boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
+        boolean hadNameInit = false;
 
 
 
@@ -240,6 +243,10 @@ public final class ScreenReader{
                             board.getPlayers().get(j).setFlopAction("No action");
                             board.getPlayers().get(j).setTurnAction("No action");
                             board.getPlayers().get(j).setRiverAction("No action");
+                            if(j != 0){
+                                PlayerAI opponentPlayer = (PlayerAI)board.getPlayers().get(j);
+                                opponentPlayer.setHandsPlayed(opponentPlayer.getHandsPlayed() + 1);
+                            }
                         }
                         board.setPotType();
                     }
@@ -465,30 +472,58 @@ public final class ScreenReader{
                 board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor5name)));
             }
 
-            if (hasCards[0] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(1).setName(tesseract.doOCR(playerNames[1]));
+
+
+            if(!hadNameInit) {
+                ArrayList<PlayerAI> opponentPlayers = new ArrayList<PlayerAI>();
+                for(int i = 0; i < board.getPlayers().size(); i++){
+                    String nameContainer = tesseract.doOCR(playerNames[i]);
+                    nameContainer = nameContainer.replaceAll("\\s", "");
+                    board.getPlayers().get(i).setName(nameContainer);
+                    if(i != 0){
+                        opponentPlayers.add((PlayerAI)board.getPlayers().get(i));
+                    }
+                }
+                hadNameInit = true;
+
+                try{
+                    Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
+                    Statement statement = conn.createStatement();
+
+                    for(int i = 0; i < opponentPlayers.size(); i++){
+                        statement.execute("SELECT * FROM players WHERE name= '"+ opponentPlayers.get(i).getName()+"'");
+                        ResultSet results = statement.getResultSet();
+
+                        if(results.next()){
+                            opponentPlayers.get(i).setHandsPlayed(results.getInt("hands"));
+                            opponentPlayers.get(i).setVpip(results.getInt("vpip"));
+                            opponentPlayers.get(i).setCall(results.getInt("call"));
+                            opponentPlayers.get(i).setBet(results.getInt("bet"));
+                            opponentPlayers.get(i).setCheck(results.getInt("checks"));
+                            opponentPlayers.get(i).setRaise(results.getInt("raise"));
+                        }else{
+                            System.out.println("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
+                                    "VALUES ('" + opponentPlayers.get(i).getName() + "' , "+ opponentPlayers.get(i).getCall() + ", " + opponentPlayers.get(i).getRaise() + ", " +
+                                    opponentPlayers.get(i).getBet() + ", " + opponentPlayers.get(i).getCheck() + ", " + opponentPlayers.get(i).getVpip() + ", " + opponentPlayers.get(i).getHandsPlayed() + ")");
+                            //statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) VALUES ('AlInne' , 0, 0, 0, 0, 0, 1)");
+                          statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
+                                    "VALUES ('" + opponentPlayers.get(i).getName() + "', "+ opponentPlayers.get(i).getCall() + ", " + opponentPlayers.get(i).getRaise() + ", " +
+                            opponentPlayers.get(i).getBet() + ", " + opponentPlayers.get(i).getCheck() + ", " + opponentPlayers.get(i).getVpip() + ", " + opponentPlayers.get(i).getHandsPlayed() + ")");
+                        }
+                    }
+                    statement.close();
+                    conn.close();
+
+
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+
+
+
+
             }
-            if (hasCards[1] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(2).setName(tesseract.doOCR(playerNames[2]));
-            }
-            if (hasCards[2] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(3).setName(tesseract.doOCR(playerNames[3]));
-            }
-            if (hasCards[3] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(4).setName(tesseract.doOCR(playerNames[4]));
-            }
-            if (hasCards[4] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(5).setName(tesseract.doOCR(playerNames[5]));
-            }
-            if (hasCards[5] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(6).setName(tesseract.doOCR(playerNames[6]));
-            }
-            if (hasCards[6] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(7).setName(tesseract.doOCR(playerNames[7]));
-            }
-            if (hasCards[7] && board.getGameState().equalsIgnoreCase("preflop")) {
-                board.getPlayers().get(8).setName(tesseract.doOCR(playerNames[8]));
-            }
+
 
             tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
 
@@ -548,6 +583,7 @@ public final class ScreenReader{
             board.setPlayerActions();
             board.setBoardType();
             assignCard(board, hasCards);
+
 
 /*
             int raises = 0;

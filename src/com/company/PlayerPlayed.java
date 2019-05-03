@@ -80,6 +80,7 @@ public class PlayerPlayed extends Player {
         this.amountToCall = amountToCall;
     }
 
+
     public void equity(ArrayList<PlayerAI> opponent, ArrayList<Card> cards){
             int wins = 0;
             int hands = 0;
