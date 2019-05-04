@@ -69,12 +69,12 @@ public class Board {
     public void addCard(Card card) {
 
         boolean exists = false;
-        for (int i = 0; i < this.cards.size(); i++) {
-            if (card.getPrimeValue() == cards.get(i).getPrimeValue()) {
+        for (Card card1 : this.cards) {
+            if (card.getPrimeValue() == card1.getPrimeValue()) {
                 exists = true;
             }
         }
-        if (exists == false) {
+        if (!exists) {
             cards.add(card);
         }
     }
@@ -199,11 +199,11 @@ public class Board {
 
         boolean wet = false;
 
-        for (int i = 0; i < this.cards.size(); i++) {
+        for (Card card : this.cards) {
             int rankhelper = -1;
             int suithelper = -1;
             for (int j = 0; j < Constants.cards.length; j++) {
-                if (this.cards.get(i).getName().equalsIgnoreCase(Constants.cards[j])) {
+                if (card.getName().equalsIgnoreCase(Constants.cards[j])) {
                     rankhelper = j / 4;
                     suithelper = j % 4;
                     ranks[rankhelper]++;
@@ -212,15 +212,15 @@ public class Board {
             }
 
         }
-        for(int i = 0; i < ranks.length; i++ ){
-            if(i != 0){
-                if(ranks[i] >= 1 && ranks[i-1] >= 1){
+        for (int i = 0; i < ranks.length; i++) {
+            if (i != 0) {
+                if (ranks[i] >= 1 && ranks[i - 1] >= 1) {
                     wet = true;
                 }
             }
         }
-        for(int i = 0; i < suits.length; i++){
-            if(suits[i] >= 2){
+        for (int suit : suits) {
+            if (suit >= 2) {
                 wet = true;
             }
         }

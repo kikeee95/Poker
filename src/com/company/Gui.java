@@ -4,14 +4,19 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Gui extends JFrame {
+import static javax.swing.text.DefaultCaret.ALWAYS_UPDATE;
 
-    private JTextArea textArea;
-    private JButton btn;
+public class Gui extends JFrame implements KeyListener {
+
+    private static JTextArea textArea;
+    private static JButton btn;
     private JPanel jp1;
     private JPanel jp2;
     private JPanel jp3;
@@ -20,13 +25,16 @@ public class Gui extends JFrame {
     private JLabel label1;
     private JLabel label2;
     private JLabel label3;
-    private boolean runIt;
+    private static JPanel errorPanel = new JPanel();
+    private static boolean runIt;
 
 
     public Gui() {
         super("PokerBot");
         setSize(350, 300);
         runIt = false;
+        setResizable(false);
+        this.setLocation(250, 250);
         jp1 = new JPanel();
         jp2 = new JPanel();
         jp3 = new JPanel();
@@ -46,7 +54,7 @@ public class Gui extends JFrame {
         jp1.setAlignmentX(Component.CENTER_ALIGNMENT);
         textArea = new JTextArea();
         textArea.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btn = new JButton("Start");
+        btn = new JButton("Start (F5)");
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
         jp2.setBorder(new EmptyBorder(0, 0, 5, 0));
         jp2.add(btn);
@@ -54,19 +62,26 @@ public class Gui extends JFrame {
         btn.setForeground(Color.BLACK);
         btn.setFocusPainted(false);
         jp2.setMaximumSize(btn.getPreferredSize());
+        textArea.setEditable(false);
+        addKeyListener(this);
+        setFocusable(true);
+        setAutoRequestFocus(true);
+        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+        caret.setUpdatePolicy(ALWAYS_UPDATE);
+
 
 
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (btn.getText().equalsIgnoreCase("start")) {
-                    btn.setText("Stop");
+                if (btn.getText().equalsIgnoreCase("start (F5)")) {
+                    btn.setText("Stop (F5)");
                     btn.setBackground(Color.RED);
                     btn.setForeground(Color.WHITE);
                     runIt = true;
 
                 } else {
-                    btn.setText("Start");
+                    btn.setText("Start (F5)");
                     btn.setBackground(Color.GREEN);
                     btn.setForeground(Color.BLACK);
                     runIt = false;
@@ -85,11 +100,54 @@ public class Gui extends JFrame {
 
     }
 
-    public boolean isRunIt() {
+    private void preventRunning(){
+        btn.setText("Start (F5)");
+        btn.setBackground(Color.GREEN);
+        btn.setForeground(Color.BLACK);
+        runIt = false;
+    }
+
+    public static boolean isRunIt() {
         return runIt;
     }
 
-    public void textAppend(String string){
+    public static void textAppend(String string) {
         textArea.append(string + "\n");
     }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_F5) {
+            if (btn.getText().equalsIgnoreCase("Start (F5)")) {
+                btn.setText("Stop (F5)");
+                btn.setBackground(Color.RED);
+                btn.setForeground(Color.WHITE);
+                runIt = true;
+            } else {
+                btn.setText("Start (F5)");
+                btn.setBackground(Color.GREEN);
+                btn.setForeground(Color.BLACK);
+                runIt = false;
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public static void errorDialog(){
+        btn.setText("Start (F5)");
+        btn.setBackground(Color.GREEN);
+        btn.setForeground(Color.BLACK);
+        runIt = false;
+        JOptionPane.showMessageDialog(errorPanel, "The PokerGenius table is not fully visible!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
 }

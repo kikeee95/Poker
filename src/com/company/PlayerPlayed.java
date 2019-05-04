@@ -1,5 +1,6 @@
 package com.company;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -44,7 +45,7 @@ public class PlayerPlayed extends Player {
         return potOdds;
     }
 
-    public void calculatePotOdds(Board board){
+    public void calculatePotOdds(Board board) {
         this.potOdds = this.amountToCall / board.getPot();
     }
 
@@ -80,29 +81,43 @@ public class PlayerPlayed extends Player {
         this.amountToCall = amountToCall;
     }
 
-
-    public void equity(ArrayList<PlayerAI> opponent, ArrayList<Card> cards){
-            int wins = 0;
-            int hands = 0;
-
-            long timerStart = System.nanoTime();
-            for(int i = 0; i < 10000; i++){
-                if(equityInnerCalculation(opponent, cards)){
-                    wins++;
-                }
-                hands++;
+    public void setAction(String action, Board board) {
+        if (action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check")) {
+            this.action = action.toLowerCase();
+            if (board.getGameState().equalsIgnoreCase("preflop")) {
+                this.preflopAction = action.toLowerCase();
+            } else if (board.getGameState().equalsIgnoreCase("flop")) {
+                this.flopAction = action.toLowerCase();
+            } else if (board.getGameState().equalsIgnoreCase("turn")) {
+                this.turnAction = action.toLowerCase();
+            } else if (board.getGameState().equalsIgnoreCase("river")) {
+                this.riverAction = action.toLowerCase();
             }
-            long timerEnd = System.nanoTime();
-        System.out.println((timerEnd-timerStart)/1000000);
-
-
-            double equity = (double) wins / hands;
-            this.equity = equity;
+        }
     }
 
 
+    public void equity(ArrayList<PlayerAI> opponent, ArrayList<Card> cards) {
+        int wins = 0;
+        int hands = 0;
 
-    public boolean equityInnerCalculation(ArrayList<PlayerAI>opponents, ArrayList<Card> cards){
+        long timerStart = System.nanoTime();
+        for (int i = 0; i < 10000; i++) {
+            if (equityInnerCalculation(opponent, cards)) {
+                wins++;
+            }
+            hands++;
+        }
+        long timerEnd = System.nanoTime();
+        System.out.println((timerEnd - timerStart) / 1000000);
+
+
+        double equity = (double) wins / hands;
+        this.equity = equity;
+    }
+
+
+    public boolean equityInnerCalculation(ArrayList<PlayerAI> opponents, ArrayList<Card> cards) {
         ArrayList<Card> cardholder = new ArrayList<Card>();
 
 
@@ -116,9 +131,9 @@ public class PlayerPlayed extends Player {
         ArrayList<Hand> opponentHands = new ArrayList<Hand>();
 
         //ellenfél kezek
-        for(int i = 0; i < opponents.size(); i++) {
+        for (PlayerAI opponent : opponents) {
             Random random = new Random();
-            Hand hand = opponents.get(i).getRange().get(random.nextInt(opponents.get(i).getRange().size()));
+            Hand hand = opponent.getRange().get(random.nextInt(opponent.getRange().size()));
 
             opponentHands.add(hand);
             deck.removeCardByname(hand.getCards()[0].getName());
@@ -128,23 +143,23 @@ public class PlayerPlayed extends Player {
             cardholder.addAll(cards);
         }
 
-            if (cardholder.size() == 3) {
-                cardholder.add(deck.dealCard());
-                cardholder.add(deck.dealCard());
-            }
-            if (cardholder.size() == 4) {
-                cardholder.add(deck.dealCard());
-            }
-            if (cardholder.size() == 5) {
-                int ownHand = new HandCombination(this.hand, cardholder).getCombinationStrength();
-                for(int i = 0; i < opponentHands.size(); i++) {
-                    if (ownHand < new HandCombination(opponentHands.get(i), cardholder).getCombinationStrength() ) {
-                        winnerHand = false;
-                    }
+        if (cardholder.size() == 3) {
+            cardholder.add(deck.dealCard());
+            cardholder.add(deck.dealCard());
+        }
+        if (cardholder.size() == 4) {
+            cardholder.add(deck.dealCard());
+        }
+        if (cardholder.size() == 5) {
+            int ownHand = new HandCombination(this.hand, cardholder).getCombinationStrength();
+            for (Hand opponentHand : opponentHands) {
+                if (ownHand < new HandCombination(opponentHand, cardholder).getCombinationStrength()) {
+                    winnerHand = false;
                 }
-
             }
-            return winnerHand;
+
+        }
+        return winnerHand;
     }
 
 }

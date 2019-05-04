@@ -31,7 +31,10 @@ public class Main {
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(timerObj, 0, timerSec * 1000);
-
+        if (TimerObj.stopped) {
+            timer.cancel();
+            timer.purge();
+        }
 
     }
 }
@@ -41,20 +44,26 @@ class TimerObj extends TimerTask {
     Gui gui = new Gui();
     Board board = new Board();
     boolean hadRun = false;
+    boolean dbConn = false;
+    static boolean stopped = false;
 
 
     @Override
     public void run() {
 
-        try{
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
-            Statement statement = conn.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS" +
-                    " players (name TEXT, call INTEGER, raise INTEGER, bet INTEGER, checks INTEGER, vpip INTEGER, hands INTEGER)");
-            statement.close();
-            conn.close();
-        }catch (SQLException e){
-            gui.textAppend(e.getMessage());
+        if (!dbConn) {
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
+                Statement statement = conn.createStatement();
+                statement.execute("CREATE TABLE IF NOT EXISTS" +
+                        " players (name TEXT, call INTEGER, raise INTEGER, bet INTEGER, checks INTEGER, vpip INTEGER, hands INTEGER)");
+                statement.close();
+                conn.close();
+                dbConn = true;
+                gui.textAppend("Database connection succesful!");
+            } catch (SQLException e) {
+                gui.textAppend(e.getMessage());
+            }
         }
 
         while (gui.isRunIt()) {
@@ -65,27 +74,26 @@ class TimerObj extends TimerTask {
                 e.printStackTrace();
             }
         }
-        if(hadRun && !gui.isRunIt()){
-            System.out.println("asd");
-            try{
+        if (hadRun && !gui.isRunIt()) {
+            try {
                 Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
                 Statement statement = conn.createStatement();
                 ArrayList<PlayerAI> opponents = new ArrayList<PlayerAI>();
 
-                for(int i = 1; i < board.getPlayers().size(); i++ ){
-                    opponents.add((PlayerAI)board.getPlayers().get(i));
+                for (int i = 1; i < board.getPlayers().size(); i++) {
+                    opponents.add((PlayerAI) board.getPlayers().get(i));
                 }
-
-                for(int i = 0; i < opponents.size(); i++) {
-                   statement.execute("UPDATE players SET call=" + opponents.get(i).getCall() + ", raise=" + opponents.get(i).getRaise() +
-                   ", bet=" + opponents.get(i).getBet() + ", checks=" + opponents.get(i).getCheck() + ", vpip=" + opponents.get(i).getVpip() +
-                   ", hands=" + opponents.get(i).getHandsPlayed() + " WHERE name='" + opponents.get(i).getName() + "'");
+                for (int i = 0; i < opponents.size(); i++) {
+                    statement.execute("UPDATE players SET call=" + opponents.get(i).getCall() + ", raise=" + opponents.get(i).getRaise() +
+                            ", bet=" + opponents.get(i).getBet() + ", checks=" + opponents.get(i).getCheck() + ", vpip=" + opponents.get(i).getVpip() +
+                            ", hands=" + opponents.get(i).getHandsPlayed() + " WHERE name='" + opponents.get(i).getName() + "'");
                 }
                 statement.close();
                 conn.close();
+                stopped = true;
 
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

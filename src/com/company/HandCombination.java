@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HandCombination {
     private String name;
@@ -70,8 +71,8 @@ public class HandCombination {
 
     private int calcId() {
         int id = 1;
-        for (int i = 0; i < this.Cards.size(); i++) {
-            id = id * this.Cards.get(i).getPrimeValue();
+        for (com.company.Card Card : this.Cards) {
+            id = id * Card.getPrimeValue();
         }
         return id;
     }
@@ -209,14 +210,14 @@ public class HandCombination {
             if (cards2 && cards3) {
                 fullHouse = true;
                 this.type = "Full House";
-                this.combinationStrength = 80000000 + (drillStrength * 100) + (pairStrength * 1);
+                this.combinationStrength = 80000000 + (drillStrength * 100) + (pairStrength);
             }
             //flush
         }
         if (!straightFlush && !royalFlush && !fourOfAKind && !fullHouse) {
             int flushStrength = 0;
-            for (int i = 0; i < suits.length; i++) {
-                if (suits[i] == 5) {
+            for (int suit : suits) {
+                if (suit == 5) {
                     flush = true;
                     this.type = "Flush";
                 }
@@ -229,6 +230,7 @@ public class HandCombination {
             }
             if (flush) {
                 flushStrength = 70000000 + flushStrength;
+                this.combinationStrength = flushStrength;
             }
             //Straight
         }
@@ -262,8 +264,8 @@ public class HandCombination {
             int kicker1 = 0;
             int kicker2 = 0;
 
-            for (int i = 0; i < ranks.length; i++) {
-                if (ranks[i] == 3) {
+            for (int rank : ranks) {
+                if (rank == 3) {
                     threeOfAKind = true;
                     this.type = "Three of a Kind";
                 }
@@ -326,11 +328,11 @@ public class HandCombination {
             if (pairs == 1) {
                 pair = true;
                 this.type = "Pair";
-                this.combinationStrength = 30000000 + ((smallerPair+1) * 50000) + ((kicker3+1) * 1500) + ((kicker2+1) * 15) + kicker1;
+                this.combinationStrength = 30000000 + ((smallerPair + 1) * 50000) + ((kicker3 + 1) * 1500) + ((kicker2 + 1) * 15) + kicker1;
             } else {
                 highcard = true;
                 this.type = "High Card";
-                this.combinationStrength = 10 + ((kicker5+1) * 40000) + ((kicker4+1) * 2) + ((kicker3+1) * 190) + ((kicker2+1) * 13) + kicker1;
+                this.combinationStrength = 10 + ((kicker5 + 1) * 40000) + ((kicker4 + 1) * 2) + ((kicker3 + 1) * 190) + ((kicker2 + 1) * 13) + kicker1;
             }
         }
     }
@@ -347,13 +349,9 @@ public class HandCombination {
         ArrayList<Card> combination = new ArrayList<>();
         ArrayList<Card> excluded = new ArrayList<>();
 
-        for (int i = 0; i < hand.getCards().length; i++) {
-            combinations.add(hand.getCards()[i]);
-        }
+        combinations.addAll(Arrays.asList(hand.getCards()));
 
-        for (int i = 0; i < boardCards.size(); i++) {
-            combinations.add(boardCards.get(i));
-        }
+        combinations.addAll(boardCards);
 
         //7ből úgy tudunk 5 lapot kiválasztani, hogy kettőt mindig kihagyunk, 21 féle képpen választhatunk ki 2 lapot amit kihagyunk, ezt 2 ciklussal lehet kiválogatni
 
@@ -368,8 +366,8 @@ public class HandCombination {
                 if (excluded.size() == 2) {
                     combination.addAll(combinations);
 
-                    for (int k = 0; k < excluded.size(); k++) {
-                        combination.remove(excluded.get(k));
+                    for (Card anExcluded : excluded) {
+                        combination.remove(anExcluded);
                     }
                     excluded.clear();
                 }
@@ -394,15 +392,15 @@ public class HandCombination {
         ArrayList<Card> cardContainer = new ArrayList<Card>();
 
 
-        for(int i = 0; i < range.size(); i++){
+        for (Hand aRange : range) {
             cardContainer.clear();
             cardContainer.add(board.getCards().get(0));
             cardContainer.add(board.getCards().get(1));
             cardContainer.add(board.getCards().get(2));
-            cardContainer.add(range.get(i).getCards()[0]);
-            cardContainer.add(range.get(i).getCards()[1]);
-            if(hasDraws(range.get(i), cardContainer) || (new HandCombination(cardContainer).getCombinationStrength()) > 3000000){
-                newRange.add(range.get(i));
+            cardContainer.add(aRange.getCards()[0]);
+            cardContainer.add(aRange.getCards()[1]);
+            if (hasDraws(aRange, cardContainer) || (new HandCombination(cardContainer).getCombinationStrength()) > 3000000) {
+                newRange.add(aRange);
             }
         }
         return newRange;
@@ -421,11 +419,11 @@ public class HandCombination {
         // s  h  d  c
         int[] suits = new int[]{0, 0, 0, 0};
 
-        for (int i = 0; i < cardContainer.size(); i++) {
+        for (Card aCardContainer : cardContainer) {
             int rankhelper = -1;
             int suithelper = -1;
             for (int j = 0; j < Constants.cards.length; j++) {
-                if (cardContainer.get(i).getName().equalsIgnoreCase(Constants.cards[j])) {
+                if (aCardContainer.getName().equalsIgnoreCase(Constants.cards[j])) {
                     rankhelper = j / 4;
                     suithelper = j % 4;
                     ranks[rankhelper]++;
@@ -433,8 +431,8 @@ public class HandCombination {
                 }
             }
         }
-        for (int i = 0; i < suits.length; i++) {
-            if (suits[i] == 4) {
+        for (int suit : suits) {
+            if (suit == 4) {
                 draw = true;
             }
         }
@@ -468,8 +466,8 @@ public class HandCombination {
                 }
             }
         }
-        for (int i = 0; i < zeros.length; i++) {
-            if (zeros[i] <= 1){
+        for (int zero : zeros) {
+            if (zero <= 1) {
                 draw = true;
             }
         }

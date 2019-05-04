@@ -13,26 +13,23 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public final class ScreenReader{
+public final class ScreenReader {
+
+    private static boolean hadNameInit = false;
 
 
-    public static void readScreen(Board board)  throws Exception {
-
-
+    public static void readScreen(Board board) throws Exception {
+        Robot robot = new Robot();
+        boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
         String PlayerButton1 = "";
         String PlayerButton2 = "";
         String PlayerButton3 = "";
         BufferedImage[] playerNames = new BufferedImage[9];
         BufferedImage[] playerMoney = new BufferedImage[9];
         BufferedImage[] playerAction = new BufferedImage[8];
-        boolean[] hasCards = new boolean[]{true, true, true, true, true, true, true, true};
-        boolean hadNameInit = false;
-
-
-
-        long startTime = System.nanoTime();
 
 
         //Poker Genius ablakának megtalálása
@@ -40,243 +37,247 @@ public final class ScreenReader{
 
 
         // screenshot az egész asztalról
-        BufferedImage screencapture = new Robot().createScreenCapture(
+        BufferedImage screencapture = robot.createScreenCapture(
                 new Rectangle(rect));
 
-        //aktív játékosok keresése
+        boardVisibilityCheck(screencapture);
 
-        hasCards = hasCardsFunction(Constants.playersCardPosX, Constants.playersCardPosY, hasCards, screencapture);
-        assignCard(board, hasCards);
-
-        if (isActive(screencapture)) {
-            canRaise(screencapture, board);
-
-            //játék állapotának lekérdezése
-
-            board.setGameState(gameState(screencapture));
+        if (Gui.isRunIt()) {
 
 
-            //játékosok adatainak begyűjtése
+            //aktív játékosok keresése
 
-            for (int i = 0; i <= Constants.playersCardPosX.length; i++) {
+            hasCards = hasCardsFunction(Constants.playersCardPosX, Constants.playersCardPosY, hasCards, screencapture);
+            assignCard(board, hasCards);
 
+            if (isActive(screencapture)) {
+                canRaise(screencapture, board);
 
-                //név
+                //játék állapotának lekérdezése
 
-                playerNames[i] = new Robot().createScreenCapture(
-                        new Rectangle(rect.x + Constants.playersPosX[i] + Constants.posXhelper, rect.y + Constants.playersPosY[i] + Constants.posYname, Constants.boxWidth, Constants.nameHeight));
-
-                //pénz
-
-                BufferedImage money = new Robot().createScreenCapture(
-                        new Rectangle(rect.x + Constants.playersPosX[i] + Constants.posXhelper, rect.y + Constants.playersPosY[i] + Constants.posYmoney, Constants.boxWidth, Constants.moneyHeight)); // 385, 610, 40, 18
-
-                playerMoney[i] = resizeImage(money, 2);
-                if (i != 0) {
-                    BufferedImage action = new Robot().createScreenCapture(
-                            new Rectangle(rect.x + Constants.playersPosX[i] + Constants.posXhelper, rect.y + Constants.playersPosY[i] + Constants.posYaction, Constants.boxWidth, Constants.actionHeight));
-
-                    playerAction[i - 1] = resizeImage(action, 2);
-                }
-
-            }
+                board.setGameState(gameState(screencapture));
 
 
-            //első lapunk
-            BufferedImage screencapturePlayer1Card1 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.holeCard1X, rect.y + Constants.holeCard1Y, Constants.CardWidth, Constants.CardHeight)); // 387, 598, 30, 12
+                //játékosok adatainak begyűjtése
 
-            int holeCardColor1 = screencapture.getRGB(Constants.holeCard1X + Constants.CardhelperX, Constants.holeCard1Y + Constants.CardhelperY);
-            String holeCardColor1name = "";
-
-            if (holeCardColor1 == Constants.clubsRGB) {
-                holeCardColor1name = "c";
-            } else if (holeCardColor1 == Constants.spadesRGB) {
-                holeCardColor1name = "s";
-            } else if (holeCardColor1 == Constants.heartsRGB) {
-                holeCardColor1name = "h";
-            } else if (holeCardColor1 == Constants.diamondsRGB) {
-                holeCardColor1name = "d";
-            }
+                for (int i = 0; i <= Constants.playersCardPosX.length; i++) {
 
 
-            //második lapunk
-            BufferedImage screencapturePlayer1Card2 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.holeCard2X, rect.y + Constants.holeCard2Y, Constants.CardWidth, Constants.CardHeight)); // 387, 598, 30, 12
+                    //név
 
-            int holeCardColor2 = screencapture.getRGB(Constants.holeCard2X + Constants.CardhelperX, Constants.holeCard2Y + Constants.CardhelperY);
-            String holeCardColor2name = "";
+                    playerNames[i] = robot.createScreenCapture(
+                            new Rectangle(rect.x + Constants.playersPosX[i] + Constants.posXhelper, rect.y + Constants.playersPosY[i] + Constants.posYname, Constants.boxWidth, Constants.nameHeight));
 
-            if (holeCardColor2 == Constants.clubsRGB) {
-                holeCardColor2name = "c";
-            } else if (holeCardColor2 == Constants.spadesRGB) {
-                holeCardColor2name = "s";
-            } else if (holeCardColor2 == Constants.heartsRGB) {
-                holeCardColor2name = "h";
-            } else if (holeCardColor2 == Constants.diamondsRGB) {
-                holeCardColor2name = "d";
-            }
+                    //pénz
 
-            // Board lapjai
+                    BufferedImage money = robot.createScreenCapture(
+                            new Rectangle(rect.x + Constants.playersPosX[i] + Constants.posXhelper, rect.y + Constants.playersPosY[i] + Constants.posYmoney, Constants.boxWidth, Constants.moneyHeight)); // 385, 610, 40, 18
 
-            //első 3 lap az asztalon leolvasása, csak ha lent vannak
+                    playerMoney[i] = resizeImage(money, 2);
+                    if (i != 0) {
+                        BufferedImage action = robot.createScreenCapture(
+                                new Rectangle(rect.x + Constants.playersPosX[i] + Constants.posXhelper, rect.y + Constants.playersPosY[i] + Constants.posYaction, Constants.boxWidth, Constants.actionHeight));
 
-            String boardCardColor1name = "";
-            String boardCardColor2name = "";
-            String boardCardColor3name = "";
-            String boardCardColor4name = "";
-            String boardCardColor5name = "";
+                        playerAction[i - 1] = resizeImage(action, 2);
+                    }
 
-
-            BufferedImage screencaptureBoardCard1 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.boardCarsdX[0], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
-
-            BufferedImage screencaptureBoardCard2 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.boardCarsdX[1], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
-
-            BufferedImage screencaptureBoardCard3 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.boardCarsdX[2], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
-
-            BufferedImage screencaptureBoardCard4 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.boardCarsdX[3], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
-
-            BufferedImage screencaptureBoardCard5 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.boardCarsdX[4], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
-
-            if (board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
-
-
-                int boardCardColor1 = screencapture.getRGB(Constants.boardCarsdX[0] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
-
-                if (boardCardColor1 == Constants.clubsRGB) {
-                    boardCardColor1name = "c";
-                } else if (boardCardColor1 == Constants.spadesRGB) {
-                    boardCardColor1name = "s";
-                } else if (boardCardColor1 == Constants.heartsRGB) {
-                    boardCardColor1name = "h";
-                } else if (boardCardColor1 == Constants.diamondsRGB) {
-                    boardCardColor1name = "d";
                 }
 
 
-                int boardCardColor2 = screencapture.getRGB(Constants.boardCarsdX[1] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
+                //első lapunk
+                BufferedImage screencapturePlayer1Card1 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.holeCard1X, rect.y + Constants.holeCard1Y, Constants.CardWidth, Constants.CardHeight)); // 387, 598, 30, 12
 
+                int holeCardColor1 = screencapture.getRGB(Constants.holeCard1X + Constants.CardhelperX, Constants.holeCard1Y + Constants.CardhelperY);
+                String holeCardColor1name = "";
 
-                if (boardCardColor2 == Constants.clubsRGB) {
-                    boardCardColor2name = "c";
-                } else if (boardCardColor2 == Constants.spadesRGB) {
-                    boardCardColor2name = "s";
-                } else if (boardCardColor2 == Constants.heartsRGB) {
-                    boardCardColor2name = "h";
-                } else if (boardCardColor2 == Constants.diamondsRGB) {
-                    boardCardColor2name = "d";
+                if (holeCardColor1 == Constants.clubsRGB) {
+                    holeCardColor1name = "c";
+                } else if (holeCardColor1 == Constants.spadesRGB) {
+                    holeCardColor1name = "s";
+                } else if (holeCardColor1 == Constants.heartsRGB) {
+                    holeCardColor1name = "h";
+                } else if (holeCardColor1 == Constants.diamondsRGB) {
+                    holeCardColor1name = "d";
                 }
 
-                int boardCardColor3 = screencapture.getRGB(Constants.boardCarsdX[2] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
 
-                if (boardCardColor3 == Constants.clubsRGB) {
-                    boardCardColor3name = "c";
-                } else if (boardCardColor3 == Constants.spadesRGB) {
-                    boardCardColor3name = "s";
-                } else if (boardCardColor3 == Constants.heartsRGB) {
-                    boardCardColor3name = "h";
-                } else if (boardCardColor3 == Constants.diamondsRGB) {
-                    boardCardColor3name = "d";
+                //második lapunk
+                BufferedImage screencapturePlayer1Card2 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.holeCard2X, rect.y + Constants.holeCard2Y, Constants.CardWidth, Constants.CardHeight)); // 387, 598, 30, 12
+
+                int holeCardColor2 = screencapture.getRGB(Constants.holeCard2X + Constants.CardhelperX, Constants.holeCard2Y + Constants.CardhelperY);
+                String holeCardColor2name = "";
+
+                if (holeCardColor2 == Constants.clubsRGB) {
+                    holeCardColor2name = "c";
+                } else if (holeCardColor2 == Constants.spadesRGB) {
+                    holeCardColor2name = "s";
+                } else if (holeCardColor2 == Constants.heartsRGB) {
+                    holeCardColor2name = "h";
+                } else if (holeCardColor2 == Constants.diamondsRGB) {
+                    holeCardColor2name = "d";
                 }
 
-            }
+                // Board lapjai
 
-            // 4. lap leolvasása turn és river esetén
+                //első 3 lap az asztalon leolvasása, csak ha lent vannak
 
-            if (board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
+                String boardCardColor1name = "";
+                String boardCardColor2name = "";
+                String boardCardColor3name = "";
+                String boardCardColor4name = "";
+                String boardCardColor5name = "";
 
-                int boardCardColor4 = screencapture.getRGB(Constants.boardCarsdX[3] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
+
+                BufferedImage screencaptureBoardCard1 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.boardCarsdX[0], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
+
+                BufferedImage screencaptureBoardCard2 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.boardCarsdX[1], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
+
+                BufferedImage screencaptureBoardCard3 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.boardCarsdX[2], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
+
+                BufferedImage screencaptureBoardCard4 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.boardCarsdX[3], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
+
+                BufferedImage screencaptureBoardCard5 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.boardCarsdX[4], rect.y + Constants.boardCardsY, Constants.CardWidth, Constants.CardHeight));
+
+                if (board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
 
 
-                if (boardCardColor4 == Constants.clubsRGB) {
-                    boardCardColor4name = "c";
-                } else if (boardCardColor4 == Constants.spadesRGB) {
-                    boardCardColor4name = "s";
-                } else if (boardCardColor4 == Constants.heartsRGB) {
-                    boardCardColor4name = "h";
-                } else if (boardCardColor4 == Constants.diamondsRGB) {
-                    boardCardColor4name = "d";
+                    int boardCardColor1 = screencapture.getRGB(Constants.boardCarsdX[0] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
+
+                    if (boardCardColor1 == Constants.clubsRGB) {
+                        boardCardColor1name = "c";
+                    } else if (boardCardColor1 == Constants.spadesRGB) {
+                        boardCardColor1name = "s";
+                    } else if (boardCardColor1 == Constants.heartsRGB) {
+                        boardCardColor1name = "h";
+                    } else if (boardCardColor1 == Constants.diamondsRGB) {
+                        boardCardColor1name = "d";
+                    }
+
+
+                    int boardCardColor2 = screencapture.getRGB(Constants.boardCarsdX[1] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
+
+
+                    if (boardCardColor2 == Constants.clubsRGB) {
+                        boardCardColor2name = "c";
+                    } else if (boardCardColor2 == Constants.spadesRGB) {
+                        boardCardColor2name = "s";
+                    } else if (boardCardColor2 == Constants.heartsRGB) {
+                        boardCardColor2name = "h";
+                    } else if (boardCardColor2 == Constants.diamondsRGB) {
+                        boardCardColor2name = "d";
+                    }
+
+                    int boardCardColor3 = screencapture.getRGB(Constants.boardCarsdX[2] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
+
+                    if (boardCardColor3 == Constants.clubsRGB) {
+                        boardCardColor3name = "c";
+                    } else if (boardCardColor3 == Constants.spadesRGB) {
+                        boardCardColor3name = "s";
+                    } else if (boardCardColor3 == Constants.heartsRGB) {
+                        boardCardColor3name = "h";
+                    } else if (boardCardColor3 == Constants.diamondsRGB) {
+                        boardCardColor3name = "d";
+                    }
+
                 }
 
-            }
+                // 4. lap leolvasása turn és river esetén
 
-            // 5. lap leolvasása river esetén
+                if (board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
 
-            if (board.getGameState().equalsIgnoreCase("river")) {
+                    int boardCardColor4 = screencapture.getRGB(Constants.boardCarsdX[3] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
 
 
-                int boardCardColor5 = screencapture.getRGB(Constants.boardCarsdX[4] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
+                    if (boardCardColor4 == Constants.clubsRGB) {
+                        boardCardColor4name = "c";
+                    } else if (boardCardColor4 == Constants.spadesRGB) {
+                        boardCardColor4name = "s";
+                    } else if (boardCardColor4 == Constants.heartsRGB) {
+                        boardCardColor4name = "h";
+                    } else if (boardCardColor4 == Constants.diamondsRGB) {
+                        boardCardColor4name = "d";
+                    }
 
-                if (boardCardColor5 == Constants.clubsRGB) {
-                    boardCardColor5name = "c";
-                } else if (boardCardColor5 == Constants.spadesRGB) {
-                    boardCardColor5name = "s";
-                } else if (boardCardColor5 == Constants.heartsRGB) {
-                    boardCardColor5name = "h";
-                } else if (boardCardColor5 == Constants.diamondsRGB) {
-                    boardCardColor5name = "d";
                 }
 
-            }
+                // 5. lap leolvasása river esetén
+
+                if (board.getGameState().equalsIgnoreCase("river")) {
 
 
+                    int boardCardColor5 = screencapture.getRGB(Constants.boardCarsdX[4] + Constants.CardhelperX, Constants.boardCardsY + Constants.CardhelperY);
 
-            for (int i = 0; i < 9; i++) {
+                    if (boardCardColor5 == Constants.clubsRGB) {
+                        boardCardColor5name = "c";
+                    } else if (boardCardColor5 == Constants.spadesRGB) {
+                        boardCardColor5name = "s";
+                    } else if (boardCardColor5 == Constants.heartsRGB) {
+                        boardCardColor5name = "h";
+                    } else if (boardCardColor5 == Constants.diamondsRGB) {
+                        boardCardColor5name = "d";
+                    }
 
-                if (Constants.buttonRGB == (screencapture.getRGB(Constants.buttonPosX[i], Constants.buttonPosY[i]))) {
-                    if (i != board.getButtonPosition()) {
-                        board.setButtonPosition(i);
-                        System.out.println("New Hand");
-
-                        //új leosztás ha a btn helyzete megváltozott
-                        board.removeCards();
+                }
 
 
-                        for (int j = 0; j < board.getPlayers().size(); j++) {
-                            board.getPlayers().get(j).setAction("No action", board);
-                            board.getPlayers().get(j).setPreflopAction("No action");
-                            board.getPlayers().get(j).setFlopAction("No action");
-                            board.getPlayers().get(j).setTurnAction("No action");
-                            board.getPlayers().get(j).setRiverAction("No action");
-                            if(j != 0){
-                                PlayerAI opponentPlayer = (PlayerAI)board.getPlayers().get(j);
-                                opponentPlayer.setHandsPlayed(opponentPlayer.getHandsPlayed() + 1);
+                for (int i = 0; i < 9; i++) {
+
+                    if (Constants.buttonRGB == (screencapture.getRGB(Constants.buttonPosX[i], Constants.buttonPosY[i]))) {
+                        if (i != board.getButtonPosition()) {
+                            board.setButtonPosition(i);
+                            System.out.println("New Hand");
+
+                            //új leosztás ha a btn helyzete megváltozott
+                            board.removeCards();
+
+
+                            for (int j = 0; j < board.getPlayers().size(); j++) {
+                                board.getPlayers().get(j).setAction("No action", board);
+                                board.getPlayers().get(j).setPreflopAction("No action");
+                                board.getPlayers().get(j).setFlopAction("No action");
+                                board.getPlayers().get(j).setTurnAction("No action");
+                                board.getPlayers().get(j).setRiverAction("No action");
+                                if (j != 0) {
+                                    PlayerAI opponentPlayer = (PlayerAI) board.getPlayers().get(j);
+                                    opponentPlayer.setHandsPlayed(opponentPlayer.getHandsPlayed() + 1);
+                                }
                             }
+                            board.setPotType();
                         }
-                        board.setPotType();
                     }
                 }
-            }
 
 
-            // pot összegének megállapítása
+                // pot összegének megállapítása
 
-            BufferedImage screenCapturePot = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.potTextX, rect.y + Constants.potTextY, Constants.potWidth, Constants.potHeight)); // 385, 610, 40, 18
+                BufferedImage screenCapturePot = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.potTextX, rect.y + Constants.potTextY, Constants.potWidth, Constants.potHeight)); // 385, 610, 40, 18
 
-            BufferedImage screenCapturePotResized = resizeImage(screenCapturePot, 2);
+                BufferedImage screenCapturePotResized = resizeImage(screenCapturePot, 2);
 
-            // Játékos gombjai
+                // Játékos gombjai
 
-            BufferedImage screenCapturePlayerButton1 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.playerButton1PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
-
-
-            BufferedImage screenCapturePlayerButton2 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.playerButton2PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
+                BufferedImage screenCapturePlayerButton1 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.playerButton1PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
 
 
-            BufferedImage screenCapturePlayerButton3 = new Robot().createScreenCapture(
-                    new Rectangle(rect.x + Constants.playerButton3PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
+                BufferedImage screenCapturePlayerButton2 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.playerButton2PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
 
 
-            File file = new File("D:/screencapture.jpg");
-            ImageIO.write(screencapture, "jpg", file);
+                BufferedImage screenCapturePlayerButton3 = robot.createScreenCapture(
+                        new Rectangle(rect.x + Constants.playerButton3PosX, rect.y + Constants.playerButtonsPosY, Constants.buttonWidth, Constants.buttonHeigth)); // 385, 610, 40, 18
+
+
+                File file = new File("D:/screencapture.jpg");
+                ImageIO.write(screencapture, "jpg", file);
 /*
               //Save as PNG
                 File file = new File("D:/screencapture.jpg");
@@ -354,41 +355,44 @@ public final class ScreenReader{
                 ImageIO.write(screencaptureBoardCard5, "png", file35);
 
 */
-            Tesseract tesseract = new Tesseract();
-            tesseract.setDatapath("D:/Tesseract/");
-            tesseract.setTessVariable("tessedit_char_whitelist", "0123456789$.,");
+                Tesseract tesseract = new Tesseract();
+                tesseract.setDatapath("D:/Tesseract/");
+                tesseract.setTessVariable("tessedit_char_whitelist", "0123456789$.,");
 
 
-            board.getPlayers().get(0).setName(tesseract.doOCR(playerNames[0]));
-            PlayerButton2 = tesseract.doOCR(screenCapturePlayerButton2);
-            String[] button = PlayerButton2.split(" ");
-            String buttonContainer;
-            buttonContainer = button[0];
-            buttonContainer = buttonContainer.replaceAll("\\s+", "");
-            PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
-            player.setAvailableAction(buttonContainer);
-
-            if (button.length == 2) {
-                buttonContainer = button[1];
-                buttonContainer = buttonContainer.replaceAll("[$]", "");
+                board.getPlayers().get(0).setName(tesseract.doOCR(playerNames[0]));
+                PlayerButton2 = tesseract.doOCR(screenCapturePlayerButton2);
+                String[] button = PlayerButton2.split(" ");
+                String buttonContainer;
+                buttonContainer = button[0];
                 buttonContainer = buttonContainer.replaceAll("\\s+", "");
-                player.setAmountToCall(Double.parseDouble(buttonContainer));
+                PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
+                player.setAvailableAction(buttonContainer);
 
-            } else {
-                player.setAmountToCall(0);
-            }
+                if (button.length == 2) {
+                    buttonContainer = button[1];
+                    buttonContainer = buttonContainer.replaceAll("[$]", "");
+                    buttonContainer = buttonContainer.replaceAll("\\s+", "");
+                    try {
+                        player.setAmountToCall(Double.parseDouble(buttonContainer));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    player.setAmountToCall(0);
+                }
 
-            tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
+                tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
 
-            String container = tesseract.doOCR(screenCapturePotResized);
-            container = container.replaceAll("[$]", "");
-            container = container.replaceAll(",", ".");
-            container = container.replaceAll("\\s+", "");
-            board.setPot(Double.parseDouble(container));
+                String container = tesseract.doOCR(screenCapturePotResized);
+                container = container.replaceAll("[$]", "");
+                container = container.replaceAll(",", ".");
+                container = container.replaceAll("\\s+", "");
+                board.setPot(Double.parseDouble(container));
 
-            container = tesseract.doOCR(playerMoney[0]);
-            container = container.replaceAll("[$]", "");
-            container = container.replaceAll(",", ".");
+                container = tesseract.doOCR(playerMoney[0]);
+                container = container.replaceAll("[$]", "");
+                container = container.replaceAll(",", ".");
            /*
             board.getPlayers().get(0).setMoney(Double.parseDouble(container));
             if (hasCards[0]) {
@@ -440,236 +444,195 @@ public final class ScreenReader{
                 board.getPlayers().get(8).setMoney(Double.parseDouble(container));
             }
             */
-            tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
-            String cardContainer1 = tesseract.doOCR(screencapturePlayer1Card1);
+                tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
+                String cardContainer1 = tesseract.doOCR(screencapturePlayer1Card1);
 
-            cardContainer1 = cardContainer1.replaceAll("\\s+", "").concat(holeCardColor1name);
-
-
-            String cardContainer2 = tesseract.doOCR(screencapturePlayer1Card2);
-            cardContainer2 = cardContainer2.replaceAll("\\s+", "").concat(holeCardColor2name);
+                cardContainer1 = cardContainer1.replaceAll("\\s+", "").concat(holeCardColor1name);
 
 
-            player.setHand(new Hand(new Card(cardContainer1), new Card(cardContainer2)));
-
-            board.getPlayers().set(0, player);
-
-
-            if (board.getGameState().equalsIgnoreCase("flop") && board.getCards().size() < 3) {
-                container = tesseract.doOCR(screencaptureBoardCard1);
-                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor1name)));
-                container = tesseract.doOCR(screencaptureBoardCard2);
-                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor2name)));
-                container = tesseract.doOCR(screencaptureBoardCard3);
-                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor3name)));
-            }
-            if (board.getGameState().equalsIgnoreCase("turn") && board.getCards().size() < 4) {
-                container = tesseract.doOCR(screencaptureBoardCard4);
-                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor4name)));
-            }
-            if (board.getGameState().equalsIgnoreCase("river") && board.getCards().size() < 5) {
-                container = tesseract.doOCR(screencaptureBoardCard5);
-                board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor5name)));
-            }
+                String cardContainer2 = tesseract.doOCR(screencapturePlayer1Card2);
+                cardContainer2 = cardContainer2.replaceAll("\\s+", "").concat(holeCardColor2name);
 
 
+                player.setHand(new Hand(new Card(cardContainer1), new Card(cardContainer2)));
 
-            if(!hadNameInit) {
-                ArrayList<PlayerAI> opponentPlayers = new ArrayList<PlayerAI>();
-                for(int i = 0; i < board.getPlayers().size(); i++){
-                    String nameContainer = tesseract.doOCR(playerNames[i]);
-                    nameContainer = nameContainer.replaceAll("\\s", "");
-                    board.getPlayers().get(i).setName(nameContainer);
-                    if(i != 0){
-                        opponentPlayers.add((PlayerAI)board.getPlayers().get(i));
-                    }
+                board.getPlayers().set(0, player);
+
+
+                if (board.getGameState().equalsIgnoreCase("flop") && board.getCards().size() < 3) {
+                    container = tesseract.doOCR(screencaptureBoardCard1);
+                    board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor1name)));
+                    container = tesseract.doOCR(screencaptureBoardCard2);
+                    board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor2name)));
+                    container = tesseract.doOCR(screencaptureBoardCard3);
+                    board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor3name)));
                 }
-                hadNameInit = true;
+                if (board.getGameState().equalsIgnoreCase("turn") && board.getCards().size() < 4) {
+                    container = tesseract.doOCR(screencaptureBoardCard4);
+                    board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor4name)));
+                }
+                if (board.getGameState().equalsIgnoreCase("river") && board.getCards().size() < 5) {
+                    container = tesseract.doOCR(screencaptureBoardCard5);
+                    board.addCard(new Card(container.replaceAll("\\s+", "").concat(boardCardColor5name)));
+                }
 
-                try{
-                    Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
-                    Statement statement = conn.createStatement();
 
-                    for(int i = 0; i < opponentPlayers.size(); i++){
-                        statement.execute("SELECT * FROM players WHERE name= '"+ opponentPlayers.get(i).getName()+"'");
-                        ResultSet results = statement.getResultSet();
-
-                        if(results.next()){
-                            opponentPlayers.get(i).setHandsPlayed(results.getInt("hands"));
-                            opponentPlayers.get(i).setVpip(results.getInt("vpip"));
-                            opponentPlayers.get(i).setCall(results.getInt("call"));
-                            opponentPlayers.get(i).setBet(results.getInt("bet"));
-                            opponentPlayers.get(i).setCheck(results.getInt("checks"));
-                            opponentPlayers.get(i).setRaise(results.getInt("raise"));
-                        }else{
-                            System.out.println("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
-                                    "VALUES ('" + opponentPlayers.get(i).getName() + "' , "+ opponentPlayers.get(i).getCall() + ", " + opponentPlayers.get(i).getRaise() + ", " +
-                                    opponentPlayers.get(i).getBet() + ", " + opponentPlayers.get(i).getCheck() + ", " + opponentPlayers.get(i).getVpip() + ", " + opponentPlayers.get(i).getHandsPlayed() + ")");
-                            //statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) VALUES ('AlInne' , 0, 0, 0, 0, 0, 1)");
-                          statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
-                                    "VALUES ('" + opponentPlayers.get(i).getName() + "', "+ opponentPlayers.get(i).getCall() + ", " + opponentPlayers.get(i).getRaise() + ", " +
-                            opponentPlayers.get(i).getBet() + ", " + opponentPlayers.get(i).getCheck() + ", " + opponentPlayers.get(i).getVpip() + ", " + opponentPlayers.get(i).getHandsPlayed() + ")");
+                if (!hadNameInit) {
+                    ArrayList<PlayerAI> opponentPlayers = new ArrayList<PlayerAI>();
+                    for (int i = 0; i < board.getPlayers().size(); i++) {
+                        String nameContainer = tesseract.doOCR(playerNames[i]);
+                        nameContainer = nameContainer.replaceAll("\\s", "");
+                        board.getPlayers().get(i).setName(nameContainer);
+                        if (i != 0) {
+                            opponentPlayers.add((PlayerAI) board.getPlayers().get(i));
                         }
                     }
-                    statement.close();
-                    conn.close();
+                    hadNameInit = true;
+
+                    try {
+                        Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
+                        Statement statement = conn.createStatement();
+
+                        for (PlayerAI opponentPlayer : opponentPlayers) {
+                            statement.execute("SELECT * FROM players WHERE name= '" + opponentPlayer.getName() + "'");
+                            ResultSet results = statement.getResultSet();
+
+                            if (results.next()) {
+                                opponentPlayer.setHandsPlayed(results.getInt("hands"));
+                                opponentPlayer.setVpip(results.getInt("vpip"));
+                                opponentPlayer.setCall(results.getInt("call"));
+                                opponentPlayer.setBet(results.getInt("bet"));
+                                opponentPlayer.setCheck(results.getInt("checks"));
+                                opponentPlayer.setRaise(results.getInt("raise"));
+                            } else {
+                                System.out.println("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
+                                        "VALUES ('" + opponentPlayer.getName() + "' , " + opponentPlayer.getCall() + ", " + opponentPlayer.getRaise() + ", " +
+                                        opponentPlayer.getBet() + ", " + opponentPlayer.getCheck() + ", " + opponentPlayer.getVpip() + ", " + opponentPlayer.getHandsPlayed() + ")");
+                                //statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) VALUES ('AlInne' , 0, 0, 0, 0, 0, 1)");
+                                statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
+                                        "VALUES ('" + opponentPlayer.getName() + "', " + opponentPlayer.getCall() + ", " + opponentPlayer.getRaise() + ", " +
+                                        opponentPlayer.getBet() + ", " + opponentPlayer.getCheck() + ", " + opponentPlayer.getVpip() + ", " + opponentPlayer.getHandsPlayed() + ")");
+                            }
+                        }
+                        statement.close();
+                        conn.close();
 
 
-                }catch (SQLException e){
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+
+                tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
+
+                tesseract.setTessVariable("tessedit_char_whitelist", "Raise Call Bet Blind Check");
+
+                String[] containerArray;
+                if (hasCards[0]) {
+                    container = tesseract.doOCR(playerAction[0]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(1).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+
+                }
+                if (hasCards[1]) {
+                    container = tesseract.doOCR(playerAction[1]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(2).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+                }
+                if (hasCards[2]) {
+                    container = tesseract.doOCR(playerAction[2]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(3).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+                }
+                if (hasCards[3]) {
+                    container = tesseract.doOCR(playerAction[3]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(4).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+                }
+                if (hasCards[4]) {
+                    container = tesseract.doOCR(playerAction[4]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(5).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+                }
+                if (hasCards[5]) {
+                    container = tesseract.doOCR(playerAction[5]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(6).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+                }
+                if (hasCards[6]) {
+                    container = tesseract.doOCR(playerAction[6]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(7).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+
+                }
+                if (hasCards[7]) {
+                    container = tesseract.doOCR(playerAction[7]);
+                    containerArray = container.split(" ");
+                    board.getPlayers().get(8).setAction(containerArray[0].replaceAll("\\s+", ""), board);
+                }
+                board.setPlayerPositions();
+                board.setPotType();
+                board.setPlayerActions();
+                board.setBoardType();
+                assignCard(board, hasCards);
+
+                if (board.getCards().size() > 0) {
+                    String boardCards = "Board: ";
+                    for (int j = 0; j < board.getCards().size(); j++) {
+                        boardCards = boardCards.concat(board.getCards().get(j).getName() + " ");
+                    }
+                    Gui.textAppend(boardCards);
+                }
+
+                for (int i = 0; i < board.getPlayers().size(); i++) {
+                    if (board.getPlayers().get(i).hasCards && !board.getPlayers().get(i).getAction().equalsIgnoreCase("No action")) {
+                        if(board.getGameState().equalsIgnoreCase("preflop") && !board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("No action")) {
+                            Gui.textAppend(board.getPlayers().get(i).getName() + ":  " + board.getPlayers().get(i).getPreflopAction() );
+                        }else if(board.getGameState().equalsIgnoreCase("flop") && !board.getPlayers().get(i).getFlopAction().equalsIgnoreCase("No action")){
+                            Gui.textAppend(board.getPlayers().get(i).getName() + ":  " + board.getPlayers().get(i).getFlopAction());
+                        }else if(board.getGameState().equalsIgnoreCase("turn") && !board.getPlayers().get(i).getTurnAction().equalsIgnoreCase("No action")){
+                            Gui.textAppend(board.getPlayers().get(i).getName() + ":  " + board.getPlayers().get(i).getTurnAction());
+                        }else if(board.getGameState().equalsIgnoreCase("river") && !board.getPlayers().get(i).getRiverAction().equalsIgnoreCase("No action")){
+                            Gui.textAppend(board.getPlayers().get(i).getName() + ":  " + board.getPlayers().get(i).getRiverAction());
+                        }
+                    }
+                }
+
+                try {
+                    GameLogic.start(board, rect);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-
-
-
-            }
-
-
-            tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_TESSERACT_ONLY);
-
-            tesseract.setTessVariable("tessedit_char_whitelist", "Raise Call Bet Blind Check");
-
-            String[] containerArray;
-            if (hasCards[0]) {
-                container = tesseract.doOCR(playerAction[0]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(1).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-
-            }
-            if (hasCards[1]) {
-                container = tesseract.doOCR(playerAction[1]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(2).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-            }
-            if (hasCards[2]) {
-                container = tesseract.doOCR(playerAction[2]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(3).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-            }
-            if (hasCards[3]) {
-                container = tesseract.doOCR(playerAction[3]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(4).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-            }
-            if (hasCards[4]) {
-                container = tesseract.doOCR(playerAction[4]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(5).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-            }
-            if (hasCards[5]) {
-                container = tesseract.doOCR(playerAction[5]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(6).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-            }
-            if (hasCards[6]) {
-                container = tesseract.doOCR(playerAction[6]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(7).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-
-            }
-            if (hasCards[7]) {
-                container = tesseract.doOCR(playerAction[7]);
-                containerArray = container.split(" ");
-                board.getPlayers().get(8).setAction(containerArray[0].replaceAll("\\s+", ""), board);
-            }
-            board.setPlayerPositions();
-            board.setPotType();
-            board.setPlayerActions();
-            board.setBoardType();
-            assignCard(board, hasCards);
-
-
-/*
-            int raises = 0;
-
-           // System.out.println("Hand: " + player.getHand().getCards()[0].getName() + "  " + player.getHand().getCards()[1].getName());
-          //  System.out.println("Preflop Action: " +player.getPreflopAction());
-            System.out.println("Preflop raises: " + raises);
-          //  System.out.println("Flop Action: " + player.getFlopAction());
-           // System.out.println("Turn Action: " + player.getTurnAction());
-           // System.out.println("River Action: "+ player.getRiverAction());
-           // System.out.println(board.getGameState());
-            if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("preflop")) {
-                System.out.println("PreflopActionok: ");
-                for (int i = 0; i < board.getPlayers().size(); i++) {
-                    if (board.getPlayers().get(i).hasCards) {
-                        System.out.println(board.getPlayers().get(i).getName() + "   " + board.getPlayers().get(i).getPreflopAction());
-                    }
+                DecimalFormat df = new DecimalFormat("#.##");
+                if(!board.getGameState().equalsIgnoreCase("preflop")){
+                    Gui.textAppend("Equity: " + df.format(player.getEquity()));
+                    Gui.textAppend("Pot odds: " + df.format(player.getPotOdds()));
                 }
             }
-            if(board.getGameState().equalsIgnoreCase("flop")) {
-                System.out.println("FlopActionok: ");
-                for (int i = 0; i < board.getPlayers().size(); i++) {
-                    if (board.getPlayers().get(i).hasCards) {
-                        System.out.println(board.getPlayers().get(i).getName() + "   " + board.getPlayers().get(i).getFlopAction());
-                    }
-                }
-            }
-            if(board.getGameState().equalsIgnoreCase("turn")) {
-                System.out.println("TurnActionok: ");
-                for (int i = 0; i < board.getPlayers().size(); i++) {
-                    if (board.getPlayers().get(i).hasCards) {
-                        System.out.println(board.getPlayers().get(i).getName() + "   " + board.getPlayers().get(i).getTurnAction());
-                    }
-                }
-            }
-            if(board.getGameState().equalsIgnoreCase("flop") || board.getGameState().equalsIgnoreCase("turn") || board.getGameState().equalsIgnoreCase("river")) {
-                System.out.println("Equity: " + player.getEquity());
-                System.out.println("Pot odds: " + player.getPotOdds());
-*/
-            int raises = 0;
-            for (int i = 0; i < board.getPlayers().size(); i++) {
-                if (board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("raise") || board.getPlayers().get(i).getPreflopAction().equalsIgnoreCase("bet")) {
-                    raises++;
-                }
-            }
-            System.out.println(raises);
-
-            System.out.println("");
-
-            try {
-                if (board.getGameState().equalsIgnoreCase("preflop")) {
-                    GameLogic.preflopAction(board, rect);
-                } else if (board.getGameState().equalsIgnoreCase("flop")) {
-                    GameLogic.flopAction(board, rect);
-                } else if (board.getGameState().equalsIgnoreCase("turn")) {
-                    GameLogic.turnAction(board, rect);
-                } else if (board.getGameState().equalsIgnoreCase("river")) {
-                    GameLogic.riverAction(board, rect);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            player.calculatePotOdds(board);
-            System.out.println();
-            System.out.println("Equity: "+ player.getEquity() + "  Pot odds: " + player.getPotOdds());
         }
 
-        }
+    }
 
 
-
-        //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
-
-
+    //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
 
     private static boolean isActive(BufferedImage screenCapture) {
-        if (screenCapture.getRGB(Constants.playerButton1PosX, Constants.playerButtonsPosY + 13) == -29152) {
-            return true;
-        } else {
-            return false;
-        }
+        return screenCapture.getRGB(Constants.playerButton1PosX, Constants.playerButtonsPosY + 13) == -29152;
     }
 
     private static void canRaise(BufferedImage screenCapture, Board board) {
-        PlayerPlayed player = (PlayerPlayed)board.getPlayers().get(0);
+        PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
         if (screenCapture.getRGB(Constants.playerButton3PosX, Constants.playerButtonsPosY + 13) == -29152) {
             player.setCanRaise(true);
         } else {
@@ -747,8 +710,18 @@ public final class ScreenReader{
         for (int i = 0; i < hasCards.length; i++) {
             if (hasCards[i]) {
                 board.getPlayers().get(i + 1).setHasCards(true);
-            }else{
-                board.getPlayers().get(i+1).setHasCards(false);
+            } else {
+                board.getPlayers().get(i + 1).setHasCards(false);
+            }
+        }
+    }
+
+    private static void boardVisibilityCheck(BufferedImage screencapture) {
+        for (int i = 0; i < Constants.visibilityCheckX.length; i++) {
+            if (Constants.visibilityCheckRGB[i] != screencapture.getRGB(Constants.visibilityCheckX[i], Constants.visibilityCheckY[i])) {
+                System.out.println(Constants.visibilityCheckX[i] + "   " + Constants.visibilityCheckY[i]);
+                Gui.errorDialog();
+                return;
             }
         }
     }
