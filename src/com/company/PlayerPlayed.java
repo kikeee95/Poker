@@ -97,36 +97,37 @@ public class PlayerPlayed extends Player {
     }
 
 
+
+
     public void equity(ArrayList<PlayerAI> opponent, ArrayList<Card> cards) {
         int wins = 0;
-        int hands = 0;
+        int hands = Constants.equityHandsCount;
+        long timerStart;
 
-        long timerStart = System.nanoTime();
-        for (int i = 0; i < 10000; i++) {
-            if (equityInnerCalculation(opponent, cards)) {
-                wins++;
-            }
-            hands++;
+        timerStart = System.nanoTime();
+        wins = IntStream.range(0, hands).parallel().map(i -> equityInnerCalculation(opponent, cards)).reduce(0, (x, y) -> x + y);
+        System.out.println((System.nanoTime() - timerStart) / Constants.nanoTimeDivider);
+
+        /*
+        timerStart = System.nanoTime();
+        for (int i = 0; i < Constants.equityHandsCount; i++) {
+            wins += equityInnerCalculation(opponent, cards);
         }
         long timerEnd = System.nanoTime();
-        System.out.println((timerEnd - timerStart) / 1000000);
-
+        System.out.println((timerEnd - timerStart) / Constants.nanoTimeDivider);
+        */
 
         double equity = (double) wins / hands;
         this.equity = equity;
     }
 
-
-    public boolean equityInnerCalculation(ArrayList<PlayerAI> opponents, ArrayList<Card> cards) {
+    public int equityInnerCalculation(ArrayList<PlayerAI> opponents, ArrayList<Card> cards) {
         ArrayList<Card> cardholder = new ArrayList<Card>();
-
-
-        long startTime = System.nanoTime();
 
         Deck deck = new Deck();
         deck.removeCardByname(this.hand.getCards()[0].getName());
         deck.removeCardByname(this.hand.getCards()[1].getName());
-        boolean winnerHand = true;
+        int result = 1;
 
         ArrayList<Hand> opponentHands = new ArrayList<Hand>();
 
@@ -154,12 +155,12 @@ public class PlayerPlayed extends Player {
             int ownHand = new HandCombination(this.hand, cardholder).getCombinationStrength();
             for (Hand opponentHand : opponentHands) {
                 if (ownHand < new HandCombination(opponentHand, cardholder).getCombinationStrength()) {
-                    winnerHand = false;
+                    result = 0;
                 }
             }
 
         }
-        return winnerHand;
+        return result;
     }
 
 }

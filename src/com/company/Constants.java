@@ -1,6 +1,8 @@
 package com.company;
 
 public final class Constants {
+    public static int nanoTimeDivider = 1000000;
+    public static int equityHandsCount = 10000;
     public static int posXhelper = 3;
     public static int posYname = -4;
     public static int posYmoney = 12;

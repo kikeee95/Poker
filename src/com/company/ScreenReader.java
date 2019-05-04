@@ -31,6 +31,8 @@ public final class ScreenReader {
         BufferedImage[] playerMoney = new BufferedImage[9];
         BufferedImage[] playerAction = new BufferedImage[8];
 
+        long timerStart = System.nanoTime();
+
 
         //Poker Genius ablakának megtalálása
         Rectangle rect = findWindow();
@@ -355,6 +357,7 @@ public final class ScreenReader {
                 ImageIO.write(screencaptureBoardCard5, "png", file35);
 
 */
+                System.out.println("Screenreader futás: " + (System.nanoTime() - timerStart) / Constants.nanoTimeDivider);
                 Tesseract tesseract = new Tesseract();
                 tesseract.setDatapath("D:/Tesseract/");
                 tesseract.setTessVariable("tessedit_char_whitelist", "0123456789$.,");
@@ -444,6 +447,8 @@ public final class ScreenReader {
                 board.getPlayers().get(8).setMoney(Double.parseDouble(container));
             }
             */
+
+
                 tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
                 String cardContainer1 = tesseract.doOCR(screencapturePlayer1Card1);
 
@@ -618,13 +623,11 @@ public final class ScreenReader {
                     Gui.textAppend("Equity: " + df.format(player.getEquity()));
                     Gui.textAppend("Pot odds: " + df.format(player.getPotOdds()));
                 }
+
             }
         }
 
     }
-
-
-    //System.out.println("Execution time in seconds: " +(float)timeElapsed/1000000000);
 
 
     private static boolean isActive(BufferedImage screenCapture) {
