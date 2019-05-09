@@ -359,7 +359,7 @@ public final class ScreenReader {
 */
                 System.out.println("Screenreader futás: " + (System.nanoTime() - timerStart) / Constants.nanoTimeDivider);
                 Tesseract tesseract = new Tesseract();
-                tesseract.setDatapath("D:/Tesseract/");
+                tesseract.setDatapath("Tesseract");
                 tesseract.setTessVariable("tessedit_char_whitelist", "0123456789$.,");
 
 
@@ -371,6 +371,11 @@ public final class ScreenReader {
                 buttonContainer = buttonContainer.replaceAll("\\s+", "");
                 PlayerPlayed player = (PlayerPlayed) board.getPlayers().get(0);
                 player.setAvailableAction(buttonContainer);
+                if(button[0].equalsIgnoreCase("check")){
+                    player.setCanCheck(true);
+                }else{
+                    player.setCanCheck(false);
+                }
 
                 if (button.length == 2) {
                     buttonContainer = button[1];
@@ -449,10 +454,12 @@ public final class ScreenReader {
             */
 
 
+
                 tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
                 String cardContainer1 = tesseract.doOCR(screencapturePlayer1Card1);
 
                 cardContainer1 = cardContainer1.replaceAll("\\s+", "").concat(holeCardColor1name);
+
 
 
                 String cardContainer2 = tesseract.doOCR(screencapturePlayer1Card2);
@@ -497,11 +504,9 @@ public final class ScreenReader {
                     try {
                         Connection conn = DriverManager.getConnection("jdbc:sqlite:D:\\players.db");
                         Statement statement = conn.createStatement();
-
                         for (PlayerAI opponentPlayer : opponentPlayers) {
                             statement.execute("SELECT * FROM players WHERE name= '" + opponentPlayer.getName() + "'");
                             ResultSet results = statement.getResultSet();
-
                             if (results.next()) {
                                 opponentPlayer.setHandsPlayed(results.getInt("hands"));
                                 opponentPlayer.setVpip(results.getInt("vpip"));
@@ -510,10 +515,6 @@ public final class ScreenReader {
                                 opponentPlayer.setCheck(results.getInt("checks"));
                                 opponentPlayer.setRaise(results.getInt("raise"));
                             } else {
-                                System.out.println("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
-                                        "VALUES ('" + opponentPlayer.getName() + "' , " + opponentPlayer.getCall() + ", " + opponentPlayer.getRaise() + ", " +
-                                        opponentPlayer.getBet() + ", " + opponentPlayer.getCheck() + ", " + opponentPlayer.getVpip() + ", " + opponentPlayer.getHandsPlayed() + ")");
-                                //statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) VALUES ('AlInne' , 0, 0, 0, 0, 0, 1)");
                                 statement.execute("INSERT INTO players (name, call, raise, bet, checks, vpip, hands) " +
                                         "VALUES ('" + opponentPlayer.getName() + "', " + opponentPlayer.getCall() + ", " + opponentPlayer.getRaise() + ", " +
                                         opponentPlayer.getBet() + ", " + opponentPlayer.getCheck() + ", " + opponentPlayer.getVpip() + ", " + opponentPlayer.getHandsPlayed() + ")");
@@ -611,6 +612,7 @@ public final class ScreenReader {
                         }
                     }
                 }
+                Gui.textAppend(player.getAvailableAction());
 
                 try {
                     GameLogic.start(board, rect);

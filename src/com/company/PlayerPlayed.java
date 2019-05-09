@@ -12,6 +12,7 @@ public class PlayerPlayed extends Player {
     private double amountToCall;
     private double potOdds;
     private boolean canRaise;
+    private boolean canCheck;
 
 
     public PlayerPlayed() {
@@ -81,6 +82,14 @@ public class PlayerPlayed extends Player {
         this.amountToCall = amountToCall;
     }
 
+    public boolean isCanCheck() {
+        return canCheck;
+    }
+
+    public void setCanCheck(boolean canCheck) {
+        this.canCheck = canCheck;
+    }
+
     public void setAction(String action, Board board) {
         if (action.toLowerCase().equals("raise") || action.toLowerCase().equals("bet") || action.toLowerCase().equals("call") || action.toLowerCase().equals("check")) {
             this.action = action.toLowerCase();
@@ -104,18 +113,7 @@ public class PlayerPlayed extends Player {
         int hands = Constants.equityHandsCount;
         long timerStart;
 
-        timerStart = System.nanoTime();
         wins = IntStream.range(0, hands).parallel().map(i -> equityInnerCalculation(opponent, cards)).reduce(0, (x, y) -> x + y);
-        System.out.println((System.nanoTime() - timerStart) / Constants.nanoTimeDivider);
-
-        /*
-        timerStart = System.nanoTime();
-        for (int i = 0; i < Constants.equityHandsCount; i++) {
-            wins += equityInnerCalculation(opponent, cards);
-        }
-        long timerEnd = System.nanoTime();
-        System.out.println((timerEnd - timerStart) / Constants.nanoTimeDivider);
-        */
 
         double equity = (double) wins / hands;
         this.equity = equity;
@@ -128,6 +126,10 @@ public class PlayerPlayed extends Player {
         deck.removeCardByname(this.hand.getCards()[0].getName());
         deck.removeCardByname(this.hand.getCards()[1].getName());
         int result = 1;
+
+        for (Card card : cards) {
+            deck.removeCardByname(card.getName());
+        }
 
         ArrayList<Hand> opponentHands = new ArrayList<Hand>();
 

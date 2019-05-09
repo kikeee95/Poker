@@ -143,6 +143,7 @@ public final class GameLogic {
                     vsRaiseCall.add(Ranges.VsStandardPos6ORCall);
                     vsRaiseCall.add(Ranges.VsStandardPos7ORCall);
                     vsRaiseCall.add(Ranges.VsStandardPos8ORCall);
+                    vsRaiseCall.add(Ranges.VsStandardPos8ORCall);
 
                     boolean call = false;
 
@@ -325,7 +326,7 @@ public final class GameLogic {
             }
         }
         // ha mi emeltünk preflop akkor mindenki más callolt
-        if (board.getPlayers().get(0).getPreflopAction().equalsIgnoreCase("raise")) {
+        if (board.getPlayers().get(0).getPreflopAction().equalsIgnoreCase("raise") || board.getPlayers().equals("check")) {
             for (PlayerAI opponent : opponents) {
                 opponent.setPreflopAction("call");
             }
@@ -457,9 +458,8 @@ public final class GameLogic {
                     }
                 }
                 if (opponent.getPreflopAction().equalsIgnoreCase("call")) {
-                    // eredeti emelő megtalálása:
-
-                    int preflopRaiserPos = -1;
+                    // eredeti emelő megtalálása, ha nem volt mindenki 8as poz
+                    int preflopRaiserPos = 8;
 
                     for (int j = 0; j < board.getPlayers().size(); j++) {
                         if (board.getPlayers().get(j).getPreflopAction().equalsIgnoreCase("raise")) {
@@ -679,12 +679,12 @@ public final class GameLogic {
             // ha nem volt még bet
             if (!betAction) {
                 // ha gyenge párunk van
-                if (showdownStrenght > 3000000 && showdownStrenght < 3045000) {
+                if (showdownStrenght > 3000000 && showdownStrenght < 3045000 && player.getAvailableAction().equalsIgnoreCase("check")) {
                     board.getPlayers().get(0).setFlopAction("check");
                     System.out.println("Flop: check");
                     Actions.callOrCheck(rect);
                     return;
-                } else if (player.getEquity() > 0.3) {
+                } else if (player.getEquity() > 0.18) {
                     if (board.isWetBoard()) {
                         board.getPlayers().get(0).setFlopAction("bet");
                         System.out.println("Flop: bet Pot");
@@ -717,20 +717,20 @@ public final class GameLogic {
                     return;
                 }
                 if (betterAgression >= 2.0) {
-                    if (player.getEquity() > (player.getPotOdds() + 0.10)) {
-                        board.getPlayers().get(0).setFlopAction("call");
-                        System.out.println("Flop: Call");
-                        Actions.callOrCheck(rect);
-                        return;
-                    } else {
-                        board.getPlayers().get(0).setFlopAction("fold");
-                        System.out.println("Flop: Fold");
-                        Actions.fold(rect);
-                        return;
+                        if ((player.getEquity() > (player.getPotOdds() - 0.10) && player.getPotOdds() !=0) || player.getEquity() > 0.45) {
+                            board.getPlayers().get(0).setFlopAction("call");
+                            System.out.println("Flop: Call");
+                            Actions.callOrCheck(rect);
+                            return;
+                        } else {
+                            board.getPlayers().get(0).setFlopAction("fold");
+                            System.out.println("Flop: Fold");
+                            Actions.fold(rect);
+                            return;
+                        }
                     }
-                }
                 if (betterAgression < 2.0) {
-                    if (player.getEquity() > (player.getPotOdds() + 0.25)) {
+                    if ((player.getEquity() > (player.getPotOdds() + 0.05) && player.getPotOdds() !=0) || player.getEquity() > 0.40) {
                         board.getPlayers().get(0).setFlopAction("call");
                         System.out.println("Flop: Call");
                         Actions.callOrCheck(rect);
@@ -759,7 +759,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.2)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.08) && player.getPotOdds() !=0) || player.getEquity() > 0.55) {
                     board.getPlayers().get(0).setFlopAction("call");
                     System.out.println("Flop: Call Raise");
                     Actions.callOrCheck(rect);
@@ -783,7 +783,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.15) && player.getPotOdds() !=0) || player.getEquity() > 0.65) {
                     board.getPlayers().get(0).setFlopAction("call");
                     System.out.println("Flop: Call raise");
                     Actions.callOrCheck(rect);
@@ -815,16 +815,20 @@ public final class GameLogic {
                             return;
                         }
                     } else {
+                        if(player.getAvailableAction().equalsIgnoreCase("check")) {
+                            board.getPlayers().get(0).setFlopAction("check");
+                            System.out.println("Flop: Check");
+                            Actions.callOrCheck(rect);
+                            return;
+                        }
+                    }
+                } else {
+                    if(player.getAvailableAction().equalsIgnoreCase("check")) {
                         board.getPlayers().get(0).setFlopAction("check");
                         System.out.println("Flop: Check");
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else {
-                    board.getPlayers().get(0).setFlopAction("check");
-                    System.out.println("Flop: Check");
-                    Actions.callOrCheck(rect);
-                    return;
                 }
             } else {
                 if (betterAgression >= 2) {
@@ -840,7 +844,7 @@ public final class GameLogic {
                             Actions.callOrCheck(rect);
                             return;
                         }
-                    } else if (player.getEquity() > (player.getPotOdds() + 0.10)) {
+                    } else if ((player.getEquity() > (player.getPotOdds() - 0.05) && player.getPotOdds() !=0) || player.getEquity() > 0.45) {
                         board.getPlayers().get(0).setFlopAction("call");
                         System.out.println("Flop: Call");
                         Actions.callOrCheck(rect);
@@ -864,7 +868,7 @@ public final class GameLogic {
                             Actions.callOrCheck(rect);
                             return;
                         }
-                    } else if (player.getEquity() > (player.getPotOdds() + 0.2)) {
+                    } else if ((player.getEquity() > (player.getPotOdds() + 0.05) && player.getPotOdds() !=0) || player.getEquity() > 0.50) {
                         board.getPlayers().get(0).setFlopAction("call");
                         System.out.println("Flop: Call");
                         Actions.callOrCheck(rect);
@@ -944,10 +948,12 @@ public final class GameLogic {
                         return;
                     }
                 } else {
-                    board.getPlayers().get(0).setTurnAction("check");
-                    System.out.println("Turn: Check");
-                    Actions.callOrCheck(rect);
-                    return;
+                    if (player.getAvailableAction().equalsIgnoreCase("check")) {
+                        board.getPlayers().get(0).setTurnAction("check");
+                        System.out.println("Turn: Check");
+                        Actions.callOrCheck(rect);
+                        return;
+                    }
                 }
             }
             if (betAction) {
@@ -959,7 +965,7 @@ public final class GameLogic {
                     return;
                 }
                 if (betterAgression >= 2.0) {
-                    if (player.getEquity() > (player.getPotOdds() + 0.15)) {
+                    if ((player.getEquity() > (player.getPotOdds() - 0.5) && player.getPotOdds() !=0) || player.getEquity() > 0.40) {
                         board.getPlayers().get(0).setTurnAction("call");
                         System.out.println("Turn: Call");
                         Actions.callOrCheck(rect);
@@ -972,7 +978,7 @@ public final class GameLogic {
                     }
                 }
                 if (betterAgression < 2.0) {
-                    if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                    if ((player.getEquity() > (player.getPotOdds() + 0.07) && player.getPotOdds() !=0) || player.getEquity() > 0.45) {
                         board.getPlayers().get(0).setTurnAction("call");
                         System.out.println("Turn: Call");
                         Actions.callOrCheck(rect);
@@ -1001,7 +1007,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.25)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.10) && player.getPotOdds() !=0) || player.getEquity() > 0.6) {
                     board.getPlayers().get(0).setTurnAction("call");
                     System.out.println("Turn: Call Raise");
                     Actions.callOrCheck(rect);
@@ -1013,7 +1019,7 @@ public final class GameLogic {
                     return;
                 }
             } else if (betterAgression < 2.0) {
-                if (player.getEquity() > 0.9) {
+                if (player.getEquity() > 0.87) {
                     if (player.isCanRaise()) {
                         board.getPlayers().get(0).setTurnAction("raise");
                         System.out.println("Turn: ReRaise");
@@ -1025,7 +1031,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.13) && player.getPotOdds() !=0) || player.getEquity() > 0.7) {
                     board.getPlayers().get(0).setTurnAction("call");
                     System.out.println("Turn: Call raise");
                     Actions.callOrCheck(rect);
@@ -1057,16 +1063,24 @@ public final class GameLogic {
                             return;
                         }
                     } else {
+                        if(player.getAvailableAction().equalsIgnoreCase("check")) {
+                            board.getPlayers().get(0).setTurnAction("check");
+                            System.out.println("Turn: Check");
+                            Actions.callOrCheck(rect);
+                            return;
+                        }else{
+                            Actions.fold(rect);
+                        }
+                    }
+                } else {
+                    if(player.getAvailableAction().equalsIgnoreCase("check")) {
                         board.getPlayers().get(0).setTurnAction("check");
                         System.out.println("Turn: Check");
                         Actions.callOrCheck(rect);
                         return;
+                    }else{
+                        Actions.fold(rect);
                     }
-                } else {
-                    board.getPlayers().get(0).setTurnAction("check");
-                    System.out.println("Turn: Check");
-                    Actions.callOrCheck(rect);
-                    return;
                 }
             } else if (!betAction && !flopBetHappened) {
                 if (player.getEquity() > 0.4) {
@@ -1082,10 +1096,14 @@ public final class GameLogic {
                         return;
                     }
                 } else {
-                    board.getPlayers().get(0).setTurnAction("check");
-                    System.out.println("Turn: Check");
-                    Actions.callOrCheck(rect);
-                    return;
+                    if(player.getAvailableAction().equalsIgnoreCase("check")) {
+                        board.getPlayers().get(0).setTurnAction("check");
+                        System.out.println("Turn: Check");
+                        Actions.callOrCheck(rect);
+                        return;
+                    }else{
+                        Actions.fold(rect);
+                    }
                 }
             } else if (betAction) {
                 if (betterAgression >= 2) {
@@ -1101,7 +1119,7 @@ public final class GameLogic {
                             Actions.callOrCheck(rect);
                             return;
                         }
-                    } else if (player.getEquity() > (player.getPotOdds() + 0.15)) {
+                    } else if ((player.getEquity() > (player.getPotOdds()) && player.getPotOdds() !=0) || player.getEquity() > 0.40) {
                         board.getPlayers().get(0).setTurnAction("call");
                         System.out.println("Turn: Call");
                         Actions.callOrCheck(rect);
@@ -1125,7 +1143,7 @@ public final class GameLogic {
                             Actions.raisePot(rect);
                             return;
                         }
-                    } else if (player.getEquity() > (player.getPotOdds() + 0.25)) {
+                    } else if ((player.getEquity() > (player.getPotOdds() + 0.05) && player.getPotOdds() !=0) || player.getEquity() > 0.50) {
                         board.getPlayers().get(0).setTurnAction("call");
                         System.out.println("Turn: Call");
                         Actions.callOrCheck(rect);
@@ -1153,7 +1171,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.15)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.08) && player.getPotOdds() !=0) || player.getEquity() > 0.55) {
                     board.getPlayers().get(0).setTurnAction("call");
                     System.out.println("Turn: Call");
                     Actions.callOrCheck(rect);
@@ -1177,7 +1195,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.2)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.15) && player.getPotOdds() !=0) || player.getEquity() > 0.65) {
                     board.getPlayers().get(0).setTurnAction("call");
                     System.out.println("Turn: Call");
                     Actions.callOrCheck(rect);
@@ -1222,7 +1240,7 @@ public final class GameLogic {
         }
 
         for (PlayerAI opponent : opponents) {
-            if (opponent.getTurnAction().equalsIgnoreCase("bet") || opponent.getTurnAction().equalsIgnoreCase("raise")) {
+            if (opponent.getRiverAction().equalsIgnoreCase("bet") || opponent.getRiverAction().equalsIgnoreCase("raise")) {
                 betAction = true;
                 betterAgression = opponent.getAggression();
             }
@@ -1245,10 +1263,14 @@ public final class GameLogic {
                         return;
                     }
                 } else {
-                    board.getPlayers().get(0).setRiverAction("check");
-                    System.out.println("River: check");
-                    Actions.callOrCheck(rect);
-                    return;
+                    if (player.getAvailableAction().equalsIgnoreCase("check")) {
+                        board.getPlayers().get(0).setRiverAction("check");
+                        System.out.println("River: check");
+                        Actions.callOrCheck(rect);
+                        return;
+                    }else{
+                        Actions.fold(rect);
+                    }
                 }
             }
             if (betAction) {
@@ -1260,7 +1282,7 @@ public final class GameLogic {
                     return;
                 }
                 if (betterAgression >= 2.0) {
-                    if (player.getEquity() > (player.getPotOdds() + 0.15)) {
+                    if ((player.getEquity() > (player.getPotOdds() - 0.05) && player.getPotOdds() !=0) || player.getEquity() > 0.45) {
                         board.getPlayers().get(0).setRiverAction("call");
                         System.out.println("River: Call");
                         Actions.callOrCheck(rect);
@@ -1273,7 +1295,7 @@ public final class GameLogic {
                     }
                 }
                 if (betterAgression < 2.0) {
-                    if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                    if ((player.getEquity() > (player.getPotOdds() + 0.10) && player.getPotOdds() !=0) || player.getEquity() > 0.50) {
                         board.getPlayers().get(0).setRiverAction("call");
                         System.out.println("River: Call");
                         Actions.callOrCheck(rect);
@@ -1302,7 +1324,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.10) && player.getPotOdds() !=0) || player.getEquity() > 0.65) {
                     board.getPlayers().get(0).setRiverAction("call");
                     System.out.println("River: Call Raise");
                     Actions.callOrCheck(rect);
@@ -1326,7 +1348,7 @@ public final class GameLogic {
                         Actions.callOrCheck(rect);
                         return;
                     }
-                } else if (player.getEquity() > (player.getPotOdds() + 0.3)) {
+                } else if ((player.getEquity() > (player.getPotOdds() + 0.15) && player.getPotOdds() !=0) || player.getEquity() > 0.75) {
                     board.getPlayers().get(0).setRiverAction("call");
                     System.out.println("River: Call raise");
                     Actions.callOrCheck(rect);
@@ -1359,16 +1381,24 @@ public final class GameLogic {
                             return;
                         }
                     } else {
+                        if(player.getAvailableAction().equalsIgnoreCase("check")) {
+                            board.getPlayers().get(0).setRiverAction("check");
+                            System.out.println("River: Check");
+                            Actions.callOrCheck(rect);
+                            return;
+                        }else{
+                            Actions.fold(rect);
+                        }
+                    }
+                } else {
+                    if(player.getAvailableAction().equalsIgnoreCase("check")) {
                         board.getPlayers().get(0).setRiverAction("check");
                         System.out.println("River: Check");
                         Actions.callOrCheck(rect);
                         return;
+                    }else{
+                        Actions.fold(rect);
                     }
-                } else {
-                    board.getPlayers().get(0).setRiverAction("check");
-                    System.out.println("River: Check");
-                    Actions.callOrCheck(rect);
-                    return;
                 }
             } else if (!betAction && !turnBetHappened) {
                 if (player.getEquity() > 0.4) {
@@ -1384,10 +1414,14 @@ public final class GameLogic {
                         return;
                     }
                 } else {
-                    board.getPlayers().get(0).setRiverAction("check");
-                    System.out.println("Turn: Check");
-                    Actions.callOrCheck(rect);
-                    return;
+                    if(player.getAvailableAction().equalsIgnoreCase("check")) {
+                        board.getPlayers().get(0).setRiverAction("check");
+                        System.out.println("Turn: Check");
+                        Actions.callOrCheck(rect);
+                        return;
+                    }else{
+                        Actions.fold(rect);
+                    }
                 }
             } else if (betAction) {
                 if (betterAgression >= 2) {
@@ -1403,7 +1437,7 @@ public final class GameLogic {
                             Actions.callOrCheck(rect);
                             return;
                         }
-                    } else if (player.getEquity() > (player.getPotOdds() + 0.05)) {
+                    } else if ((player.getEquity() > (player.getPotOdds() + 0.05) && player.getPotOdds() !=0) || player.getEquity() > 0.45) {
                         board.getPlayers().get(0).setRiverAction("call");
                         System.out.println("River: Call");
                         Actions.callOrCheck(rect);
@@ -1427,7 +1461,7 @@ public final class GameLogic {
                             Actions.callOrCheck(rect);
                             return;
                         }
-                    } else if (player.getEquity() > (player.getPotOdds() + 0.1)) {
+                    } else if ((player.getEquity() > (player.getPotOdds() + 0.10) && player.getPotOdds() !=0) || player.getEquity() > 0.50) {
                         board.getPlayers().get(0).setRiverAction("call");
                         System.out.println("River: Call");
                         Actions.callOrCheck(rect);

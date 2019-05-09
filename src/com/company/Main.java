@@ -30,7 +30,7 @@ public class Main {
         TimerTask timerObj = new TimerObj();
 
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerObj, 0, timerSec * 1000);
+        timer.scheduleAtFixedRate(timerObj, 0, timerSec * 100);
         if (TimerObj.stopped) {
             timer.cancel();
             timer.purge();
